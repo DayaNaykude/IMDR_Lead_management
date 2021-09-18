@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", userRoutes);
+
 // app.use("/api/private", require("./routes/private"));
 
 //error handler
