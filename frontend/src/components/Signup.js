@@ -79,7 +79,7 @@ const SignUp = ({ handleChange }) => {
             style={btnstyle}
             fullWidth
             onClick={() => {
-              history.push("/Home");
+              history.push("/");
             }}
           >
             Sign Up

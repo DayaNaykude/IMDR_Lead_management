@@ -1,8 +1,8 @@
 import React from "react";
 import "./App.css";
 import SignInOutContainer from "./containers";
-//import Login from './components/login';
-//import Signup from './components/Signup';
+import Forgot from './components/Forgot';
+import ResetPassword from './components/ResetPass';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
 
@@ -13,6 +13,9 @@ function App() {
         <Switch>
           <Route exact path="/login" component={SignInOutContainer} />
           <Route exact path="/" component={() => <Home />} />
+          <Route exact path="/forgot" component={() => <Forgot />} />
+          <Route exact path="/reset" component={() => <ResetPassword />} />
+          
         </Switch>
       </Router>
     </div>
