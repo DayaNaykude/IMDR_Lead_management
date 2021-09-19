@@ -1,9 +1,12 @@
 {
   "name": "lead_management",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -16,5 +19,19 @@
     "url": "https://github.com/prajakta-more11/IMDR-Lead_Management/issues"
   },
   "homepage": "https://github.com/prajakta-more11/IMDR-Lead_Management#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.6",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.6.3"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12"
+  }
 }

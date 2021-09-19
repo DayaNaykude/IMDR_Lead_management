@@ -1,27 +1,32 @@
 import React from "react";
-import "./App.css";
 import SignInOutContainer from "./containers";
-import Forgot from './components/Forgot';
-import ResetPassword from './components/ResetPass';
+import ForgotPasswordScreen from "./components/ForgotPasswordScreen";
+import ResetPasswordScreen from "./components/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./pages/Home";
-import Navbar from './components/Navbar/Navbar'
+import HomeScreen from "./components/HomeScreen";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <Router>
         <Switch>
           <Route exact path="/login" component={SignInOutContainer} />
-          <Route exact path="/home" component={() => <Home />} />
-          <Route exact path="/forgot" component={() => <Forgot />} />
-          <Route exact path="/reset" component={() => <ResetPassword />} />
-          
+          <Route exact path="/register" component={SignInOutContainer} />
+          <Route exact path="/" component={() => <HomeScreen />} />
+          <Route
+            exact
+            path="/forgotpassword"
+            component={() => <ForgotPasswordScreen />}
+          />
+          <Route
+            exact
+            path="/resetpassword/:resetToken"
+            component={() => <ResetPasswordScreen />}
+          />
         </Switch>
       </Router>
-      <Navbar/>
     </div>
   );
-}
+};
 
 export default App;
