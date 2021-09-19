@@ -44,7 +44,7 @@ const HomeScreen = () => {
     <span className="error-message">{error}</span>
   ) : (
     <>
-      <div>Welcome to home page</div>;
+      <div>Welcome to home page {user.username}</div>;
       <button onClick={logoutHandler}>Logout</button>
     </>
   );
