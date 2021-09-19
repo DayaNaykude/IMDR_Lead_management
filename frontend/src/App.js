@@ -3,7 +3,8 @@ import SignInOutContainer from "./containers";
 import ForgotPasswordScreen from "./components/ForgotPasswordScreen";
 import ResetPasswordScreen from "./components/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomeScreen from "./components/HomeScreen";
+import HomeScreen from "./pages/HomeScreen";
+import Navbar from "./components/Navbar/Navbar";
 
 const App = () => {
   return (
@@ -12,7 +13,8 @@ const App = () => {
         <Switch>
           <Route exact path="/login" component={SignInOutContainer} />
           <Route exact path="/register" component={SignInOutContainer} />
-          <Route exact path="/" component={() => <HomeScreen />} />
+          {/* <Route exact path="/" component={() => <HomeScreen />} /> */}
+          <Route exact path="/" component={() => <Navbar />} />
           <Route
             exact
             path="/forgotpassword"
