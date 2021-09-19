@@ -79,7 +79,7 @@ const SignUp = ({ handleChange }) => {
             style={btnstyle}
             fullWidth
             onClick={() => {
-              history.push("/");
+              history.push("/home");
             }}
           >
             Sign Up
@@ -87,7 +87,7 @@ const SignUp = ({ handleChange }) => {
 
           <Typography style={linkStyle}>
             Already have an account ?
-            <Link href="#" onClick={() => handleChange("event", 0)}>
+            <Link  onClick={() => handleChange("event", 0)}>
               Sign In
             </Link>
           </Typography>

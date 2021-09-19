@@ -4,7 +4,8 @@ import SignInOutContainer from "./containers";
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPass';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
+import Home from "./pages/Home";
+import Navbar from './components/Navbar/Navbar'
 
 function App() {
   return (
@@ -12,12 +13,13 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/login" component={SignInOutContainer} />
-          <Route exact path="/" component={() => <Home />} />
+          <Route exact path="/home" component={() => <Home />} />
           <Route exact path="/forgot" component={() => <Forgot />} />
           <Route exact path="/reset" component={() => <ResetPassword />} />
           
         </Switch>
       </Router>
+      <Navbar/>
     </div>
   );
 }

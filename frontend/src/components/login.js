@@ -1,10 +1,10 @@
 import React from 'react';
-import { Avatar, Button, Grid, Paper, TextField, Typography, Link } from '@material-ui/core';
+import { Avatar, Button, Grid, Paper, TextField, Typography} from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom';
 import * as Yup from 'yup'
 
 const Login = ({ handleChange }) => {
@@ -53,7 +53,7 @@ const Login = ({ handleChange }) => {
 
                             <Button type="submit" color="primary" variant="contained" disabled={props.isSubmitting} style={btnstyle} fullWidth
                                 onClick={() => {
-                                    history.push("/");
+                                    history.push("/home");
                                 }}
                             >
                                 Sign In</Button>
@@ -62,14 +62,13 @@ const Login = ({ handleChange }) => {
                     )}
                 </Formik>
                 <Typography>
-                    <Link href="#" onClick={() => { history.push("/forgot") }}
-                    >
+                    <Link to="/forgot"  >
                         Forgot password
                     </Link>
                 </Typography>
 
                 <Typography style={linkStyle}>Don't have an account?
-                    <Link href="#" onClick={() => handleChange("event", 1)}>
+                    <Link  onClick={() => handleChange("event", 1)}>
                         Sign Up
 
                     </Link>
