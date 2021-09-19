@@ -8,13 +8,12 @@ import {
   Paper,
   TextField,
   Typography,
-  Link,
 } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
 
 const LoginScreen = ({ handleChange }) => {
@@ -75,7 +74,11 @@ const LoginScreen = ({ handleChange }) => {
       localStorage.setItem("authToken", data.token);
       history.push("/");
     } catch (error) {
-      setError(error.response);
+      setError(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
       setTimeout(() => {
         setError("");
       }, 5000);
@@ -155,7 +158,7 @@ const LoginScreen = ({ handleChange }) => {
 
         <Typography style={linkStyle}>
           Don't have an account?
-          <Link to="/" onClick={() => handleChange("event", 1)}>
+          <Link to="/register" onClick={() => handleChange("event", 1)}>
             Sign Up
           </Link>
         </Typography>
