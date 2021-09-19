@@ -2,7 +2,7 @@ import React from "react";
 import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link, useParams } from "react-router-dom";
 
 const ResetPasswordScreen = ({ match }) => {
   const paperStyle = {
@@ -15,6 +15,7 @@ const ResetPasswordScreen = ({ match }) => {
   const headerStyle = { margin: "10px 0", color: "Green" };
   const btnstyle = { margin: "5px 0" };
   let history = useHistory();
+  const { resetToken } = useParams();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,7 +26,7 @@ const ResetPasswordScreen = ({ match }) => {
     e.preventDefault();
 
     const config = {
-      headers: {
+      header: {
         "Content-Type": "application/json",
       },
     };
@@ -41,17 +42,15 @@ const ResetPasswordScreen = ({ match }) => {
 
     try {
       const { data } = await axios.put(
-        `/api/auth/resetpassword/${match.params.resetToken}`,
-        {
-          password,
-        },
+        `/api/auth/resetpassword/${resetToken}`,
+        { password },
         config
       );
 
       setSuccess(data.data);
-      history.pushState("/login");
+      // history.push("/login");
     } catch (error) {
-      setError(error.response.data.error);
+      setError(error.response);
       setTimeout(() => {
         setError("");
       }, 5000);
@@ -66,11 +65,15 @@ const ResetPasswordScreen = ({ match }) => {
           <Typography variant="caption">Please Set New Password !!</Typography>
         </Grid>
         {error && <span className="error-message">{error}</span>}
-        {success && <span className="error-message">{success}</span>}
+        {success && (
+          <span className="success-message">
+            {success} <Link to="/login">Login</Link>
+          </span>
+        )}
         <form onSubmit={resetPasswordHandler}>
           <TextField
             label="New Password"
-            placeholder="Enter Password"
+            placeholder="Enter New Password"
             type="password"
             style={textstyle}
             fullWidth

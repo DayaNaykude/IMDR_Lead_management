@@ -73,7 +73,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const message = `
       <h1>You have requested a password reset</h1>
       <p>You're receiving this e-mail because you requested a password reset for your user account at IMDR Lead Management.</p>
-      <P>If you didn't request this change, you can disregard this email - we have not yet reset your password.</p>
+      
       
       <a href=${resetUrl} clicktracking=off>Click Here To Reset Your Password</a>
     `;
@@ -103,6 +103,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Compare token in URL params to hashed token
+  console.log("reset pass");
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resetToken)
@@ -124,7 +125,6 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     user.resetPasswordExpire = undefined;
 
     await user.save();
-
     res.status(201).json({
       success: true,
       data: "Password Updated Successfully",

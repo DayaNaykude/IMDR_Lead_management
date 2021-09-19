@@ -1,10 +1,15 @@
-// require("dotenv").config({ path: "./config.env" });
 const dotenv = require("dotenv");
 dotenv.config();
 
+const morgan = require("morgan");
 // const errorHandler = require("./middleware/error");
 const express = require("express");
 const app = express();
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
 const userRoutes = require("./routes/userRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
