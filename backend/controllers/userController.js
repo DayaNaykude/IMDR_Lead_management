@@ -22,7 +22,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(400);
-    return next(new Error("Please provide email and password"));
+    throw new Error("Please provide email and password");
   }
 
   try {
@@ -31,7 +31,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
 
     if (!user) {
       res.status(401);
-      return next(new Error("User does not exists !"));
+      throw new Error("User does not exists !");
     }
 
     // Check that password match
@@ -39,13 +39,13 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
 
     if (!isMatch) {
       res.status(401);
-      return next(new Error("Invalid credentials !"));
+      throw new Error("Invalid credentials !");
     }
 
     sendToken(user, 201, res);
   } catch (error) {
     res.status(500);
-    return next(new Error(error.message));
+    throw new Error(error.message);
     // next(error);
   }
 });
@@ -58,7 +58,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     if (!user) {
       res.status(404);
-      return next(new Error("Email could not be sent"));
+      throw new Error("Email could not be sent");
     }
 
     // Reset Token Gen and add to database hashed (private) version of token
@@ -87,14 +87,12 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
       res.status(200).json({ success: true, data: "Email Sent" });
     } catch (err) {
-      console.log(err);
-
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
 
       await user.save();
       res.status(500);
-      return next(new Error("Email could not be sent"));
+      throw new Error("Email could not be sent");
     }
   } catch (err) {
     next(err);
@@ -117,7 +115,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     if (!user) {
       res.status(400);
-      return next(new Error("Invalid Token"));
+      throw new Error("Invalid Token");
     }
 
     user.password = req.body.password;

@@ -50,7 +50,11 @@ const ResetPasswordScreen = ({ match }) => {
       setSuccess(data.data);
       // history.push("/login");
     } catch (error) {
-      setError(error.response);
+      setError(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
       setTimeout(() => {
         setError("");
       }, 5000);

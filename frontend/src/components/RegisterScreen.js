@@ -9,12 +9,11 @@ import {
   Typography,
   TextField,
   Button,
-  Link,
 } from "@material-ui/core";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 //import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Checkbox from '@material-ui/core/Checkbox';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
@@ -74,7 +73,11 @@ const RegisterScreen = ({ handleChange }) => {
 
       history.push("/");
     } catch (error) {
-      setError(error.response.data.error);
+      setError(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
       setTimeout(() => {
         setError("");
       }, 5000);
