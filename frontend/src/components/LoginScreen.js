@@ -46,7 +46,6 @@ const LoginScreen = ({ handleChange }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -55,22 +54,13 @@ const LoginScreen = ({ handleChange }) => {
     }
   }, [history]);
 
-  const registerHandler = async (e) => {
+  const loginHandler = async (e) => {
     e.preventDefault();
     const config = {
-      header: {
+      headers: {
         "Content-Type": "application/json",
       },
     };
-
-    if (password !== confirmPassword) {
-      setPassword("");
-      setConfirmPassword("");
-      setTimeout(() => {
-        setError("");
-      }, 5000);
-      return setError("Passwords do not match");
-    }
 
     try {
       const { data } = await axios.post(
@@ -83,10 +73,9 @@ const LoginScreen = ({ handleChange }) => {
       );
 
       localStorage.setItem("authToken", data.token);
-
       history.push("/");
     } catch (error) {
-      setError(error.response.data.error);
+      setError(error.response);
       setTimeout(() => {
         setError("");
       }, 5000);
@@ -103,13 +92,14 @@ const LoginScreen = ({ handleChange }) => {
           </Avatar>
           <h2>Sign In</h2>
         </Grid>
+        {error && <span className="error-message">{error}</span>}
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
           {(props) => (
-            <Form>
+            <Form onSubmit={loginHandler}>
               <Field
                 as={TextField}
                 label="Email"
@@ -118,6 +108,8 @@ const LoginScreen = ({ handleChange }) => {
                 type="email"
                 fullWidth
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 helperText={<ErrorMessage name="email" />}
               />
               <Field
@@ -130,6 +122,8 @@ const LoginScreen = ({ handleChange }) => {
                 style={textstyle}
                 fullWidth
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <Button
@@ -139,9 +133,9 @@ const LoginScreen = ({ handleChange }) => {
                 disabled={props.isSubmitting}
                 style={btnstyle}
                 fullWidth
-                onClick={() => {
-                  history.push("/");
-                }}
+                // onClick={() => {
+                //   history.push("/");
+                // }}
               >
                 Sign In
               </Button>
