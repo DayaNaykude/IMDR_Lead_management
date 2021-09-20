@@ -1,52 +1,20 @@
 import React from "react";
+import './images/IMDRPicture.jpg';
 //import { Redirect } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useImage } from 'react-image';
+const Home=()=>{
+const homeStyle={
+            margin:"200px" 
+}
 
-const HomeScreen = () => {
-  let history = useHistory();
-  const [error, setError] = useState("");
-  const [user, setUser] = useState("");
 
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      history.push("/login");
-    }
-
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.get("/api/auth/home", config);
-        setUser(data);
-        console.log(data);
-      } catch (error) {
-        localStorage.removeItem("authToken");
-        setError("You are not authorized please login");
-      }
-    };
-
-    fetchData();
-  }, [history]);
-
-  const logoutHandler = () => {
-    localStorage.removeItem("authToken");
-    history.push("/login");
-  };
-
-  return error ? (
-    <span className="error-message">{error}</span>
-  ) : (
-    <>
-      <div>Welcome to home page {user.username}</div>;
-      <button onClick={logoutHandler}>Logout</button>
-    </>
-  );
-};
-export default HomeScreen;
+return(
+    
+    <div style={homeStyle}>
+        <img src="/images/IMDRPicture.jpg" alt="logo"/>
+    Home
+    </div>
+    
+)
+}
+export default Home;

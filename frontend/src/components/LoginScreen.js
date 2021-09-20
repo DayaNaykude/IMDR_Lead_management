@@ -26,7 +26,7 @@ const LoginScreen = ({ handleChange }) => {
   const avatarstyle = { backgroundColor: "#26d6ca" };
   const btnstyle = { margin: "8px 0" };
   const textstyle = { margin: "8px 0" };
-  const linkStyle = { margin: "8px 0" };
+  const linkStyle = { margin: "8px 0",cursor: "pointer" };
   const initialValues = {
     email: "",
     password: "",
@@ -158,7 +158,7 @@ const LoginScreen = ({ handleChange }) => {
 
         <Typography style={linkStyle}>
           Don't have an account?
-          <Link to="/register" onClick={() => handleChange("event", 1)}>
+          <Link to="/register" style={linkStyle} onClick={() => handleChange("event", 1)}>
             Sign Up
           </Link>
         </Typography>
