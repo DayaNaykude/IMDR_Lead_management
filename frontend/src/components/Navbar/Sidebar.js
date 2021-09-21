@@ -20,11 +20,7 @@ function Sidebar() {
         <ListItemText primary='Home' />
 
       </ListItem>
-      <ListItem button component={Link} to='/Data' title="Data">
-
-        <ListItemIcon><InfoIcon style={{ fill: 'purple'}}  fontSize="large" /></ListItemIcon>
-        <ListItemText primary='Data' />
-      </ListItem>
+     
       <ListItem button component={Link} to='/Tasks' title="Tasks">
         <ListItemIcon><TaskIcon    style={{ fill: 'purple'}} fontSize="large" /></ListItemIcon>
         <ListItemText primary='Tasks' />

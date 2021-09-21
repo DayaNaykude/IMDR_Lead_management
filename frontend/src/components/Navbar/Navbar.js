@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,42 +14,42 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CloseIcon from '@material-ui/icons/Close';
-import {Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import InfoIcon from '@material-ui/icons/Info';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
 const Navbar = () => {
- 
-  const btnStyle = { marginLeft: ""};
-  let history = useHistory();
-  const logoutHandler = () => {
-    localStorage.removeItem("authToken");
-    history.push("/login");
-  };
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-        letterSpacing: '0.175em',
-        fontSize: '140%'
-    },
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
-    },
-    closeButton: {
-        display: 'block',
-        textAlign: 'end'
-    }
-}));
+    const btnStyle = { marginLeft: "" };
+    let history = useHistory();
+    const logoutHandler = () => {
+        localStorage.removeItem("authToken");
+        history.push("/login");
+    };
+
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+        },
+        title: {
+            flexGrow: 1,
+            letterSpacing: '0.175em',
+            fontSize: '140%'
+        },
+        list: {
+            width: 250,
+        },
+        fullList: {
+            width: 'auto',
+        },
+        closeButton: {
+            display: 'block',
+            textAlign: 'end'
+        }
+    }));
 
 
     const classes = useStyles();
@@ -73,11 +73,12 @@ const useStyles = makeStyles((theme) => ({
             <List>
                 <Sidebar />
             </List>
-            
-            </div>
+
+        </div>
     );
     return (
         <div className={classes.root}>
+            
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton}
@@ -88,12 +89,12 @@ const useStyles = makeStyles((theme) => ({
                         IMDR
                     </Typography>
                     <Typography variant="h6" className={classes.title}>
-                     Welcome (Admin name)
+                        Welcome (Admin name)
                     </Typography>
                     {/* <Button color="inherit">Login</Button> */}
-                    <Button  style={btnStyle} variant='contained' color='secondary' onClick={logoutHandler}>
-                  Logout</Button>
-                   
+                    <Button style={btnStyle} variant='contained' color='secondary' onClick={logoutHandler}>
+                        Logout</Button>
+
 
                 </Toolbar>
             </AppBar>
@@ -103,5 +104,5 @@ const useStyles = makeStyles((theme) => ({
         </div>
     );
 }
-export default Navbar; 
+export default Navbar;
 

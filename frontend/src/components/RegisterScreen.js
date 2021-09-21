@@ -17,12 +17,13 @@ import { useHistory, Link } from "react-router-dom";
 
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
-    padding: "20px",
-    height: "75vh",
+    padding: 20,
+    height: "70vh",
     width: 340,
-    margin: "0px auto",
+    margin:"auto 0",
+    backgroundColor:"",
   };
-  const avatarstyle = { backgroundColor: "#26d6ca" };
+  const avatarstyle = { backgroundColor: "" };
   const headerStyle = { margin: 0 };
   const textstyle = { margin: "5px 0" };
   const btnstyle = { margin: "5px 0" };

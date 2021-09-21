@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 import {
   Avatar,
   Button,
@@ -16,16 +17,19 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
 
+
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
     padding: 20,
     height: "70vh",
     width: 340,
-    margin: "0px auto",
+    margin:"auto 0",
+    backgroundColor:"",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
   const btnstyle = { margin: "8px 0" };
   const textstyle = { margin: "8px 0" };
+  ;
   const linkStyle = { margin: "8px 0",cursor: "pointer" };
   const initialValues = {
     email: "",
@@ -87,7 +91,8 @@ const LoginScreen = ({ handleChange }) => {
   // history.push('/Home')
 
   return (
-    <Grid>
+    <>
+      <Grid>
       <Paper elevation={10} style={paperstyle}>
         <Grid align="center">
           <Avatar style={avatarstyle}>
@@ -164,6 +169,8 @@ const LoginScreen = ({ handleChange }) => {
         </Typography>
       </Paper>
     </Grid>
+    
+    </>
   );
 };
 export default LoginScreen;
