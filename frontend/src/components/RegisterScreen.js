@@ -23,7 +23,7 @@ const RegisterScreen = ({ handleChange }) => {
     margin:"auto 0",
     backgroundColor:"",
   };
-  const avatarstyle = { backgroundColor: "" };
+  const avatarstyle = { backgroundColor: "#26d6ca" };
   const headerStyle = { margin: 0 };
   const textstyle = { margin: "5px 0" };
   const btnstyle = { margin: "5px 0" };
