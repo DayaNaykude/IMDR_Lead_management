@@ -2,7 +2,11 @@ import React from "react";
 import SignInOutContainer from "./containers";
 import ForgotPasswordScreen from "./components/ForgotPasswordScreen";
 import ResetPasswordScreen from "./components/ResetPasswordScreen";
-import { BrowserRouter as Router, Route,Redirect, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import DataScreen from "./pages/DataScreen";
 import TasksScreen from "./pages/TasksScreen";
@@ -14,7 +18,7 @@ import Navbar from "./components/Navbar/NavbarScreen";
 const App = () => {
   return (
     <div className="App">
-        <Router>
+      <Router>
         <Switch>
           <Route exact path="/login" component={SignInOutContainer} />
           <Route exact path="/register" component={SignInOutContainer} />
@@ -40,9 +44,9 @@ const App = () => {
            <Route exact path="/Help" component={() => <HelpScreen />} /> 
            <Route exact path="/Settings" component={() => <SettingScreen/>} />
           </div>
-       </Switch>
+        </Switch>
       </Router>
-       </div>
+    </div>
   );
 };
 

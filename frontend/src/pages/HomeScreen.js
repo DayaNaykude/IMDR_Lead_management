@@ -1,4 +1,3 @@
-
 import { Grid,Typography,Paper,Button} from "@mui/material";
 import { fontSize } from "@mui/system";
 import React from "react";
@@ -9,21 +8,15 @@ import   './home.css';
 //import { Redirect } from "react-router-dom";
 
 const Home=()=>{
-const homeStyle={
-           
-            fontSize:"20px"
-};
+
+
 const paperStyle = {
     width: 380,
      marginLeft: "500px",
      marginTop:"50px",
      height:400,
 };
-
-  const btnStyle = { marginLeft: "" };
-   
-
-
+const btnStyle = { marginLeft: "" };
 return(
     
     <div class="imageStyle" style={{
@@ -39,7 +32,6 @@ return(
 
 
     </div>
-    
-)
-}
+  );
+};
 export default Home;
