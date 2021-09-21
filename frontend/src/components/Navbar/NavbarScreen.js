@@ -16,7 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CloseIcon from '@material-ui/icons/Close';
 import { Button } from "@material-ui/core";
 import InfoIcon from '@material-ui/icons/Info';
-import Sidebar from './Sidebar';
+import Sidebar from './SidebarScreen';
 import { Link } from 'react-router-dom';
 const Navbar = () => {
 

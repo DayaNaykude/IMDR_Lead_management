@@ -9,7 +9,7 @@ import TasksScreen from "./pages/TasksScreen";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/Navbar/NavbarScreen";
 
 const App = () => {
   return (
