@@ -18,7 +18,7 @@ import { useHistory, Link } from "react-router-dom";
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
     padding: 20,
-    height: "70vh",
+    height: "60vh",
     width: 340,
     margin:"",
     

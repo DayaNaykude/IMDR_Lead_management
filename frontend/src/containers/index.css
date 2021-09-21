@@ -4,11 +4,11 @@
     position:fixed;
     Width:102%;
     Height:92%;
-    padding:0;
+    padding: 0px;
     margin:auto;
     background-size: cover;
     background-position: center;
-    opacity: 0.25;
+    opacity: 0.5;
     display:flex;
 
 }

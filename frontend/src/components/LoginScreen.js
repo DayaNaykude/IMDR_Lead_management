@@ -21,7 +21,7 @@ import * as Yup from "yup";
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
     padding: 20,
-    height: "70vh",
+    height: "60vh",
     width: 340,
     margin:"",
     backgroundColor:"",
