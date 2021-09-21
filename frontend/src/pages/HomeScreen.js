@@ -1,4 +1,5 @@
 
+import { fontSize } from "@mui/system";
 import React from "react";
 import   './home.css';
 
@@ -6,17 +7,17 @@ import   './home.css';
 
 const Home=()=>{
 const homeStyle={
-            margin:"200px" 
+            margin:"200px"
 }
 
 
 
 return(
     
-    <div className="home">
+    <div className="home" >
         
         <img src="images/IMDRPicture.png" className="imageStyle"></img>
-       
+       hello
     </div>
     
 )
