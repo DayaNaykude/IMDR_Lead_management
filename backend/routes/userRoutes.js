@@ -13,6 +13,6 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/forgotpassword").post(forgotPassword);
 router.route("/resetpassword/:resetToken").put(resetPassword);
-router.route("/navbar").get(protect, getUserProfile);
+router.route("/home").get(protect, getUserProfile);
 
 module.exports = router;

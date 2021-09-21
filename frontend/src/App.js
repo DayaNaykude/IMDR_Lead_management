@@ -38,9 +38,7 @@ const App = () => {
             <Navbar />
 
             <Route exact path="/" component={() => <HomeScreen />} />
-            <Route exact path="/">
-              <Redirect exact path="/Home" />
-            </Route>
+
             <Route exact path="/Data" component={() => <DataScreen />} />
             <Route exact path="/Tasks" component={() => <TasksScreen />} />
             <Route

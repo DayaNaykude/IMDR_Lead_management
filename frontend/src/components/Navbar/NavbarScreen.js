@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -22,6 +24,36 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const btnStyle = { marginLeft: "" };
   let history = useHistory();
+
+  const [error, setError] = useState("");
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    if (!localStorage.getItem("authToken")) {
+      history.push("/login");
+    }
+
+    const fetchData = async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      };
+
+      try {
+        const { data } = await axios.get("/api/auth/home", config);
+        setUser(data);
+        console.log(data);
+      } catch (error) {
+        localStorage.removeItem("authToken");
+        setError("You are not authorized please login");
+      }
+    };
+
+    fetchData();
+  }, [history]);
+
   const logoutHandler = () => {
     localStorage.removeItem("authToken");
     history.push("/login");
@@ -78,7 +110,9 @@ const Navbar = () => {
       </List>
     </div>
   );
-  return (
+  return error ? (
+    <span className="error-message">{error}</span>
+  ) : (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
@@ -95,7 +129,7 @@ const Navbar = () => {
             IMDR
           </Typography>
           <Typography variant="h6" className={classes.title}>
-            Welcome (Admin name)
+            Hello, {user.username}
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
           <Button
