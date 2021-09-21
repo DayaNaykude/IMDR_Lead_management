@@ -14,19 +14,20 @@ import Navbar from "./components/Navbar/NavbarScreen";
 const App = () => {
   return (
     <div className="App">
-      
-          <Router>
-          <Route exact path="/" component={() => <Navbar/>} /> 
-          <Switch>
-          
-           <Route exact path="/" component={() => <HomeScreen />} /> 
-           <Route exact path="/Data" component={() => <DataScreen />} /> 
-           <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
-           <Route exact path="/Dashboard" component={() => <DashboardScreen />} />
-           <Route exact path="/Help" component={() => <HelpScreen />} /> 
-           <Route exact path="/Settings" component={() => <SettingScreen/>} />
-          
-       </Switch>
+      <Router>
+        <Route exact path="/" component={() => <Navbar />} />
+        <Switch>
+          <Route exact path="/" component={() => <HomeScreen />} />
+          <Route exact path="/Data" component={() => <DataScreen />} />
+          <Route exact path="/Tasks" component={() => <TasksScreen />} />
+          <Route
+            exact
+            path="/Dashboard"
+            component={() => <DashboardScreen />}
+          />
+          <Route exact path="/Help" component={() => <HelpScreen />} />
+          <Route exact path="/Settings" component={() => <SettingScreen />} />
+        </Switch>
       </Router>
       <Router>
         <Switch>
@@ -42,8 +43,8 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-          </Switch>
-         </Router>
+        </Switch>
+      </Router>
     </div>
   );
 };
