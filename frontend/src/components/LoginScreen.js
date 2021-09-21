@@ -23,7 +23,7 @@ const LoginScreen = ({ handleChange }) => {
     padding: 20,
     height: "70vh",
     width: 340,
-    margin:"auto 0",
+    margin:"",
     backgroundColor:"",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
@@ -135,15 +135,15 @@ const LoginScreen = ({ handleChange }) => {
               />
 
               <Button
-                type="submit"
+               type="submit"
                 color="primary"
                 variant="contained"
                 disabled={props.isSubmitting}
                 style={btnstyle}
                 fullWidth
-                // onClick={() => {
-                //   history.push("/");
-                // }}
+                 onClick={() => {
+                   history.push("/");
+                 }}
               >
                 Sign In
               </Button>

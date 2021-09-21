@@ -20,7 +20,8 @@ const RegisterScreen = ({ handleChange }) => {
     padding: 20,
     height: "70vh",
     width: 340,
-    margin:"auto 0",
+    margin:"",
+    
     backgroundColor:"",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
@@ -33,6 +34,7 @@ const RegisterScreen = ({ handleChange }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -145,9 +147,9 @@ const RegisterScreen = ({ handleChange }) => {
             variant="contained"
             style={btnstyle}
             fullWidth
-            // onClick={() => {
-            //   history.push("/");
-            // }}
+             onClick={() => {
+               history.push("/");
+            }}
           >
             Sign Up
           </Button>

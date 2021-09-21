@@ -1,23 +1,43 @@
 
+import { Grid,Typography,Paper,Button} from "@mui/material";
 import { fontSize } from "@mui/system";
 import React from "react";
+import { useHistory } from "react-router";
 import   './home.css';
+
 
 //import { Redirect } from "react-router-dom";
 
 const Home=()=>{
 const homeStyle={
-            margin:"200px"
-}
+           
+            fontSize:"20px"
+};
+const paperStyle = {
+    width: 380,
+     marginLeft: "500px",
+     marginTop:"50px",
+     height:400,
+};
 
+  const btnStyle = { marginLeft: "" };
+   
 
 
 return(
     
-    <div className="home" >
+    <div class="imageStyle" style={{
         
-        <img src="images/IMDRPicture.png" className="imageStyle"></img>
-       hello
+        backgroundImage:'url("images/IMDRPicture.png")'}}>
+        <Grid>
+        <Paper elevation={10} style={paperStyle}>
+                <Typography>Hello</Typography>
+                
+                </Paper>
+        
+       </Grid>
+
+
     </div>
     
 )

@@ -6,6 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import LoginScreen from "../components/LoginScreen";
 import RegisterScreen from "../components/RegisterScreen";
+import { Grid} from "@mui/material";
+
+import './index.css';
 
 
 const SignInOutContainer = ({ history }) => {
@@ -14,31 +17,42 @@ const SignInOutContainer = ({ history }) => {
     setValue(newValue);
     value === 1 ? history.push("/login") : history.push("/register");
   };
-  const paperStyle = { width: 380, margin: "20px auto",backgroundColor:"" 
+ 
+  const paperStyle = {
+    width: 380,
+     marginLeft: "500px",
+     marginTop:"50px"
 };
+
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
     return (
-      <div 
+      
+      <div  
         role="tabpanel"
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
         {...other}
+     
       >
-        
         {value === index && (
           <Box>
             <Typography>{children}</Typography>
           </Box>
         )}
+         
       </div>
     );
   }
 
   return (
+    <div  className="imageStyle" style={{backgroundImage:'url("images/IMDRPicture.png")'}}>
+    <Grid>
     <Paper style={paperStyle}>
+     
       <Tabs
         value={value}
         indicatorColor="primary"
@@ -57,6 +71,8 @@ const SignInOutContainer = ({ history }) => {
         <RegisterScreen handleChange={handleChange} />
       </TabPanel>
     </Paper>
+    </Grid>
+    </div>
   );
 };
 

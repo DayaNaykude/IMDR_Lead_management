@@ -32,7 +32,7 @@ const Navbar = () => {
             flexGrow: 1,
         },
         menuButton: {
-            marginRight: theme.spacing(2),
+            marginRight: theme.spacing(),
         },
         title: {
             flexGrow: 1,
@@ -40,7 +40,7 @@ const Navbar = () => {
             fontSize: '140%'
         },
         list: {
-            width: 250,
+            width: 200,
         },
         fullList: {
             width: 'auto',
@@ -79,7 +79,7 @@ const Navbar = () => {
     return (
         <div className={classes.root}>
             
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton}
                         color="inherit" aria-label="menu" onClick={toggleSidebar()} >
