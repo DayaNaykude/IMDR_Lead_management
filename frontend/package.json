@@ -12,6 +12,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/utils": "^4.11.2",
     "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@svgr/webpack": "5.5.0",
