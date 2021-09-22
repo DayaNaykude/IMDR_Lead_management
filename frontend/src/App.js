@@ -15,6 +15,7 @@ import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
 
+
 const App = () => {
   return (
     <div className="App">
@@ -32,12 +33,12 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
+           {/* <Route exact path="/userscreen" component={()=><UserScreen/>}/> */}
         <div>
         <Navbar/> 
         <Route exact path="/" component={() => <HomeScreen />} /> 
-           <Route exact path="/">
-             
-             </Route>
+           <Route exact path="/"></Route>
+          
            <Route exact path="/Data" component={() => <DataScreen />} /> 
            <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
            <Route exact path="/Dashboard" component={() => <DashboardScreen />} />
