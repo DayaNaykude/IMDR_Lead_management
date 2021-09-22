@@ -8,7 +8,7 @@ import {
   Switch,
 } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
-import DataScreen from "./pages/DataScreen";
+import UserScreen from "./pages/HomePageFolder/UserScreen";
 import TasksScreen from "./pages/TasksScreen";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
@@ -33,13 +33,14 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-           {/* <Route exact path="/userscreen" component={()=><UserScreen/>}/> */}
+          <Route exact path="/userscreen" component={() =><UserScreen/>}/>
+         
         <div>
         <Navbar/> 
         <Route exact path="/" component={() => <HomeScreen />} /> 
            <Route exact path="/"></Route>
           
-           <Route exact path="/Data" component={() => <DataScreen />} /> 
+         
            <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
            <Route exact path="/Dashboard" component={() => <DashboardScreen />} />
            <Route exact path="/Help" component={() => <HelpScreen />} /> 
