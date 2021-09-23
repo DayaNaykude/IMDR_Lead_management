@@ -6,7 +6,13 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import LoginScreen from "../components/LoginScreen";
 import RegisterScreen from "../components/RegisterScreen";
+
 import { Grid } from "@mui/material";
+
+import Grid from "@material-ui/core/Grid";
+
+import './index.css';
+
 
 import "./index.css";
 
@@ -19,9 +25,12 @@ const SignInOutContainer = ({ history }) => {
 
   const paperStyle = {
     width: 380,
-    marginLeft: "500px",
+   marginLeft: "500px",
     marginTop: "50px",
   };
+
+
+
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
