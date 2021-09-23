@@ -9,10 +9,9 @@ import RegisterScreen from "../components/RegisterScreen";
 
 import { Grid } from "@mui/material";
 
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 
-import './index.css';
-
+import "./index.css";
 
 import "./index.css";
 
@@ -25,12 +24,9 @@ const SignInOutContainer = ({ history }) => {
 
   const paperStyle = {
     width: 380,
-   marginLeft: "500px",
+    marginLeft: "150px",
     marginTop: "50px",
   };
-
-
-
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;

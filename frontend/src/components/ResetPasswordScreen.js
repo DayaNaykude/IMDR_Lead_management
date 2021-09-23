@@ -14,7 +14,7 @@ const ResetPasswordScreen = ({ match }) => {
   const textstyle = { margin: "5px 0" };
   const headerStyle = { margin: "10px 0", color: "Green" };
   const btnstyle = { margin: "5px 0" };
-  let history = useHistory();
+  // let history = useHistory();
   const { resetToken } = useParams();
 
   const [password, setPassword] = useState("");
