@@ -11,8 +11,6 @@ import {
   Button,
 } from "@material-ui/core";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
-//import FormControlLabel from '@material-ui/core/FormControlLabel';
-//import Checkbox from '@material-ui/core/Checkbox';
 import { useHistory, Link } from "react-router-dom";
 
 const RegisterScreen = ({ handleChange }) => {
@@ -20,9 +18,9 @@ const RegisterScreen = ({ handleChange }) => {
     padding: 20,
     height: "60vh",
     width: 340,
-    margin:"",
-    
-    backgroundColor:"",
+    margin: "",
+
+    backgroundColor: "",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
   const headerStyle = { margin: 0 };
@@ -34,7 +32,7 @@ const RegisterScreen = ({ handleChange }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -147,9 +145,7 @@ const RegisterScreen = ({ handleChange }) => {
             variant="contained"
             style={btnstyle}
             fullWidth
-             onClick={() => {
-               history.push("/");
-            }}
+            onClick={registerHandler}
           >
             Sign Up
           </Button>

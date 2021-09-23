@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import PeopleIcon from '@material-ui/icons/People';
 import PersonIcon from '@material-ui/icons/Person';
@@ -6,10 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import   './home.css';
 import Box from '@material-ui/core/Box';
 import { useHistory} from "react-router-dom";
-import Typography from '@mui/material/Typography';
 import Modal from '@material-ui/core/Modal';
 import AboutScreen from '../pages/HomePageFolder/AboutScreen';
-//C:\Users\HP\Desktop\imdr\frontend\src\pages\HomePageFolder\UserScreen.js
 
 const style = {
   position: 'absolute',
@@ -43,16 +41,6 @@ padding: "10px 20px 20px 20px",
 marginLeft:"450px", 
 marginTop:"25px",
 };
-const backStyle={
-  padding:"0px",
-  margin:"0px",
-  backgroundColor:"#4ab5da",
-
-}
-
-
-//import { Redirect } from "react-router-dom";
-
 const Home=()=>{
 
   let history=useHistory();

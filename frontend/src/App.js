@@ -2,19 +2,14 @@ import React from "react";
 import SignInOutContainer from "./containers";
 import ForgotPasswordScreen from "./components/ForgotPasswordScreen";
 import ResetPasswordScreen from "./components/ResetPasswordScreen";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
-import UserScreen from "./pages/HomePageFolder/UserScreen";
+import UserListScreen from "./pages/HomePageFolder/UserListScreen";
 import TasksScreen from "./pages/TasksScreen";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
-
 
 const App = () => {
   return (
@@ -33,7 +28,7 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-           <Route exact path="/userscreen" component={() =><UserScreen/>}/>
+           <Route exact path="/userscreen" component={() =><UserListScreen/>}/>
          
         <div>
         <Navbar/> 

@@ -5,6 +5,7 @@ import { useHistory} from "react-router-dom";
 import axios from "axios";
 
 const ForgotPasswordScreen = () => {
+  let history = useHistory();
   const paperstyle = {
     padding: 40,
     height: "40vh",
@@ -17,7 +18,7 @@ const ForgotPasswordScreen = () => {
     backgroundColor:"#4ab5da",
 
   };
-  let history = useHistory();
+ 
   const textstyle = { margin: "5px 0" };
   const headerStyle = { margin: "20px 0", color: "red" };
   const btnstyle = { margin: "5px 0" };
