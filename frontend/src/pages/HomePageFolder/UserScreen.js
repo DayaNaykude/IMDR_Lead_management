@@ -1,9 +1,18 @@
-import React from 'react'
-import { useState } from 'react';
-import MaterialTable from 'material-table'
+import React from 'react';
+import MaterialTable from 'material-table';
+import { Button} from "@material-ui/core";
+import { useState } from "react";
+import { useHistory} from "react-router-dom";
 import resolve from 'resolve';
 
-export const  UserScreen=()=>{
+const backStyle={
+    padding:"0px",
+    margin:"0px",
+    backgroundColor:"#4ab5da",
+
+  };
+  
+export const  UserScreen =()=>{
     const[tableData,setTableData]=useState([
     
             {name:'sahil',
@@ -44,10 +53,22 @@ const columns=[
         title:'Admin',field:'admin',align:""
     }
 ]
-
+let history = useHistory();
 return (
         <div>
-            <h1 align="center">Users List</h1>
+          <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+             style={backStyle}
+             onClick={() => {
+              history.push("/");}}
+          >
+             Back
+            </Button>
+          
+
+             <h1 align="center">Users List</h1>
             <MaterialTable title=""
             data={tableData}
             columns={columns}
@@ -78,10 +99,12 @@ return (
                 rowStyle:(data,index)=>index%2==0?{background:"#f5f5f5"}:null,
                 headerStyle:{background:"#9c66e2",fontStyle:'bold'}
             }}
-           
+            
 
         
             />
+            
+           
             
         </div>
     )

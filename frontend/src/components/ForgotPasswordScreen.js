@@ -1,17 +1,25 @@
 import React from "react";
 import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
+import { useHistory} from "react-router-dom";
 import axios from "axios";
 
 const ForgotPasswordScreen = () => {
   const paperstyle = {
     padding: 40,
-    height: "30vh",
-    width: 300,
+    height: "40vh",
+    width: 350,
     margin: "40px auto",
   };
+  const backStyle={
+    padding:"0px",
+    margin:"0px",
+    backgroundColor:"#4ab5da",
+
+  };
+  let history = useHistory();
   const textstyle = { margin: "5px 0" };
-  const headerStyle = { margin: "10px 0", color: "red" };
+  const headerStyle = { margin: "20px 0", color: "red" };
   const btnstyle = { margin: "5px 0" };
 
   const [email, setEmail] = useState("");
@@ -51,6 +59,17 @@ const ForgotPasswordScreen = () => {
   return (
     <Grid>
       <Paper elevation={10} style={paperstyle}>
+      <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+             style={backStyle}
+             onClick={() => {
+              history.push("/login");}}
+          >
+             Back
+            </Button>
+
         <Grid align="center">
           <h2 style={headerStyle}>Forgot Password</h2>
           <Typography variant="caption">
@@ -78,6 +97,9 @@ const ForgotPasswordScreen = () => {
             variant="contained"
             style={btnstyle}
             fullWidth
+            onClick={() => {
+              alert("✔️ successfully send email!");
+            }}
           >
             Send Email
           </Button>

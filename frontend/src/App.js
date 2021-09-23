@@ -33,7 +33,7 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-          <Route exact path="/userscreen" component={() =><UserScreen/>}/>
+           <Route exact path="/userscreen" component={() =><UserScreen/>}/>
          
         <div>
         <Navbar/> 
