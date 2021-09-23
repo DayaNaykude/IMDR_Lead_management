@@ -1,18 +1,25 @@
 const express = require("express");
 const { protect, admin } = require("../middleware/authMiddleware");
 const {
-  registerUser,
-  loginUser,
-  forgotPassword,
-  resetPassword,
   getUserProfile,
+  getUsers,
+  getUserById,
+  deleteUser,
+  updateUser,
+  updateUserProfile,
 } = require("../controllers/userController");
 const router = express.Router();
 
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
-router.route("/forgotpassword").post(forgotPassword);
-router.route("/resetpassword/:resetToken").put(resetPassword);
-router.route("/home").get(protect, getUserProfile);
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
+
+router.route("/").get(protect, admin, getUsers);
+router
+  .route("/:id")
+  .delete(protect, admin, deleteUser)
+  .get(protect, admin, getUserById)
+  .put(protect, admin, updateUser);
 
 module.exports = router;
