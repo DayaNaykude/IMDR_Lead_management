@@ -28,19 +28,22 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-           <Route exact path="/userscreen" component={() =><UserListScreen/>}/>
-         
-        <div>
-        <Navbar/> 
-        <Route exact path="/" component={() => <HomeScreen />} /> 
-           <Route exact path="/"></Route>
-          
-         
-           <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
-           <Route exact path="/Dashboard" component={() => <DashboardScreen />} />
-           <Route exact path="/Help" component={() => <HelpScreen />} /> 
-           <Route exact path="/Settings" component={() => <SettingScreen/>} />
-          </div>
+          <Route exact path="/users" component={() => <UserListScreen />} />
+
+          <>
+            <Navbar />
+            <Route exact path="/" component={() => <HomeScreen />} />
+            <Route exact path="/"></Route>
+
+            <Route exact path="/Tasks" component={() => <TasksScreen />} />
+            <Route
+              exact
+              path="/Dashboard"
+              component={() => <DashboardScreen />}
+            />
+            <Route exact path="/Help" component={() => <HelpScreen />} />
+            <Route exact path="/Settings" component={() => <SettingScreen />} />
+          </>
         </Switch>
       </Router>
     </div>
