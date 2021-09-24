@@ -192,10 +192,10 @@ exports.getUserById = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Private/Admin
 exports.updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findOne({ email: req.params.id });
 
   if (user) {
-    user.name = req.body.name || user.name;
+    user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
     user.isAdmin = req.body.isAdmin;
 
@@ -203,7 +203,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
 
     res.json({
       _id: updatedUser._id,
-      name: updatedUser.name,
+      name: updatedUser.username,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
     });

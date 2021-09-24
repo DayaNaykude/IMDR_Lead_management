@@ -2,7 +2,7 @@ import React from "react";
 import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
 import axios from "axios";
-import { useHistory, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ResetPasswordScreen = ({ match }) => {
   const paperStyle = {
