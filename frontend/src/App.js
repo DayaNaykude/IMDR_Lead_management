@@ -35,7 +35,7 @@ const App = () => {
         <Navbar/> 
         <Route exact path="/" component={() => <HomeScreen />} /> 
            <Route exact path="/"></Route>
-           <Route exact path="/userscreen" component={() =><UserListScreen/>}/>
+           <Route exact path="/users" component={() =><UserListScreen/>}/>
            <Route exact path="/about" component={() =><AboutScreen/>}/>
          
            <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
