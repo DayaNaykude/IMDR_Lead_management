@@ -33,7 +33,13 @@ export const UserListScreen = () => {
       flexGrow: 1,
       letterSpacing: "0.175em",
       fontSize: "140%",
+  
     },
+    tableStyle:{
+      marginTop:400,
+      width:"200px",
+      height:"100px",
+    }
   }));
 
   const classes = useStyles();
@@ -146,6 +152,7 @@ export const UserListScreen = () => {
   }, [history]);
 
   const columns = [
+    
     {
       title: "User Name",
       field: "name",
@@ -172,7 +179,9 @@ export const UserListScreen = () => {
         1: "Yes",
         2: "No",
       },
+      
     },
+    
   ];
 
   return (
@@ -195,8 +204,9 @@ export const UserListScreen = () => {
           </Typography>
         </Toolbar>
       </AppBar>
+      
       <div>
-        <MaterialTable
+        <MaterialTable  classes={classes.tableStyle}
           data={users.map((user) => ({
             name: user.username,
             email: user.email,

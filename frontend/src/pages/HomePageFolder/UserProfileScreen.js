@@ -45,7 +45,7 @@ const saveStyle = {
     width:300,
   }
 
-const AboutScreen = () => {
+const UserProfileScreen = () => {
  
  
    
@@ -139,7 +139,7 @@ const AboutScreen = () => {
               variant="contained"
              style={editStyle}
           >
-             Update
+            EDIT
             </Button>
 
             <Button
@@ -148,7 +148,7 @@ const AboutScreen = () => {
               variant="contained"
               style={saveStyle}
             >
-             Save
+            SAVE
             </Button>
 
   
@@ -159,4 +159,4 @@ const AboutScreen = () => {
     );
   };
   
-  export default AboutScreen;
+  export default UserProfileScreen;

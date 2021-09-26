@@ -3,25 +3,22 @@ import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
 import { useHistory} from "react-router-dom";
 import axios from "axios";
+import IconButton from '@mui/material/IconButton';
+import KeyboardBackspaceSharpIcon from '@mui/icons-material/KeyboardBackspaceSharp';
 
 const ForgotPasswordScreen = () => {
   let history = useHistory();
   const paperstyle = {
-    padding: 40,
+    padding: 50,
     height: "40vh",
-    width: 350,
+    width: 400,
     margin: "40px auto",
   };
-  const backStyle={
-    padding:"0px",
-    margin:"0px",
-    backgroundColor:"#4ab5da",
-
-  };
  
-  const textstyle = { margin: "5px 0" };
-  const headerStyle = { margin: "20px 0", color: "red" };
-  const btnstyle = { margin: "5px 0" };
+ 
+  const textstyle = { marginTop: "30px" };
+  const headerStyle = { margin: "40px 0", color: "red" };
+  const btnstyle ={ marginTop:"55px" };
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -60,16 +57,17 @@ const ForgotPasswordScreen = () => {
   return (
     <Grid>
       <Paper elevation={10} style={paperstyle}>
-      <Button
-              type="submit"
+      <IconButton aria-label="Back to login" 
+             
               color="primary"
               variant="contained"
-             style={backStyle}
-             onClick={() => {
+         
+              onClick={() => {
               history.push("/login");}}
-          >
-             Back
-            </Button>
+              
+         > 
+           <KeyboardBackspaceSharpIcon/>
+           </IconButton>
 
         <Grid align="center">
           <h2 style={headerStyle}>Forgot Password</h2>

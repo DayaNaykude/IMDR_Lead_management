@@ -10,7 +10,7 @@ import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
-import AboutScreen from "./pages/HomePageFolder/AboutScreen";
+import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 
 const App = () => {
   return (
@@ -29,14 +29,14 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-           
+           <Route exact path="/users" component={() =><UserListScreen/>}/>
+           <Route exact path="/profile" component={() =><UserProfileScreen/>}/>
          
         <div>
         <Navbar/> 
         <Route exact path="/" component={() => <HomeScreen />} /> 
            <Route exact path="/"></Route>
-           <Route exact path="/users" component={() =><UserListScreen/>}/>
-           <Route exact path="/about" component={() =><AboutScreen/>}/>
+           
          
            <Route exact path="/Tasks" component={() => <TasksScreen />} /> 
            <Route exact path="/Dashboard" component={() => <DashboardScreen />} />

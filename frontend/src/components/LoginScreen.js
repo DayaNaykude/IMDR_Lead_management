@@ -11,8 +11,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
-//import FormControlLabel from '@material-ui/core/FormControlLabel';
-//import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
@@ -26,9 +24,9 @@ const LoginScreen = ({ handleChange }) => {
     backgroundColor: "",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
-  const btnstyle = { margin: "8px 0" };
+  const btnstyle = { marginTop: "40px" };
   const textstyle = { margin: "8px 0" };
-  const linkStyle = { margin: "8px 0", cursor: "pointer" };
+  const linkStyle = { marginTop: "55px", cursor: "pointer" };
   const initialValues = {
     email: "",
     password: "",
@@ -145,7 +143,7 @@ const LoginScreen = ({ handleChange }) => {
               </Form>
             )}
           </Formik>
-          <Typography>
+          <Typography style={linkStyle}>
             <Link
               to="/forgotpassword"
               onClick={() => {
@@ -156,11 +154,11 @@ const LoginScreen = ({ handleChange }) => {
             </Link>
           </Typography>
 
-          <Typography style={linkStyle}>
+          <Typography>
             Don't have an account?
             <Link
               to="/register"
-              style={linkStyle}
+             
               onClick={() => handleChange("event", 1)}
             >
               Sign Up

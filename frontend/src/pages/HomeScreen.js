@@ -43,7 +43,6 @@ const btnStyle = {
 };
 const Home = () => {
   let history = useHistory();
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState("");
 
@@ -99,7 +98,7 @@ const Home = () => {
          fontSize="large"
          startIcon={<PersonIcon fontSize="large" />}
          onClick={() => {
-           history.push("/about");
+           history.push("/profile");
          }}
          >
           MY PROFILE
