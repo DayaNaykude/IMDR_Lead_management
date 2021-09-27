@@ -16,9 +16,9 @@ const ForgotPasswordScreen = () => {
   };
  
  
-  const textstyle = { marginTop: "30px" };
-  const headerStyle = { margin: "40px 0", color: "red" };
-  const btnstyle ={ marginTop:"55px" };
+  const textstyle = { marginTop: "20px" };
+  const headerStyle = { margin: "20px 0", color: "red" };
+  const btnstyle ={ marginTop:"40px" };
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
