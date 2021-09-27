@@ -29,8 +29,8 @@ const about = {
   color: "white",
   fontSize: "20px",
   padding: "20px",
-  marginLeft: "400px",
-  marginTop: "20px",
+  marginLeft: "350px",
+  marginTop: "250px",
 };
 const btnStyle = {
   backgroundColor: "#11a6da",
@@ -38,8 +38,8 @@ const btnStyle = {
   width: "200px",
   fontSize: "20px",
   padding: "20px",
-  marginLeft: "450px",
-  marginTop: "25px",
+  marginLeft: "380px",
+  marginTop: "250px",
 };
 const Home = () => {
   let history = useHistory();

@@ -1,5 +1,8 @@
 import React from "react";
 import PersonIcon from "@material-ui/icons/Person";
+import IconButton from '@mui/material/IconButton';
+import KeyboardBackspaceSharpIcon from '@mui/icons-material/KeyboardBackspaceSharp';
+import { useHistory} from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -10,7 +13,7 @@ import {
 
 const paperStyle = {
   padding: 20,
-  height: "80vh",
+  height: "85vh",
   width: 760,
   margin:"10px auto",
   
@@ -21,7 +24,7 @@ const headerStyle = { margin: 0 };
 const textstyle = { margin: "10px 0",textSize:"20px" };
 
 const editStyle = { 
-  backgroundColor:"#bb38e0",
+  backgroundColor:"#26d6ca",
   color: 'white',
   fontSize:"20px",
   padding: "10px 10px 10px 10px",
@@ -32,7 +35,7 @@ const editStyle = {
 };
 
 const saveStyle = { 
-  backgroundColor:"#bb38e0",
+  backgroundColor:"#26d6ca",
   color: 'white',
   width:"150px",
   fontSize:"20px",
@@ -46,6 +49,7 @@ const saveStyle = {
   }
 
 const UserProfileScreen = () => {
+  let history = useHistory();
  
  
    
@@ -53,6 +57,18 @@ const UserProfileScreen = () => {
       
       <Grid>
         <Paper elevation={20} style={paperStyle}>
+        <IconButton aria-label="Back to home page" 
+             
+             color="primary"
+             variant="contained"
+        
+             onClick={() => {
+             history.push("/");}}
+             
+        > 
+          <KeyboardBackspaceSharpIcon/>
+          </IconButton>
+
           <Grid align="center">
             <Avatar style={avatarstyle}>
               <PersonIcon />
@@ -103,7 +119,8 @@ const UserProfileScreen = () => {
                     variant="outlined"
                     label="Birthday date"
                     type="date"
-                    style={birthStyle}
+                    style={textstyle}
+                   // style={birthStyle}
                     defaultValue="2017-05-24"
                     InputLabelProps={{
                       shrink: true,

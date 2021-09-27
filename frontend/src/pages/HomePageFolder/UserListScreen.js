@@ -8,6 +8,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
+import Box from '@material-ui/core/Box';
+
 import { alpha } from "@material-ui/core/styles";
 
 const backStyle = {
@@ -17,6 +19,11 @@ const backStyle = {
   marginRight: "",
   backgroundColor: "#4ab5da",
 };
+const boxStyle={
+  marginTop:"50px",
+  marginLeft:"20px",
+  marginRight:"20px",
+}
 
 export const UserListScreen = () => {
   const useStyles = makeStyles((theme) => ({
@@ -206,6 +213,7 @@ export const UserListScreen = () => {
       </AppBar>
       
       <div>
+        <Box style={boxStyle}>
         <MaterialTable  classes={classes.tableStyle}
           data={users.map((user) => ({
             name: user.username,
@@ -257,6 +265,7 @@ export const UserListScreen = () => {
             headerStyle: { background: "#9c66e2", fontStyle: "bold" },
           }}
         />
+        </Box>
       </div>
     </>
   );
