@@ -129,15 +129,14 @@ const Navbar = () => {
             Hello, {user.username}
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
-          <IconButton aria-label="logout" 
-             
-             color="inherit"
-              variant="contained"
-         
-              onClick={logoutHandler}>
-
-           <PowerSettingsNewIcon/>
-           </IconButton>
+          <IconButton
+            aria-label="logout"
+            color="inherit"
+            variant="contained"
+            onClick={logoutHandler}
+          >
+            <PowerSettingsNewIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer anchor={"left"} open={open} onClose={toggleSidebar()}>
