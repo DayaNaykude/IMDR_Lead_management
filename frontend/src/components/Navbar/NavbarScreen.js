@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -15,48 +14,17 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
-
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import Sidebar from "./SidebarScreen";
 
+// backend imports
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../actions/userActions";
+
 const Navbar = () => {
   const btnStyle = { marginLeft: "" };
+
   let history = useHistory();
-
-  const [error, setError] = useState("");
-  const [user, setUser] = useState("");
-
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      history.push("/login");
-    }
-
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.get("/api/auth/home", config);
-        setUser(data);
-        console.log(data);
-      } catch (error) {
-        localStorage.removeItem("authToken");
-        setError("You are not authorized please login");
-      }
-    };
-
-    fetchData();
-  }, [history]);
-
-  const logoutHandler = () => {
-    localStorage.removeItem("authToken");
-    history.push("/login");
-  };
-
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -108,10 +76,30 @@ const Navbar = () => {
       </List>
     </div>
   );
-  return error ? (
-    <span className="error-message">{error}</span>
-  ) : (
+
+  // **************** Backend Stuff
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  const logoutHandler = () => {
+    if (window.confirm("Are you sure ?")) {
+      dispatch(logout());
+    }
+  };
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
+  }, [history, userInfo]);
+
+  return (
     <div className={classes.root}>
+      {error && <span className="error-message">{error}</span>}
+      {loading && <h3>Loading...</h3>}
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -123,11 +111,11 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          {/* <Typography variant="h6" className={classes.title}>
             IMDR
-          </Typography>
+          </Typography> */}
           <Typography variant="h6" className={classes.title}>
-            Hello, {user.username}
+            {userInfo ? userInfo.username : "IMDR"}
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
           <Button

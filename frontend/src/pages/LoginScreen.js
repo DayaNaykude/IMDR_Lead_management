@@ -1,7 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
-
 import {
   Avatar,
   Button,
@@ -15,6 +12,11 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
 
+// backend imports
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userActions";
+
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
     padding: 20,
@@ -27,7 +29,8 @@ const LoginScreen = ({ handleChange }) => {
   const btnstyle = { marginTop: "40px" };
   const textstyle = { margin: "8px 0" };
   const linkStyle = { marginTop: "55px", cursor: "pointer" };
-  const linkstyle={marginTop:"55px", }
+  const linkstyle = { marginTop: "55px" };
+
   const initialValues = {
     email: "",
     password: "",
@@ -37,53 +40,34 @@ const LoginScreen = ({ handleChange }) => {
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Please enter valid email"),
   });
+
   const onSubmit = (values, props) => {
     console.log(values);
     props.setSubmitting(false);
     console.log(props);
   };
+
+  // **************** backend stuff
+
   let history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
 
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
+    if (userInfo) {
       history.push("/");
     }
-  }, [history]);
+  }, [history, userInfo]);
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.post(
-        "/api/auth/login",
-        {
-          email,
-          password,
-        },
-        config
-      );
-
-      localStorage.setItem("authToken", data.token);
-      history.push("/");
-    } catch (error) {
-      setError(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      setTimeout(() => {
-        setError("");
-      }, 5000);
-    }
+    dispatch(login(email, password));
   };
 
   return (
@@ -97,6 +81,7 @@ const LoginScreen = ({ handleChange }) => {
             <h2>Sign In</h2>
           </Grid>
           {error && <span className="error-message">{error}</span>}
+          {loading && <h3>Loading...</h3>}
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
@@ -137,7 +122,6 @@ const LoginScreen = ({ handleChange }) => {
                   disabled={props.isSubmitting}
                   style={btnstyle}
                   fullWidth
-                  
                 >
                   Sign In
                 </Button>
@@ -157,11 +141,7 @@ const LoginScreen = ({ handleChange }) => {
 
           <Typography style={linkstyle}>
             Don't have an account?
-            <Link
-              to="/register"
-             
-              onClick={() => handleChange("event", 1)}
-            >
+            <Link to="/register" onClick={() => handleChange("event", 1)}>
               Sign Up
             </Link>
           </Typography>

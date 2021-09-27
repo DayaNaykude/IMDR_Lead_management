@@ -1,6 +1,6 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import MaterialTable from "material-table";
@@ -9,6 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
+
+// Backend Imports
+
+import { listUsers, deleteUser, updateUser } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const backStyle = {
   width: "10vh",
@@ -50,111 +55,6 @@ export const UserListScreen = () => {
 
   let history = useHistory();
 
-  const [error, setError] = useState("");
-  const [users, setUsers] = useState([]);
-  const [userInfo, setUserInfo] = useState("");
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState("true");
-
-  const updateHandler = async (email, isAdmin) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    };
-
-    try {
-      await axios.put(`/api/users/${email}`, { email, isAdmin }, config);
-      setUpdateSuccess(true);
-    } catch (error) {
-      setError(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      setTimeout(() => {
-        setError("");
-      }, 5000);
-    }
-  };
-
-  const deleteHandler = async (email) => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    };
-
-    try {
-      await axios.delete(`/api/users/${email}`, config);
-      setDeleteSuccess(true);
-    } catch (error) {
-      setError(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      setTimeout(() => {
-        setError("");
-      }, 5000);
-    }
-  };
-
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      history.push("/login");
-    }
-
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.get("/api/users", config);
-        setUsers(data);
-
-        setIsLoading(false);
-      } catch (error) {
-        localStorage.removeItem("authToken");
-        setError("You are not authorized !");
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [history, deleteSuccess, updateSuccess]);
-
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      history.push("/login");
-    }
-
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.get("/api/auth/home", config);
-        setUserInfo(data);
-      } catch (error) {
-        localStorage.removeItem("authToken");
-        setError("You are not authorized !");
-      }
-    };
-
-    fetchData();
-  }, [history]);
-
   const columns = [
     {
       title: "User Name",
@@ -187,9 +87,39 @@ export const UserListScreen = () => {
     },
   ];
 
-  return error ? (
-    <h2 className="error-message">{error}</h2>
-  ) : (
+  // ***************** Backend stuff
+
+  const dispatch = useDispatch();
+
+  const userList = useSelector((state) => state.userList);
+  const { loading, error, users } = userList;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
+
+  const userUpdate = useSelector((state) => state.userUpdate);
+  const { success: successUpdate } = userUpdate;
+
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers());
+    } else {
+      history.push("/login");
+    }
+  }, [dispatch, history, userInfo, successDelete, successUpdate]);
+
+  const updateHandler = async (email, isAdmin) => {
+    dispatch(updateUser({ email, isAdmin }));
+  };
+
+  const deleteHandler = async (email) => {
+    dispatch(deleteUser(email));
+  };
+
+  return (
     <>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
@@ -211,18 +141,23 @@ export const UserListScreen = () => {
       </AppBar>
 
       <div>
+        {error && <span className="error-message">{error}</span>}
+        {loading && <h3>Loading...</h3>}
         <Box style={boxStyle}>
           <MaterialTable
-            classes={classes.tableStyle}
-            data={users.map((user) => ({
-              name: user.username,
-              id: user._id,
-              email: user.email,
-              contact: user.contact ? `+91 ${user.contact}` : "NA",
-              admin: user.isAdmin ? "1" : "2",
-            }))}
+            className={classes.tableStyle}
+            data={
+              users &&
+              users.map((user) => ({
+                name: user.username,
+                id: user._id,
+                email: user.email,
+                contact: user.contact ? `+91 ${user.contact}` : "NA",
+                admin: user.isAdmin ? "1" : "2",
+              }))
+            }
             columns={columns}
-            isLoading={isLoading}
+            isLoading={loading}
             localization={{
               body: {
                 editRow: {
@@ -237,7 +172,7 @@ export const UserListScreen = () => {
               isEditable: (rowData) => rowData.email !== userInfo.email,
               onRowUpdate: (newRow, oldRow) =>
                 new Promise((resolve, reject) => {
-                  setUpdateSuccess(false);
+                  // setUpdateSuccess(false);
                   updateHandler(
                     oldRow.email,
                     oldRow.admin === "2" ? true : false
@@ -247,7 +182,6 @@ export const UserListScreen = () => {
                 }),
               onRowDelete: (selectedRow) =>
                 new Promise((resolve, reject) => {
-                  setDeleteSuccess(false);
                   deleteHandler(selectedRow.email.toString());
 
                   setTimeout(() => resolve(), 4000);
