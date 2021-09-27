@@ -27,6 +27,7 @@ const LoginScreen = ({ handleChange }) => {
   const btnstyle = { marginTop: "40px" };
   const textstyle = { margin: "8px 0" };
   const linkStyle = { marginTop: "55px", cursor: "pointer" };
+  const linkstyle={marginTop:"55px", }
   const initialValues = {
     email: "",
     password: "",
@@ -154,7 +155,7 @@ const LoginScreen = ({ handleChange }) => {
             </Link>
           </Typography>
 
-          <Typography>
+          <Typography style={linkstyle}>
             Don't have an account?
             <Link
               to="/register"

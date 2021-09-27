@@ -14,6 +14,7 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import CloseIcon from "@material-ui/icons/Close";
+import Button from "@material-ui/core/Button";
 
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import Sidebar from "./SidebarScreen";
@@ -111,7 +112,7 @@ const Navbar = () => {
     <span className="error-message">{error}</span>
   ) : (
     <div className={classes.root}>
-      <AppBar position="absolute">
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -129,14 +130,15 @@ const Navbar = () => {
             Hello, {user.username}
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
-          <IconButton
-            aria-label="logout"
+          <Button
             color="inherit"
-            variant="contained"
+            variant=""
+            fontSize="large"
+            startIcon={<PowerSettingsNewIcon fontSize="large" />}
             onClick={logoutHandler}
           >
-            <PowerSettingsNewIcon />
-          </IconButton>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer anchor={"left"} open={open} onClose={toggleSidebar()}>
