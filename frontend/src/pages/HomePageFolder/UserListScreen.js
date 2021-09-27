@@ -8,7 +8,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
-import { alpha } from "@material-ui/core/styles";
 
 const backStyle = {
   width: "10vh",
@@ -111,8 +110,8 @@ export const UserListScreen = () => {
 
         setIsLoading(false);
       } catch (error) {
-        // localStorage.removeItem("authToken");
-        setError("You are not authorized please login");
+        localStorage.removeItem("authToken");
+        setError("You are not authorized !");
         console.log(error);
       }
     };
@@ -138,7 +137,7 @@ export const UserListScreen = () => {
         setUserInfo(data);
       } catch (error) {
         localStorage.removeItem("authToken");
-        setError("You are not authorized please login");
+        setError("You are not authorized !");
       }
     };
 
@@ -153,21 +152,23 @@ export const UserListScreen = () => {
       editable: "never",
     },
     {
+      title: "User ID",
+      field: "id",
+      editable: "never",
+    },
+    {
       title: "Email",
       field: "email",
-      align: "",
       editable: "never",
     },
     {
       title: "Contact",
       field: "contact",
-      align: "",
       editable: "never",
     },
     {
       title: "Admin",
       field: "admin",
-      align: "",
       lookup: {
         1: "Yes",
         2: "No",
@@ -175,7 +176,9 @@ export const UserListScreen = () => {
     },
   ];
 
-  return (
+  return error ? (
+    <h2 className="error-message">{error}</h2>
+  ) : (
     <>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
@@ -199,6 +202,7 @@ export const UserListScreen = () => {
         <MaterialTable
           data={users.map((user) => ({
             name: user.username,
+            id: user._id,
             email: user.email,
             contact: user.contact ? `+91 ${user.contact}` : "NA",
             admin: user.isAdmin ? "1" : "2",

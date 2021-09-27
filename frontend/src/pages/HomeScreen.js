@@ -74,7 +74,9 @@ const Home = () => {
     fetchData();
   }, [history]);
 
-  return (
+  return error ? (
+    <h2 className="error-message">{error}</h2>
+  ) : (
     <div
       className="imageStyle"
       style={{ backgroundImage: 'url("images/IMDRPicture.png")' }}
