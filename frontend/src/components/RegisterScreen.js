@@ -16,17 +16,16 @@ import { useHistory, Link } from "react-router-dom";
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
     padding: 20,
-    height: "60vh",
+    height: "70vh",
     width: 340,
-    margin: "",
-
+    margin: "auto 0",
     backgroundColor: "",
   };
   const avatarstyle = { backgroundColor: "#26d6ca" };
   const headerStyle = { margin: 0 };
   const textstyle = { margin: "5px 0" };
-  const btnstyle = { margin: "5px 0" };
-  const linkStyle = { margin: "8px 0" };
+  const btnstyle = { marginTop: "40px" };
+  const linkStyle = { marginTop: "50px" };
   let history = useHistory();
 
   const [username, setUsername] = useState("");

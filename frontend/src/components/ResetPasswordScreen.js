@@ -6,14 +6,14 @@ import { Link, useParams } from "react-router-dom";
 
 const ResetPasswordScreen = ({ match }) => {
   const paperStyle = {
-    padding: 40,
-    height: "30vh",
-    width: 300,
+    padding: 50,
+    height: "40vh",
+    width: 400,
     margin: "40px auto",
-  };
+ };
   const textstyle = { margin: "5px 0" };
   const headerStyle = { margin: "10px 0", color: "Green" };
-  const btnstyle = { margin: "5px 0" };
+  const btnstyle = { marginTop: "50px" };
   // let history = useHistory();
   const { resetToken } = useParams();
 

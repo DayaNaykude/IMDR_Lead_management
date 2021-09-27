@@ -1,5 +1,8 @@
 import React from "react";
 import PersonIcon from "@material-ui/icons/Person";
+import IconButton from '@mui/material/IconButton';
+import KeyboardBackspaceSharpIcon from '@mui/icons-material/KeyboardBackspaceSharp';
+import { useHistory} from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -10,7 +13,7 @@ import {
 
 const paperStyle = {
   padding: 20,
-  height: "80vh",
+  height: "85vh",
   width: 760,
   margin:"10px auto",
   
@@ -21,30 +24,32 @@ const headerStyle = { margin: 0 };
 const textstyle = { margin: "10px 0",textSize:"20px" };
 
 const editStyle = { 
-  backgroundColor:"#bb38e0",
+  backgroundColor:"#26d6ca",
   color: 'white',
   fontSize:"20px",
   padding: "10px 10px 10px 10px",
   marginLeft:"20px", 
   marginTop:"20px",
-  width:"180px",
+  width:"150px",
   
 };
 
 const saveStyle = { 
-  backgroundColor:"#bb38e0",
+  backgroundColor:"#26d6ca",
   color: 'white',
-  width:"180px",
+  width:"150px",
   fontSize:"20px",
   padding: "10px 10px 10px 10px",
-  marginLeft:"280px", 
+  marginLeft:"410px",
+  marginRight:"20px", 
   marginTop:"25px",
   };
   const birthStyle={
     width:300,
   }
 
-const AboutScreen = () => {
+const UserProfileScreen = () => {
+  let history = useHistory();
  
  
    
@@ -52,6 +57,18 @@ const AboutScreen = () => {
       
       <Grid>
         <Paper elevation={20} style={paperStyle}>
+        <IconButton aria-label="Back to home page" 
+             
+             color="primary"
+             variant="contained"
+        
+             onClick={() => {
+             history.push("/");}}
+             
+        > 
+          <KeyboardBackspaceSharpIcon/>
+          </IconButton>
+
           <Grid align="center">
             <Avatar style={avatarstyle}>
               <PersonIcon />
@@ -102,7 +119,8 @@ const AboutScreen = () => {
                     variant="outlined"
                     label="Birthday date"
                     type="date"
-                    style={birthStyle}
+                    style={textstyle}
+                   // style={birthStyle}
                     defaultValue="2017-05-24"
                     InputLabelProps={{
                       shrink: true,
@@ -138,7 +156,7 @@ const AboutScreen = () => {
               variant="contained"
              style={editStyle}
           >
-             Edit
+            EDIT
             </Button>
 
             <Button
@@ -147,7 +165,7 @@ const AboutScreen = () => {
               variant="contained"
               style={saveStyle}
             >
-             Save
+            SAVE
             </Button>
 
   
@@ -158,4 +176,4 @@ const AboutScreen = () => {
     );
   };
   
-  export default AboutScreen;
+  export default UserProfileScreen;

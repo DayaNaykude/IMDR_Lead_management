@@ -16,6 +16,11 @@ const backStyle = {
   marginRight: "",
   backgroundColor: "#4ab5da",
 };
+const boxStyle = {
+  marginTop: "50px",
+  marginLeft: "20px",
+  marginRight: "20px",
+};
 
 export const UserListScreen = () => {
   const useStyles = makeStyles((theme) => ({
@@ -32,6 +37,11 @@ export const UserListScreen = () => {
       flexGrow: 1,
       letterSpacing: "0.175em",
       fontSize: "140%",
+    },
+    tableStyle: {
+      marginTop: 400,
+      width: "200px",
+      height: "100px",
     },
   }));
 
@@ -198,59 +208,63 @@ export const UserListScreen = () => {
           </Typography>
         </Toolbar>
       </AppBar>
+
       <div>
-        <MaterialTable
-          data={users.map((user) => ({
-            name: user.username,
-            id: user._id,
-            email: user.email,
-            contact: user.contact ? `+91 ${user.contact}` : "NA",
-            admin: user.isAdmin ? "1" : "2",
-          }))}
-          columns={columns}
-          isLoading={isLoading}
-          localization={{
-            body: {
-              editRow: {
-                deleteText: "Are you sure you want to delete this user ?",
+        <Box style={boxStyle}>
+          <MaterialTable
+            classes={classes.tableStyle}
+            data={users.map((user) => ({
+              name: user.username,
+              id: user._id,
+              email: user.email,
+              contact: user.contact ? `+91 ${user.contact}` : "NA",
+              admin: user.isAdmin ? "1" : "2",
+            }))}
+            columns={columns}
+            isLoading={isLoading}
+            localization={{
+              body: {
+                editRow: {
+                  deleteText: "Are you sure you want to delete this user ?",
+                },
+                deleteTooltip: "Delete User",
+                editTooltip: "Edit User",
               },
-              deleteTooltip: "Delete User",
-              editTooltip: "Edit User",
-            },
-          }}
-          editable={{
-            isDeletable: (rowData) => rowData.admin === "2",
-            isEditable: (rowData) => rowData.email !== userInfo.email,
-            onRowUpdate: (newRow, oldRow) =>
-              new Promise((resolve, reject) => {
-                setUpdateSuccess(false);
-                updateHandler(
-                  oldRow.email,
-                  oldRow.admin === "2" ? true : false
-                );
+            }}
+            editable={{
+              isDeletable: (rowData) => rowData.admin === "2",
+              isEditable: (rowData) => rowData.email !== userInfo.email,
+              onRowUpdate: (newRow, oldRow) =>
+                new Promise((resolve, reject) => {
+                  setUpdateSuccess(false);
+                  updateHandler(
+                    oldRow.email,
+                    oldRow.admin === "2" ? true : false
+                  );
 
-                setTimeout(() => resolve(), 4000);
-              }),
-            onRowDelete: (selectedRow) =>
-              new Promise((resolve, reject) => {
-                setDeleteSuccess(false);
-                deleteHandler(selectedRow.email.toString());
+                  setTimeout(() => resolve(), 4000);
+                }),
+              onRowDelete: (selectedRow) =>
+                new Promise((resolve, reject) => {
+                  setDeleteSuccess(false);
+                  deleteHandler(selectedRow.email.toString());
 
-                setTimeout(() => resolve(), 4000);
-              }),
-          }}
-          options={{
-            paging: false,
-            sorting: true,
-            search: false,
-            showTitle: false,
-            toolbar: false,
-            actionsColumnIndex: -1,
-            rowStyle: (data, index) =>
-              index % 2 === 0 ? { background: "#f5f5f5" } : null,
-            headerStyle: { background: "#9c66e2", fontStyle: "bold" },
-          }}
-        />
+                  setTimeout(() => resolve(), 4000);
+                }),
+            }}
+            options={{
+              paging: false,
+              sorting: true,
+              search: false,
+              showTitle: false,
+              toolbar: false,
+              actionsColumnIndex: -1,
+              rowStyle: (data, index) =>
+                index % 2 === 0 ? { background: "#f5f5f5" } : null,
+              headerStyle: { background: "#9c66e2", fontStyle: "bold" },
+            }}
+          />
+        </Box>
       </div>
     </>
   );

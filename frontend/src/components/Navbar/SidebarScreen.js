@@ -7,14 +7,15 @@ import HelpIcon from "@material-ui/icons/Help";
 import SettingsIcon from "@material-ui/icons/Settings";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
- 
+import Divider from "@material-ui/core/Divider";
 
 import { Link } from "react-router-dom";
+
 
 function Sidebar() {
   return (
     <div>
-      <ListItem button component={Link} to="/" title="Home">
+        <ListItem button component={Link} to="/" title="Home">
        <ListItemIcon>
           <HomeIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon> 
