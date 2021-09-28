@@ -22,7 +22,7 @@ function Sidebar() {
         <ListItemText primary="Home" />
       </ListItem>
 
-      <ListItem button component={Link} to="/Tasks" title="Tasks">
+      <ListItem button component={Link} to="/Task" title="TasksScreenUser">
        <ListItemIcon>
           <GroupWorkIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon> 

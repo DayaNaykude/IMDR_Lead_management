@@ -5,7 +5,7 @@ import ResetPasswordScreen from "./components/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import UserListScreen from "./pages/HomePageFolder/UserListScreen";
-import TasksScreenUser from "./pages/TaskPageFolder/TasksScreenUser";
+import TasksScreenUser from "./pages/TasksScreenUser";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";

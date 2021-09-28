@@ -23,7 +23,7 @@ const boxStyle={
   marginTop:"50px",
   marginLeft:"20px",
   marginRight:"20px",
-}
+};
 
 export const UserListScreen = () => {
   const useStyles = makeStyles((theme) => ({

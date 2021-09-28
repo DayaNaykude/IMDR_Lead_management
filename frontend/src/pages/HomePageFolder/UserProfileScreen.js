@@ -13,8 +13,8 @@ import {
 
 const paperStyle = {
   padding: 20,
-  height: "90vh",
-  width: 760,
+  maxheight: "90vh",
+  maxWidth: 760,
   margin:"10px auto",
   
   backgroundColor:"",

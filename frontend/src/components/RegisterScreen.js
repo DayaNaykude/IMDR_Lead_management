@@ -100,11 +100,12 @@ const RegisterScreen = ({ handleChange }) => {
         <form onSubmit={registerHandler}>
           <TextField
             label="Your Name"
+           
             style={textstyle}
             placeholder="Enter Your Name"
             fullWidth
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            required onChange={(e) => setUsername(e.target.value)}
           />
           {/* <TextField label="Last Name" style={textstyle} placeholder="Enter Last Name" fullWidth/> */}
           <TextField
@@ -113,9 +114,10 @@ const RegisterScreen = ({ handleChange }) => {
             type="email"
             style={textstyle}
             fullWidth
-            required
+           
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            required onChange={(e) => setEmail(e.target.value)}
+
           />
           <TextField
             label="Password"
@@ -123,9 +125,9 @@ const RegisterScreen = ({ handleChange }) => {
             type="password"
             style={textstyle}
             fullWidth
-            required
+           
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            required onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             label="Confirm Password"
@@ -133,9 +135,9 @@ const RegisterScreen = ({ handleChange }) => {
             type="password"
             style={textstyle}
             fullWidth
-            required
+            
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            required onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <Button
@@ -144,11 +146,12 @@ const RegisterScreen = ({ handleChange }) => {
             variant="contained"
             style={btnstyle}
             fullWidth
+           
             onClick={registerHandler}
           >
             Sign Up
           </Button>
-
+          
           <Typography style={linkStyle}>
             Already have an account ?
             <Link to="/login" onClick={() => handleChange("event", 0)}>
