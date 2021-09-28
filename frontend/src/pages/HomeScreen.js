@@ -3,26 +3,12 @@ import Button from "@material-ui/core/Button";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import Grid from "@material-ui/core/Grid";
-
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import './home.css';
+import "./home.css";
 
-
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  height: 720,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+// backend imports
+import { useSelector } from "react-redux";
 
 const about = {
   backgroundColor: "#11a6da",
@@ -43,41 +29,24 @@ const btnStyle = {
 };
 const Home = () => {
   let history = useHistory();
-  const [error, setError] = useState("");
-  const [user, setUser] = useState("");
+
+  // *************** Backend Stuff
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
 
   useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
+    if (!userInfo) {
       history.push("/login");
     }
-
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      };
-
-      try {
-        const { data } = await axios.get("/api/auth/home", config);
-        setUser(data);
-      } catch (error) {
-        localStorage.removeItem("authToken");
-        setError("You are not authorized please login");
-      }
-    };
-
-    fetchData();
-  }, [history]);
+  }, [history, userInfo]);
 
   return (
-    <div
-      className="imageStyle"
-      style={{ backgroundImage: 'url("images/IMDRPicture.png")' }}
-    >
+    <div>
+      {error && <span className="error-message">{error}</span>}
+      {loading && <h3>Loading...</h3>}
       <Grid>
-        {user && user.isAdmin && (
+        {userInfo && userInfo.isAdmin && (
           <Button
             type="submit"
             style={btnStyle}
@@ -92,18 +61,17 @@ const Home = () => {
           </Button>
         )}
         <Button
-         type="submit"
-         style={about}
-         variant="contained"
-         fontSize="large"
-         startIcon={<PersonIcon fontSize="large" />}
-         onClick={() => {
-           history.push("/profile");
-         }}
-         >
+          type="submit"
+          style={about}
+          variant="contained"
+          fontSize="large"
+          startIcon={<PersonIcon fontSize="large" />}
+          onClick={() => {
+            history.push("/profile");
+          }}
+        >
           MY PROFILE
         </Button>
-        
       </Grid>
     </div>
   );

@@ -5,14 +5,30 @@ const crypto = require("crypto");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error("User with this email already exists");
+  }
+
   try {
     const user = await User.create({
       username,
       email,
       password,
     });
+    res.status(200);
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: user.getSignedJwtToken(),
+    });
 
-    sendToken(user, 200, res);
+    // sendToken(user, 200, res);
   } catch (error) {
     next(error);
   }
@@ -41,8 +57,15 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
       res.status(401);
       throw new Error("Invalid credentials !");
     }
-
-    sendToken(user, 201, res);
+    res.status(201);
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: user.getSignedJwtToken(),
+    });
+    // sendToken(user, 201, res);
   } catch (error) {
     res.status(500);
     throw new Error(error.message);

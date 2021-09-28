@@ -1,7 +1,7 @@
 import React from "react";
 import SignInOutContainer from "./containers";
-import ForgotPasswordScreen from "./components/ForgotPasswordScreen";
-import ResetPasswordScreen from "./components/ResetPasswordScreen";
+import ForgotPasswordScreen from "./pages/ForgotPasswordScreen";
+import ResetPasswordScreen from "./pages/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import UserListScreen from "./pages/HomePageFolder/UserListScreen";
@@ -11,7 +11,6 @@ import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
-
 
 const App = () => {
   return (
@@ -30,20 +29,26 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-           <Route exact path="/users" component={() =><UserListScreen/>}/>
-           <Route exact path="/profile" component={() =><UserProfileScreen/>}/>
-           
-        <div>
-        <Navbar/> 
-        <Route exact path="/" component={() => <HomeScreen />} /> 
-           <Route exact path="/"></Route>
-           
-         
-           
-          <Route exact path="/Task" component={() => <TasksScreenUser />} /> 
-           <Route exact path="/Dashboard" component={() => <DashboardScreen />} />
-           <Route exact path="/Help" component={() => <HelpScreen />} /> 
-           <Route exact path="/Settings" component={() => <SettingScreen/>} />
+          <Route exact path="/users" component={() => <UserListScreen />} />
+          <Route
+            exact
+            path="/profile"
+            component={() => <UserProfileScreen />}
+          />
+
+          <div>
+            <Navbar />
+            <Route exact path="/" component={() => <HomeScreen />} />
+            <Route exact path="/"></Route>
+
+            <Route exact path="/Task" component={() => <TasksScreenUser />} />
+            <Route
+              exact
+              path="/Dashboard"
+              component={() => <DashboardScreen />}
+            />
+            <Route exact path="/Help" component={() => <HelpScreen />} />
+            <Route exact path="/Settings" component={() => <SettingScreen />} />
           </div>
         </Switch>
       </Router>
