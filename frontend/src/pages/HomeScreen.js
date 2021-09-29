@@ -1,23 +1,16 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import PeopleIcon from "@material-ui/icons/People";
-import PersonIcon from "@material-ui/icons/Person";
+
 import Grid from "@material-ui/core/Grid";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import "./home.css";
+
 
 // backend imports
 import { useSelector } from "react-redux";
 
-const about = {
-  backgroundColor: "#11a6da",
-  color: "white",
-  fontSize: "20px",
-  padding: "20px",
-  marginLeft: "350px",
-  marginTop: "250px",
-};
+
 const btnStyle = {
   backgroundColor: "#11a6da",
   color: "white",
@@ -46,7 +39,7 @@ const Home = () => {
       {error && <span className="error-message">{error}</span>}
       {loading && <h3>Loading...</h3>}
       <Grid>
-        {userInfo && userInfo.isAdmin && (
+        {/* {userInfo && userInfo.isAdmin && (
           <Button
             type="submit"
             style={btnStyle}
@@ -59,20 +52,8 @@ const Home = () => {
           >
             USERS
           </Button>
-        )}
-        <Button
-          type="submit"
-          style={about}
-          variant="contained"
-          fontSize="large"
-          startIcon={<PersonIcon fontSize="large" />}
-          onClick={() => {
-            history.push("/profile");
-          }}
-        >
-          MY PROFILE
-        </Button>
-      </Grid>
+        )} */}
+             </Grid>
     </div>
   );
 };

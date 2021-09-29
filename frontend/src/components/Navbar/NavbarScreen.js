@@ -16,6 +16,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import Sidebar from "./SidebarScreen";
+import PersonIcon from "@material-ui/icons/Person";
 
 // backend imports
 import { useDispatch, useSelector } from "react-redux";
@@ -46,6 +47,14 @@ const Navbar = () => {
     closeButton: {
       display: "block",
       textAlign: "end",
+    },
+    about : {
+      backgroundColor: "#11a6da",
+      color: "white",
+      fontSize: "20px",
+      padding: "20px",
+      marginLeft: "350px",
+      marginTop: "250px",
     },
   }));
 
@@ -119,8 +128,19 @@ const Navbar = () => {
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
           <Button
+          type="submit"
+          color="inherit"
+          fontSize="large"
+          startIcon={<PersonIcon fontSize="large" />}
+          onClick={() => {
+            history.push("/profile");
+          }}
+        >
+          MY PROFILE
+        </Button>
+
+          <Button
             color="inherit"
-            variant=""
             fontSize="large"
             startIcon={<PowerSettingsNewIcon fontSize="large" />}
             onClick={logoutHandler}

@@ -8,9 +8,17 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import Divider from "@material-ui/core/Divider";
+import PeopleIcon from "@material-ui/icons/People";
 
 import { Link } from "react-router-dom";
-
+const Style={
+ marginTop:"630px",
+ backgroundColor:"#c5bfbf",
+};
+const SettingStyle={
+  marginTop:"2px",
+ backgroundColor:"#c5bfbf",
+};
 
 function Sidebar() {
   return (
@@ -35,16 +43,23 @@ function Sidebar() {
         </ListItemIcon> 
         <ListItemText primary="Dashboard" />
       </ListItem>
-      <ListItem button component={Link} to="/Help" title="Help">
+      <ListItem button component={Link} to="/users" title="Users">
+       <ListItemIcon>
+          <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+        </ListItemIcon> 
+        <ListItemText primary="Users List" />
+      </ListItem>
+      
+      <ListItem style={Style} button component={Link} to="/Help" title="Help">
       <ListItemIcon>
-          <HelpIcon style={{ fill: "purple" }} fontSize="large" />
+          <HelpIcon  fontSize="large" />
         </ListItemIcon> 
         <ListItemText primary="Help" />
       </ListItem>
 
-      <ListItem button component={Link} to="/Settings" title="Settings">
+      <ListItem style={SettingStyle} button component={Link} to="/Settings" title="Settings">
        <ListItemIcon>
-          <SettingsIcon style={{ fill: "purple" }} fontSize="large" />
+          <SettingsIcon fontSize="large" />
         </ListItemIcon> 
         <ListItemText primary="Settings" />
       </ListItem>

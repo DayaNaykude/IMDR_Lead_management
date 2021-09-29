@@ -7,19 +7,11 @@ import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
 
 const paperStyle = {
   padding: 20,
-<<<<<<< HEAD
-  maxheight: "90vh",
-  maxWidth: 760,
-  margin:"10px auto",
-  
-  backgroundColor:"",
-=======
   height: "90vh",
   width: 760,
   margin: "10px auto",
 
   backgroundColor: "",
->>>>>>> 43843c0dc2f15a8fed7a94a86aac43bd675f85b1
 };
 const avatarstyle = { backgroundColor: "#26d6ca" };
 const headerStyle = { margin: 0 };

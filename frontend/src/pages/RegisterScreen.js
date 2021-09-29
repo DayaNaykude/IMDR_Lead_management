@@ -78,9 +78,9 @@ const RegisterScreen = ({ handleChange }) => {
       setMessage("Passwords do not match");
       setTimeout(() => {
         setMessage(null);
-      }, 5000);
+      }, 5000); 
     } else {
-      dispatch(register(username, email, password));
+       dispatch(register(username, email, password));
     }
   };
 
