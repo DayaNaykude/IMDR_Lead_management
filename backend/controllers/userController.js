@@ -164,6 +164,8 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      contact: user.contact,
+      bio: user.bio,
       isAdmin: user.isAdmin,
     });
   } else {
@@ -226,7 +228,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
 
     res.json({
       _id: updatedUser._id,
-      name: updatedUser.username,
+      username: updatedUser.username,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
     });
@@ -243,19 +245,27 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.name = req.body.name || user.name;
+    user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
     if (req.body.password) {
       user.password = req.body.password;
+    }
+    if (req.body.contact) {
+      user.contact = req.body.contact;
+    }
+    if (req.body.bio) {
+      user.bio = req.body.bio;
     }
 
     const updatedUser = await user.save();
     res.json({
       _id: updatedUser._id,
-      name: updatedUser.name,
+      username: updatedUser.username,
       email: updatedUser.email,
+      contact: updatedUser.contact,
+      bio: updatedUser.bio,
       isAdmin: updatedUser.isAdmin,
-      token: generateToken(updatedUser._id),
+      token: updatedUser.getSignedJwtToken(),
     });
   } else {
     res.status(404);
