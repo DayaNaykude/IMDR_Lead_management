@@ -11,6 +11,7 @@ import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
+import AddContact from "./pages/TaskScreen/AddContactScreen";
 
 const App = () => {
   return (
@@ -34,6 +35,11 @@ const App = () => {
             exact
             path="/profile"
             component={() => <UserProfileScreen />}
+          />
+          <Route
+            exact
+            path="/add"
+            component={() => <AddContact />}
           />
 
           <div>

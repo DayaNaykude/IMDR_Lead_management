@@ -9,20 +9,29 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import Divider from "@material-ui/core/Divider";
 import PeopleIcon from "@material-ui/icons/People";
-
 import { Link } from "react-router-dom";
+
+
 const Style={
- marginTop:"630px",
+ marginTop:"150%",
  backgroundColor:"#c5bfbf",
+ 
 };
 const SettingStyle={
   marginTop:"2px",
  backgroundColor:"#c5bfbf",
-};
+ width:"auto",
 
+ 
+};
+const sidenav={
+  position:"static",
+  height:"10vh",
+};
 function Sidebar() {
   return (
-    <div>
+    <div style={sidenav}>
+      
         <ListItem button component={Link} to="/" title="Home">
        <ListItemIcon>
           <HomeIcon style={{ fill: "purple" }} fontSize="large" />
@@ -63,6 +72,7 @@ function Sidebar() {
         </ListItemIcon> 
         <ListItemText primary="Settings" />
       </ListItem>
+    
     </div>
   );
 }

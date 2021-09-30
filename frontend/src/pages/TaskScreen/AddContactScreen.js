@@ -1,9 +1,20 @@
 import React from "react";
-import PersonIcon from "@material-ui/icons/Person";
-import IconButton from "@mui/material/IconButton";
+
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import { useHistory } from "react-router-dom";
+
+import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+const backStyle = {
+  width: "10vh",
+  padding: "10px",
+  margin: "10px",
+  marginRight: "",
+  backgroundColor: "#4ab5da",
+};
 
 const paperStyle = {
   padding: 20,
@@ -16,7 +27,17 @@ const paperStyle = {
 const avatarstyle = { backgroundColor: "#26d6ca" };
 const headerStyle = { margin: 0 };
 const textstyle = { margin: "10px 0", textSize: "20px" };
+const appBar={
+  top: "auto",
+  bottom: 0,
+  textAlign: "center",
+};
 
+const title= {
+  flexGrow: 1,
+  letterSpacing: "0.175em",
+  fontSize: "140%",
+};
 const editStyle = {
   backgroundColor: "#26d6ca",
   color: "white",
@@ -37,33 +58,39 @@ const saveStyle = {
   marginRight: "0%",
   marginTop: "0%",
 };
-const birthStyle = {
-  width: 300,
-};
 
-const UserProfileScreen = () => {
+
+const AddContact = () => {
   let history = useHistory();
 
   return (
+    <>
+    <AppBar position="static" style={appBar}>
+        <Toolbar>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            style={backStyle}
+            onClick={() => {
+              history.push("/");
+            }}
+          >
+            Back
+          </Button>
+          <Typography variant="h6" style={title}>
+          Add Contact
+          </Typography>
+        </Toolbar>
+      </AppBar>
     <Grid>
       <Paper elevation={20} style={paperStyle}>
-        <IconButton
-          aria-label="Back to home page"
-          color="primary"
-          variant="contained"
-          onClick={() => {
-            history.push("/");
-          }}
-        >
-          <KeyboardBackspaceSharpIcon />
-        </IconButton>
-
-        <Grid align="center">
-          <Avatar style={avatarstyle}>
-            <PersonIcon />
+      {/*  <Grid align="center">
+        <Avatar style={avatarstyle}>
+            <AddCircleOutlineOutlinedIcon />
           </Avatar>
-          <h1 style={headerStyle}>User Profile</h1>
-        </Grid>
+          <h1 style={headerStyle}>Add Details</h1>
+        </Grid> */}
 
         <form>
           <TextField
@@ -151,7 +178,8 @@ const UserProfileScreen = () => {
         </form>
       </Paper>
     </Grid>
+    </>
   );
 };
 
-export default UserProfileScreen;
+export default AddContact;

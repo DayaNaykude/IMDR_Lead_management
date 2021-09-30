@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/userActions";
 
 const Navbar = () => {
-  const btnStyle = { marginLeft: "" };
+  
 
   let history = useHistory();
   const useStyles = makeStyles((theme) => ({
@@ -40,6 +40,7 @@ const Navbar = () => {
     },
     list: {
       width: 250,
+      
     },
     fullList: {
       width: "auto",
@@ -55,6 +56,10 @@ const Navbar = () => {
       padding: "20px",
       marginLeft: "350px",
       marginTop: "250px",
+    },
+    navStyle : {
+      maxWidth:2000,
+      maxHeight:300,
     },
   }));
 
@@ -110,7 +115,7 @@ const Navbar = () => {
       {error && <span className="error-message">{error}</span>}
       {loading && <h3>Loading...</h3>}
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.navStyle}>
           <IconButton
             edge="start"
             className={classes.menuButton}

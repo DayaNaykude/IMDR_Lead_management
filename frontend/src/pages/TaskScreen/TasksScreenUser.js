@@ -122,12 +122,12 @@ const TasksScreenUser = () => {
                             icon: 'edit',
                             tooltip: 'view details',
                             position: 'row',
-                            onClick: () => window.open('http://localhost:3000/profile')
+                            onClick: () =>  history.push("/profile"),
                         },
                         {
                             icon: () => <button style={btnstyle}>Add Contact</button>,
                             tooltip: "Add Contact",
-                            onClick: () => window.open('http://localhost:3000/profile'),
+                            onClick: () => history.push("/add"),
                             isFreeAction: true
                         },
                         {
@@ -139,7 +139,7 @@ const TasksScreenUser = () => {
                         {
                             icon: () => <button style={btnstyle}>Send Email</button>,
                             tooltip: "Send Email",
-                            onClick: () => window.open('http://localhost:3000/profile'),
+                            onClick: () => window.open("/profile"),
                             isFreeAction: false
 
                         }
