@@ -2,74 +2,100 @@ import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import HomeIcon from "@material-ui/icons/Home";
 import HelpIcon from "@material-ui/icons/Help";
 import SettingsIcon from "@material-ui/icons/Settings";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
-import Divider from "@material-ui/core/Divider";
 import PeopleIcon from "@material-ui/icons/People";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import { Divider } from "@material-ui/core";
+import { height, minWidth } from "@mui/system";
 
 
-const Style={
- marginTop:"150%",
- backgroundColor:"#c5bfbf",
- 
-};
-const SettingStyle={
-  marginTop:"2px",
- backgroundColor:"#c5bfbf",
- width:"auto",
 
- 
-};
-const sidenav={
-  position:"static",
-  height:"10vh",
-};
 function Sidebar() {
-  return (
-    <div style={sidenav}>
-      
-        <ListItem button component={Link} to="/" title="Home">
-       <ListItemIcon>
-          <HomeIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon> 
-        <ListItemText primary="Home" />
-      </ListItem>
+  // *************** Backend Stuff
+  const useStyles = makeStyles((theme) => ({
+    sidenav: {
+      position:"sticky",
+      maxHeight:100,
+    },
+    
 
-      <ListItem button component={Link} to="/Task" title="TasksScreenUser">
-       <ListItemIcon>
+    SettingStyle: {
+      marginTop:"2px",
+      background:"#c5bfbf",
+      width:"auto",
+    },
+
+    style: {
+      marginTop:"",
+      background:"#c5bfbf",
+ 
+    },
+    
+  }));
+
+  const classes = useStyles();
+
+  let history = useHistory();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
+  }, [history, userInfo]);
+
+  return (
+    <div className={classes.sidenav}>
+      <Divider/>
+      <ListItem button component={Link} to="/" title="TasksScreenUser">
+        <ListItemIcon>
           <GroupWorkIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon> 
+        </ListItemIcon>
         <ListItemText primary="Tasks" />
       </ListItem>
 
       <ListItem button component={Link} to="/Dashboard" title="Dashboard">
-       <ListItemIcon>
+        <ListItemIcon>
           <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon> 
+        </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItem>
-      <ListItem button component={Link} to="/users" title="Users">
-       <ListItemIcon>
-          <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon> 
-        <ListItemText primary="Users List" />
-      </ListItem>
-      
-      <ListItem style={Style} button component={Link} to="/Help" title="Help">
-      <ListItemIcon>
-          <HelpIcon  fontSize="large" />
-        </ListItemIcon> 
+      {userInfo && userInfo.isAdmin && (
+        <ListItem button component={Link} to="/users" title="Users">
+          <ListItemIcon>
+            <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+          </ListItemIcon>
+          <ListItemText primary="Users List" />
+        </ListItem>
+      )}
+    
+     <Divider style={{marginTop:"175%"}}/>
+
+      <ListItem className={classes.style} button component={Link} to="/Help" title="Help">
+        <ListItemIcon>
+          <HelpIcon fontSize="large" />
+        </ListItemIcon>
         <ListItemText primary="Help" />
       </ListItem>
 
-      <ListItem style={SettingStyle} button component={Link} to="/Settings" title="Settings">
-       <ListItemIcon>
+      <ListItem
+        className={classes.SettingStyle}
+        button
+        component={Link}
+        to="/Settings"
+        title="Settings"
+      >
+        <ListItemIcon>
           <SettingsIcon fontSize="large" />
-        </ListItemIcon> 
+        </ListItemIcon>
         <ListItemText primary="Settings" />
       </ListItem>
     

@@ -1,8 +1,7 @@
 import React from "react";
-
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import { useHistory } from "react-router-dom";
-
+import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
@@ -65,32 +64,26 @@ const AddContact = () => {
 
   return (
     <>
-    <AppBar position="static" style={appBar}>
-        <Toolbar>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            style={backStyle}
-            onClick={() => {
-              history.push("/");
-            }}
-          >
-            Back
-          </Button>
-          <Typography variant="h6" style={title}>
-          Add Contact
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    
     <Grid>
       <Paper elevation={20} style={paperStyle}>
-      {/*  <Grid align="center">
+        <IconButton
+          aria-label="Back to home page"
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            history.push("/login");
+          }}
+        >
+          <KeyboardBackspaceSharpIcon />
+        </IconButton>
+
+       <Grid align="center">
         <Avatar style={avatarstyle}>
             <AddCircleOutlineOutlinedIcon />
           </Avatar>
           <h1 style={headerStyle}>Add Details</h1>
-        </Grid> */}
+        </Grid>
 
         <form>
           <TextField

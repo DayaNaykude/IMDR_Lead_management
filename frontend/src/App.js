@@ -3,7 +3,6 @@ import SignInOutContainer from "./containers";
 import ForgotPasswordScreen from "./pages/ForgotPasswordScreen";
 import ResetPasswordScreen from "./pages/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomeScreen from "./pages/HomeScreen";
 import UserListScreen from "./pages/HomePageFolder/UserListScreen";
 import TasksScreenUser from "./pages/TaskScreen/TasksScreenUser";
 import HelpScreen from "./pages/HelpScreen";
@@ -44,10 +43,10 @@ const App = () => {
 
           <div>
             <Navbar />
-            <Route exact path="/" component={() => <HomeScreen />} />
+            <Route exact path="/" component={() => <TasksScreenUser />} />
             <Route exact path="/"></Route>
 
-            <Route exact path="/Task" component={() => <TasksScreenUser />} />
+            {/* <Route exact path="/Task" component={() => <TasksScreenUser />} /> */}
             <Route
               exact
               path="/Dashboard"

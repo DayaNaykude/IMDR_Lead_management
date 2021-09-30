@@ -5,6 +5,11 @@ import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSha
 import { useHistory } from "react-router-dom";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
 
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails, updateUserProfile } from "../../actions/userActions";
+import { USER_UPDATE_PROFILE_RESET } from "../../constants/userConstants";
+
 const paperStyle = {
   padding: 20,
   height: "90%",
@@ -13,9 +18,6 @@ const paperStyle = {
 
   backgroundColor: "",
 };
-const avatarstyle = { backgroundColor: "#26d6ca" };
-const headerStyle = { margin: 0 };
-const textstyle = { margin: "10px 0", textSize: "20px" };
 
 const editStyle = {
   backgroundColor: "#26d6ca",
@@ -37,12 +39,81 @@ const saveStyle = {
   marginRight: "0%",
   marginTop: "0%",
 };
-const birthStyle = {
-  width: 300,
-};
+
+// backend imports
 
 const UserProfileScreen = () => {
+
+  const avatarstyle = { backgroundColor: "#26d6ca" };
+  const headerStyle = { margin: 0 };
+  const textstyle = { margin: "10px 0", textSize: "20px" };
+
+
+  
+
   let history = useHistory();
+
+  //*********** Backend Stuff */
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [bio, setBio] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+
+  const dispatch = useDispatch();
+
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, error, user } = userDetails;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success } = userUpdateProfile;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      if (!user || !user.username || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+        dispatch(getUserDetails("profile"));
+      } else {
+        setUsername(user.username);
+        setEmail(user.email);
+        setContact(user.contact);
+        setBio(user.bio);
+      }
+    }
+  }, [dispatch, history, userInfo, user, success]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setPassword("");
+      setConfirmPassword("");
+      setMessage("Passwords do not match");
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } else {
+      setDisabled(true);
+      dispatch(
+        updateUserProfile({
+          id: user._id,
+          username,
+          email,
+          password,
+          contact,
+          bio,
+        })
+      );
+    }
+  };
 
   return (
     <Grid>
@@ -52,7 +123,7 @@ const UserProfileScreen = () => {
           color="primary"
           variant="contained"
           onClick={() => {
-            history.push("/");
+            history.push("/login");
           }}
         >
           <KeyboardBackspaceSharpIcon />
@@ -64,21 +135,30 @@ const UserProfileScreen = () => {
           </Avatar>
           <h1 style={headerStyle}>User Profile</h1>
         </Grid>
-
-        <form>
-          <TextField
-            label="Bio"
-            style={textstyle}
-            variant="outlined"
-            placeholder="Enter Your Bio"
-            fullWidth
-          />
+        {message && <span className="error-message">{message}</span>}
+        {error && <span className="error-message">{error}</span>}
+        {success && <span className="error-message">Profile Updated</span>}
+        {loading && <h3>Loading...</h3>}
+        <form onSubmit={submitHandler}>
           <TextField
             label="Your Full Name"
             variant="outlined"
             style={textstyle}
             placeholder="Enter Your Name"
             fullWidth
+            disabled={disabled}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            label="Bio"
+            style={textstyle}
+            variant="outlined"
+            placeholder="Enter Your Bio"
+            fullWidth
+            disabled={disabled}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
           />
 
           <TextField
@@ -88,7 +168,10 @@ const UserProfileScreen = () => {
             type="email"
             style={textstyle}
             fullWidth
+            disabled={disabled}
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             label="Phone Number"
@@ -97,6 +180,9 @@ const UserProfileScreen = () => {
             type="number"
             placeholder="Enter Your Phone number"
             fullWidth
+            disabled={disabled}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
           />
 
           <TextField
@@ -105,8 +191,9 @@ const UserProfileScreen = () => {
             label="Birthday date"
             type="date"
             style={textstyle}
+            disabled={disabled}
             // style={birthStyle}
-            defaultValue="2017-05-24"
+            defaultValue="1990-05-24"
             InputLabelProps={{
               shrink: true,
             }}
@@ -119,7 +206,8 @@ const UserProfileScreen = () => {
             type="password"
             style={textstyle}
             fullWidth
-            required
+            disabled={disabled}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             label="Confirm Password"
@@ -128,14 +216,18 @@ const UserProfileScreen = () => {
             type="password"
             style={textstyle}
             fullWidth
-            required
+            disabled={disabled}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <Button
-            type="submit"
             color="primary"
             variant="contained"
             style={editStyle}
+            onClick={(e) => {
+              setDisabled(false);
+              console.log(disabled);
+            }}
           >
             EDIT
           </Button>
@@ -144,9 +236,10 @@ const UserProfileScreen = () => {
             type="submit"
             color="primary"
             variant="contained"
+            disabled={disabled}
             style={saveStyle}
           >
-            SAVE
+            UPDATE
           </Button>
         </form>
       </Paper>

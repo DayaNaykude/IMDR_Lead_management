@@ -41,6 +41,7 @@ const Navbar = () => {
     list: {
       width: 250,
       
+      
     },
     fullList: {
       width: "auto",
@@ -59,7 +60,7 @@ const Navbar = () => {
     },
     navStyle : {
       maxWidth:2000,
-      maxHeight:300,
+      maxHeight:100,
     },
   }));
 
