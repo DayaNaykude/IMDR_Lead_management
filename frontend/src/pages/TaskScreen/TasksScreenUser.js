@@ -122,7 +122,7 @@ const TasksScreenUser = () => {
                             icon: 'edit',
                             tooltip: 'view details',
                             position: 'row',
-                            onClick: () =>  history.push("/profile"),
+                            onClick: () =>  history.push("/view"),
                         },
                         {
                             icon: () => <button style={btnstyle}>Add Contact</button>,

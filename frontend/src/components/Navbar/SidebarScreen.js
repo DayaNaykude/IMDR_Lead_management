@@ -21,8 +21,15 @@ function Sidebar() {
   // *************** Backend Stuff
   const useStyles = makeStyles((theme) => ({
     sidenav: {
-      position:"sticky",
-      maxHeight:100,
+      position:"fixed",
+     
+      overflowY:"none",
+    },
+    MuiBackdropRoot:{
+      overflowY:"none",
+    },
+    MuiDrawerPaper:{
+      overflowY:"none",
     },
     
 
@@ -33,7 +40,7 @@ function Sidebar() {
     },
 
     style: {
-      marginTop:"",
+      marginTop: "-30%",
       background:"#c5bfbf",
  
     },
@@ -55,21 +62,21 @@ function Sidebar() {
   return (
     <div className={classes.sidenav}>
       <Divider/>
-      <ListItem button component={Link} to="/" title="TasksScreenUser">
+      <ListItem button style={{minWidth:300}} component={Link} to="/" title="TasksScreenUser">
         <ListItemIcon>
           <GroupWorkIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon>
         <ListItemText primary="Tasks" />
       </ListItem>
 
-      <ListItem button component={Link} to="/Dashboard" title="Dashboard">
+      <ListItem button style={{minWidth:300}} component={Link} to="/Dashboard" title="Dashboard">
         <ListItemIcon>
           <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItem>
       {userInfo && userInfo.isAdmin && (
-        <ListItem button component={Link} to="/users" title="Users">
+        <ListItem button style={{minWidth:300}} component={Link} to="/users" title="Users">
           <ListItemIcon>
             <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
           </ListItemIcon>
@@ -79,7 +86,7 @@ function Sidebar() {
     
      <Divider style={{marginTop:"175%"}}/>
 
-      <ListItem className={classes.style} button component={Link} to="/Help" title="Help">
+      <ListItem className={classes.style} style={{minWidth:300}} button component={Link} to="/Help" title="Help">
         <ListItemIcon>
           <HelpIcon fontSize="large" />
         </ListItemIcon>
@@ -89,6 +96,7 @@ function Sidebar() {
       <ListItem
         className={classes.SettingStyle}
         button
+        style={{minWidth:300}}
         component={Link}
         to="/Settings"
         title="Settings"
