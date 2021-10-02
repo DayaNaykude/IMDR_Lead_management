@@ -21,10 +21,9 @@ import PersonIcon from "@material-ui/icons/Person";
 // backend imports
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/userActions";
+import { Alert } from "@mui/material";
 
 const Navbar = () => {
-  
-
   let history = useHistory();
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,8 +39,6 @@ const Navbar = () => {
     },
     list: {
       width: 300,
-      
-      
     },
     fullList: {
       width: "auto",
@@ -50,7 +47,7 @@ const Navbar = () => {
       display: "block",
       textAlign: "end",
     },
-    about : {
+    about: {
       backgroundColor: "#11a6da",
       color: "white",
       fontSize: "20px",
@@ -58,9 +55,9 @@ const Navbar = () => {
       marginLeft: "350px",
       marginTop: "250px",
     },
-    navStyle : {
-      maxWidth:2000,
-      maxHeight:100,
+    navStyle: {
+      maxWidth: 2000,
+      maxHeight: 100,
     },
   }));
 
@@ -113,8 +110,8 @@ const Navbar = () => {
 
   return (
     <div className={classes.root}>
-      {error && <span className="error-message">{error}</span>}
-      {loading && <h3>Loading...</h3>}
+      {error && <Alert severity="error">{error}</Alert>}
+      {loading && <Alert severity="info">Loading...</Alert>}
       <AppBar position="static">
         <Toolbar className={classes.navStyle}>
           <IconButton
@@ -134,16 +131,16 @@ const Navbar = () => {
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
           <Button
-          type="submit"
-          color="inherit"
-          fontSize="large"
-          startIcon={<PersonIcon fontSize="large" />}
-          onClick={() => {
-            history.push("/profile");
-          }}
-        >
-          MY PROFILE
-        </Button>
+            type="submit"
+            color="inherit"
+            fontSize="large"
+            startIcon={<PersonIcon fontSize="large" />}
+            onClick={() => {
+              history.push("/profile");
+            }}
+          >
+            MY PROFILE
+          </Button>
 
           <Button
             color="inherit"

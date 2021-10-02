@@ -14,44 +14,38 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 
-
-
-
 function Sidebar() {
   // *************** Backend Stuff
   const useStyles = makeStyles((theme) => ({
     sidenav: {
-      position:"fixed",
-     
-      overflowY:"none",
+      position: "fixed",
+
+      overflowY: "none",
     },
-    MuiBackdropRoot:{
-      overflowY:"none",
+    MuiBackdropRoot: {
+      overflowY: "none",
     },
-    MuiDrawerPaper:{
-      overflowY:"none",
+    MuiDrawerPaper: {
+      overflowY: "none",
     },
-    
 
     SettingStyle: {
-      marginTop:"2px",
-      background:"#c5bfbf",
-      width:"auto",
+      marginTop: "2px",
+      background: "#c5bfbf",
+      width: "auto",
     },
 
     style: {
       marginTop: "-30%",
-      background:"#c5bfbf",
- 
+      background: "#c5bfbf",
     },
-    
   }));
 
   const classes = useStyles();
 
   let history = useHistory();
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const { userInfo } = userLogin;
 
   useEffect(() => {
     if (!userInfo) {
@@ -61,32 +55,57 @@ function Sidebar() {
 
   return (
     <div className={classes.sidenav}>
-      <Divider/>
-      <ListItem button style={{minWidth:300}} component={Link} to="/" title="TasksScreenUser">
+      <Divider />
+      <ListItem
+        button
+        style={{ minWidth: 300 }}
+        component={Link}
+        to="/"
+        title="TasksScreenUser"
+      >
         <ListItemIcon>
           <GroupWorkIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon>
         <ListItemText primary="Tasks" />
       </ListItem>
 
-      <ListItem button style={{minWidth:300}} component={Link} to="/Dashboard" title="Dashboard">
+      <ListItem
+        button
+        style={{ minWidth: 300 }}
+        component={Link}
+        to="/Dashboard"
+        title="Dashboard"
+      >
         <ListItemIcon>
           <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItem>
       {userInfo && userInfo.isAdmin && (
-        <ListItem button style={{minWidth:300}} component={Link} to="/users" title="Users">
+        <ListItem
+          button
+          style={{ minWidth: 300 }}
+          component={Link}
+          to="/users"
+          title="Users"
+        >
           <ListItemIcon>
             <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
           </ListItemIcon>
           <ListItemText primary="Users List" />
         </ListItem>
       )}
-    
-     <Divider style={{marginTop:"175%"}}/>
 
-      <ListItem className={classes.style} style={{minWidth:300}} button component={Link} to="/Help" title="Help">
+      <Divider style={{ marginTop: "175%" }} />
+
+      <ListItem
+        className={classes.style}
+        style={{ minWidth: 300 }}
+        button
+        component={Link}
+        to="/Help"
+        title="Help"
+      >
         <ListItemIcon>
           <HelpIcon fontSize="large" />
         </ListItemIcon>
@@ -96,7 +115,7 @@ function Sidebar() {
       <ListItem
         className={classes.SettingStyle}
         button
-        style={{minWidth:300}}
+        style={{ minWidth: 300 }}
         component={Link}
         to="/Settings"
         title="Settings"
@@ -106,7 +125,6 @@ function Sidebar() {
         </ListItemIcon>
         <ListItemText primary="Settings" />
       </ListItem>
-    
     </div>
   );
 }

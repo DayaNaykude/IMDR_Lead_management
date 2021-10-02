@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail, message } = require("../utils/sendEmail");
 const crypto = require("crypto");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
@@ -93,22 +93,18 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
     // HTML Message
-    const message = `
-      <h1>You have requested a password reset</h1>
-      <p>You're receiving this e-mail because you requested a password reset for your user account at IMDR Lead Management.</p>
-      
-      
-      <a href=${resetUrl} clicktracking=off>Click Here To Reset Your Password</a>
-    `;
+    const resetPassMail = message(user.username, resetUrl);
 
     try {
-      await sendEmail({
-        to: user.email,
-        subject: "Password Reset Request",
-        text: message,
-      });
+      // await sendEmail({
+      //   to: user.email,
+      //   subject: "Password Reset Request",
+      //   text: resetPassMail,
+      // });
+      console.log(resetPassMail);
 
-      res.status(200).json({ success: true, data: "Email Sent" });
+      res.status(200);
+      res.json({ success: true, data: "Email Sent" });
     } catch (err) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;

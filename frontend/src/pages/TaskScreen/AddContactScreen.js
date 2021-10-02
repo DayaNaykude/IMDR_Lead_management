@@ -4,14 +4,14 @@ import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const paperStyle = {
   padding: 20,
@@ -24,7 +24,12 @@ const paperStyle = {
 const avatarstyle = { backgroundColor: "#26d6ca" };
 const headerStyle = { margin: 0 };
 const textstyle = { margin: "8px 0", textSize: "20px" };
-const Style = { margin: "8px 0", marginLeft: "15%", textSize: "20px", minWidth: 250 };
+const Style = {
+  margin: "8px 0",
+  marginLeft: "15%",
+  textSize: "20px",
+  minWidth: 250,
+};
 const listStyle = { margin: "8px 20px", width: 250 };
 
 const editStyle = {
@@ -48,21 +53,16 @@ const saveStyle = {
   marginTop: "0%",
 };
 
-
-
-
 const AddContact = () => {
-
-  const [category, setCategory] = React.useState('');
+  const [category, setCategory] = React.useState("");
   const handleChange = (event) => {
     setCategory(event.target.value);
-
   };
-  const [entrance, setEntrance] = React.useState('');
+  const [entrance, setEntrance] = React.useState("");
   const handleChangeExam = (event) => {
     setEntrance(event.target.value);
   };
-  const [source, setSource] = React.useState('');
+  const [source, setSource] = React.useState("");
   const handleChangeSource = (event) => {
     setSource(event.target.value);
   };
@@ -71,7 +71,6 @@ const AddContact = () => {
 
   return (
     <>
-
       <Grid>
         <Paper elevation={20} style={paperStyle}>
           <IconButton
@@ -89,10 +88,10 @@ const AddContact = () => {
             <Avatar style={avatarstyle}>
               <AddCircleOutlineOutlinedIcon />
             </Avatar>
-            <h1 style={headerStyle}>Add Details</h1>
+            <h1 style={headerStyle}>Add New Lead</h1>
           </Grid>
 
-          <form >
+          <form>
             <TextField
               label="Name"
               style={textstyle}
@@ -100,7 +99,6 @@ const AddContact = () => {
               variant="outlined"
               placeholder="Enter Student Name"
               fullWidth
-
             />
             <TextField
               id="date"
@@ -112,15 +110,33 @@ const AddContact = () => {
                 shrink: true,
               }}
             />
-            <FormControl style={{ margin: "0px 30px auto" }} component="fieldset">
+            <FormControl
+              style={{ margin: "0px 30px auto" }}
+              component="fieldset"
+            >
               <FormLabel component="legend">Gender</FormLabel>
-              <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                <FormControlLabel value="other" control={<Radio />} label="Other" />
+              <RadioGroup
+                row
+                aria-label="gender"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                />
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="other"
+                  control={<Radio />}
+                  label="Other"
+                />
               </RadioGroup>
             </FormControl>
-
 
             <TextField
               label="Email"
@@ -144,11 +160,11 @@ const AddContact = () => {
                 <MenuItem value="">
                   <em>Other</em>
                 </MenuItem>
-                <MenuItem value={'obc'}>OBC</MenuItem>
-                <MenuItem value={'general'}>General</MenuItem>
-                <MenuItem value={'sc'}>SC</MenuItem>
-                <MenuItem value={'st'}>ST</MenuItem>
-                <MenuItem value={'nt'}>NT</MenuItem>
+                <MenuItem value={"obc"}>OBC</MenuItem>
+                <MenuItem value={"general"}>General</MenuItem>
+                <MenuItem value={"sc"}>SC</MenuItem>
+                <MenuItem value={"st"}>ST</MenuItem>
+                <MenuItem value={"nt"}>NT</MenuItem>
               </Select>
             </FormControl>
 
@@ -165,13 +181,13 @@ const AddContact = () => {
                 <MenuItem value="">
                   <em>OTHER</em>
                 </MenuItem>
-                <MenuItem value={'cat'}>CAT</MenuItem>
-                <MenuItem value={'mat'}>MAT</MenuItem>
-                <MenuItem value={'cmat'}>C-MAT</MenuItem>
-                <MenuItem value={'xat'}>XAT</MenuItem>
-                <MenuItem value={'mhcet'}>MH-CET</MenuItem>
-                <MenuItem value={'xat'}>XAT</MenuItem>
-                <MenuItem value={'ATMA'}>ATMA</MenuItem>
+                <MenuItem value={"cat"}>CAT</MenuItem>
+                <MenuItem value={"mat"}>MAT</MenuItem>
+                <MenuItem value={"cmat"}>C-MAT</MenuItem>
+                <MenuItem value={"xat"}>XAT</MenuItem>
+                <MenuItem value={"mhcet"}>MH-CET</MenuItem>
+                <MenuItem value={"xat"}>XAT</MenuItem>
+                <MenuItem value={"ATMA"}>ATMA</MenuItem>
               </Select>
             </FormControl>
 
@@ -183,7 +199,8 @@ const AddContact = () => {
               placeholder="Enter number"
             />
 
-            <TextField style={listStyle}
+            <TextField
+              style={listStyle}
               label="Course"
               variant="outlined"
               placeholder="Enter Course"
@@ -198,10 +215,10 @@ const AddContact = () => {
               required
             />
             <TextField
-              label="College Name" style={listStyle}
+              label="College Name"
+              style={listStyle}
               variant="outlined"
               placeholder="Enter College Name"
-
             />
             <TextField
               label="City"
@@ -211,7 +228,8 @@ const AddContact = () => {
               style={Style}
             />
             <TextField
-              label="Pin Code" style={listStyle}
+              label="Pin Code"
+              style={listStyle}
               variant="outlined"
               type="number"
               placeholder="Enter pin code"
@@ -225,17 +243,15 @@ const AddContact = () => {
                 label="Source"
                 onChange={handleChangeSource}
               >
-                <MenuItem value="">
-                </MenuItem>
-                <MenuItem value={'Social Media'}>Social Media</MenuItem>
-                <MenuItem value={'Walk in'}>Walk In</MenuItem>
-                <MenuItem value={'Coaching Class'}>Coaching Class</MenuItem>
-                <MenuItem value={'Outdoor'}>Outdoor</MenuItem>
-                <MenuItem value={'Digital Fair'}>Digital Fair</MenuItem>
-                <MenuItem value={'Paraphernalia'}>Paraphernalia</MenuItem>
+                <MenuItem value=""></MenuItem>
+                <MenuItem value={"Social Media"}>Social Media</MenuItem>
+                <MenuItem value={"Walk in"}>Walk In</MenuItem>
+                <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
+                <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
+                <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
+                <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
               </Select>
             </FormControl>
-
 
             <Grid style={{ marginTop: 30 }}>
               <Button

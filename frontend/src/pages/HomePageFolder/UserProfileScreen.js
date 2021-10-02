@@ -4,6 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import { useHistory } from "react-router-dom";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
+import { Alert } from "@mui/material";
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,13 +44,9 @@ const saveStyle = {
 // backend imports
 
 const UserProfileScreen = () => {
-
   const avatarstyle = { backgroundColor: "#26d6ca" };
   const headerStyle = { margin: 0 };
   const textstyle = { margin: "10px 0", textSize: "20px" };
-
-
-  
 
   let history = useHistory();
 
@@ -69,14 +66,14 @@ const UserProfileScreen = () => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  // const userLogin = useSelector((state) => state.userLogin);
+  // const { userInfo } = userLogin;
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!user) {
       history.push("/login");
     } else {
       if (!user || !user.username || success) {
@@ -89,7 +86,7 @@ const UserProfileScreen = () => {
         setBio(user.bio);
       }
     }
-  }, [dispatch, history, userInfo, user, success]);
+  }, [dispatch, history, user]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -101,7 +98,6 @@ const UserProfileScreen = () => {
         setMessage(null);
       }, 5000);
     } else {
-      setDisabled(true);
       dispatch(
         updateUserProfile({
           id: user._id,
@@ -112,6 +108,7 @@ const UserProfileScreen = () => {
           bio,
         })
       );
+      setDisabled(true);
     }
   };
 
@@ -123,7 +120,7 @@ const UserProfileScreen = () => {
           color="primary"
           variant="contained"
           onClick={() => {
-            history.push("/login");
+            history.push("/");
           }}
         >
           <KeyboardBackspaceSharpIcon />
@@ -135,10 +132,11 @@ const UserProfileScreen = () => {
           </Avatar>
           <h1 style={headerStyle}>User Profile</h1>
         </Grid>
-        {message && <span className="error-message">{message}</span>}
-        {error && <span className="error-message">{error}</span>}
-        {success && <span className="error-message">Profile Updated</span>}
-        {loading && <h3>Loading...</h3>}
+        {error && <Alert severity="error">{error}</Alert>}
+        {message && <Alert severity="error">{message}</Alert>}
+        {loading && <Alert severity="info">Loading...</Alert>}
+        {success && <Alert severity="success">Profile Updated</Alert>}
+
         <form onSubmit={submitHandler}>
           <TextField
             label="Your Full Name"
@@ -207,6 +205,7 @@ const UserProfileScreen = () => {
             style={textstyle}
             fullWidth
             disabled={disabled}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
@@ -217,6 +216,7 @@ const UserProfileScreen = () => {
             style={textstyle}
             fullWidth
             disabled={disabled}
+            value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
 

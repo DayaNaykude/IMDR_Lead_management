@@ -1,73 +1,53 @@
 import React from "react";
 import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
-import { useHistory} from "react-router-dom";
-import axios from "axios";
-import IconButton from '@mui/material/IconButton';
-import KeyboardBackspaceSharpIcon from '@mui/icons-material/KeyboardBackspaceSharp';
+import { useHistory } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
+import { Alert } from "@mui/material";
+
+// backend Imports
+import { forgotPassword } from "../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const ForgotPasswordScreen = () => {
   let history = useHistory();
   const paperstyle = {
     padding: 50,
-    height: "40vh",
-    width: 400,
+    height: "60%",
+    width: "20%",
     margin: "40px auto",
   };
- 
- 
+
   const textstyle = { marginTop: "20px" };
   const headerStyle = { margin: "20px 0", color: "red" };
-  const btnstyle ={ marginTop:"40px" };
+  const btnstyle = { marginTop: "40px" };
 
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
+  const dispatch = useDispatch();
+
+  const userForgotPassword = useSelector((state) => state.userForgotPassword);
+  const { loading, error, status } = userForgotPassword;
 
   const forgotPasswordHandler = async (e) => {
     e.preventDefault();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.post(
-        "/api/auth/forgotpassword",
-        { email },
-        config
-      );
-
-      setSuccess(data.data);
-    } catch (error) {
-      setError(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      setEmail("");
-      setTimeout(() => {
-        setError("");
-      }, 5000);
-    }
+    dispatch(forgotPassword(email));
   };
 
   return (
     <Grid>
       <Paper elevation={10} style={paperstyle}>
-      <IconButton aria-label="Back to login" 
-             
-              color="primary"
-              variant="contained"
-         
-              onClick={() => {
-              history.push("/login");}}
-              
-         > 
-           <KeyboardBackspaceSharpIcon/>
-           </IconButton>
+        <IconButton
+          aria-label="Back to login"
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            history.push("/login");
+          }}
+        >
+          <KeyboardBackspaceSharpIcon />
+        </IconButton>
 
         <Grid align="center">
           <h2 style={headerStyle}>Forgot Password</h2>
@@ -76,8 +56,9 @@ const ForgotPasswordScreen = () => {
             send you reset password confirmation to this email !
           </Typography>
         </Grid>
-        {error && <span className="error-message">{error}</span>}
-        {success && <span className="error-message">{success}</span>}
+        {loading && <Alert severity="info">Loading...</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+        {status && <Alert severity="success">{status.data}</Alert>}
         <form onSubmit={forgotPasswordHandler}>
           <TextField
             label="Email"
@@ -96,9 +77,6 @@ const ForgotPasswordScreen = () => {
             variant="contained"
             style={btnstyle}
             fullWidth
-            onClick={() => {
-              alert("✔️ successfully send email!");
-            }}
           >
             Send Email
           </Button>

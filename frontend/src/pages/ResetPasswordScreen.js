@@ -1,16 +1,20 @@
 import React from "react";
 import { TextField, Grid, Paper, Typography, Button } from "@material-ui/core";
 import { useState } from "react";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import { Alert } from "@mui/material";
+
+// backend Imports
+import { resetPassword } from "../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const ResetPasswordScreen = ({ match }) => {
   const paperStyle = {
     padding: 50,
-    height: "40vh",
-    width: 400,
+    height: "60%",
+    width: "20%",
     margin: "40px auto",
- };
+  };
   const textstyle = { margin: "5px 0" };
   const headerStyle = { margin: "10px 0", color: "Green" };
   const btnstyle = { marginTop: "50px" };
@@ -19,45 +23,24 @@ const ResetPasswordScreen = ({ match }) => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const userResetPassword = useSelector((state) => state.userResetPassword);
+  const { loading, error, status } = userResetPassword;
 
   const resetPasswordHandler = async (e) => {
     e.preventDefault();
-
-    const config = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
     if (password !== confirmPassword) {
       setPassword("");
       setConfirmPassword("");
+      setMessage("Passwords do not match");
       setTimeout(() => {
-        setError("");
+        setMessage(null);
       }, 5000);
-      return setError("Passwords don't match");
-    }
-
-    try {
-      const { data } = await axios.put(
-        `/api/auth/resetpassword/${resetToken}`,
-        { password },
-        config
-      );
-
-      setSuccess(data.data);
-      // history.push("/login");
-    } catch (error) {
-      setError(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+    } else {
+      dispatch(resetPassword(password, resetToken));
     }
   };
 
@@ -68,12 +51,18 @@ const ResetPasswordScreen = ({ match }) => {
           <h2 style={headerStyle}>Reset Password</h2>
           <Typography variant="caption">Please Set New Password !!</Typography>
         </Grid>
-        {error && <span className="error-message">{error}</span>}
-        {success && (
-          <span className="success-message">
-            {success} <Link to="/login">Login</Link>
-          </span>
+        {loading && <Alert severity="info">Loading...</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+        {message && <Alert severity="error">{message}</Alert>}
+        {status && (
+          <>
+            <Alert severity="success">{status.data}</Alert>
+            <p>
+              <Link to="/login">Click here to Login</Link>
+            </p>
+          </>
         )}
+
         <form onSubmit={resetPasswordHandler}>
           <TextField
             label="New Password"
