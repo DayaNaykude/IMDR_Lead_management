@@ -38,7 +38,8 @@
     "material-table": "^1.69.3",
     "mongoose": "^6.0.7",
     "morgan": "^1.10.0",
-    "nodemailer": "^6.6.3"
+    "nodemailer": "^6.6.3",
+    "react-country-region-selector": "^3.3.0"
   },
   "devDependencies": {
     "concurrently": "^6.2.1",

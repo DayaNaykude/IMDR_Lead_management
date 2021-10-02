@@ -12,6 +12,8 @@ import Navbar from "./components/Navbar/NavbarScreen";
 import Footer from "./components/Footer";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
+import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
+import TaskScreenAdmin from "./pages/TaskScreen/TasksScreenAdmin";
 
 const App = () => {
   return (
@@ -37,13 +39,12 @@ const App = () => {
             component={() => <UserProfileScreen />}
           />
           <Route exact path="/add" component={() => <AddContact />} />
+          <Route exact path="/view" component={() => <LeadDetails />} />
 
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TasksScreenUser />} />
-            {/* <Route exact path="/"></Route> */}
-
-            {/* <Route exact path="/Task" component={() => <TasksScreenUser />} /> */}
+            <Route exact path="/"></Route>
             <Route
               exact
               path="/Dashboard"
@@ -51,6 +52,7 @@ const App = () => {
             />
             <Route exact path="/Help" component={() => <HelpScreen />} />
             <Route exact path="/Settings" component={() => <SettingScreen />} />
+            <Route exact path="/admin" component={() => <TaskScreenAdmin />} />
           </div>
         </Switch>
         {/* <Footer /> */}

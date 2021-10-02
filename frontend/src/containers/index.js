@@ -13,8 +13,6 @@ import { Grid } from "@mui/material";
 
 import "./index.css";
 
-import "./index.css";
-
 const SignInOutContainer = ({ history }) => {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {

@@ -39,7 +39,7 @@ const Navbar = () => {
       fontSize: "140%",
     },
     list: {
-      width: 250,
+      width: 300,
       
       
     },
