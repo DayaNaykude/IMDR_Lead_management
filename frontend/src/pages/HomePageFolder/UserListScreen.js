@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 
 import { listUsers, deleteUser, updateUser } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "@mui/material";
 
 const backStyle = {
   width: "10vh",
@@ -62,11 +63,11 @@ export const UserListScreen = () => {
       defaultSort: "asc",
       editable: "never",
     },
-    {
-      title: "User ID",
-      field: "id",
-      editable: "never",
-    },
+    // {
+    //   title: "User ID",
+    //   field: "id",
+    //   editable: "never",
+    // },
     {
       title: "Email",
       field: "email",
@@ -141,8 +142,8 @@ export const UserListScreen = () => {
       </AppBar>
 
       <div>
-        {error && <span className="error-message">{error}</span>}
-        {loading && <h3>Loading...</h3>}
+        {error && <Alert severity="error">{error}</Alert>}
+        {loading && <Alert severity="info">Loading...</Alert>}
         <Box style={boxStyle}>
           <MaterialTable
             className={classes.tableStyle}
@@ -150,7 +151,7 @@ export const UserListScreen = () => {
               users &&
               users.map((user) => ({
                 name: user.username,
-                id: user._id,
+                // id: user._id,
                 email: user.email,
                 contact: user.contact ? `+91 ${user.contact}` : "NA",
                 admin: user.isAdmin ? "1" : "2",

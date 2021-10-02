@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/userActions";
+import { Alert } from "@mui/material";
 
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
@@ -44,7 +45,6 @@ const LoginScreen = ({ handleChange }) => {
   const onSubmit = (values, props) => {
     console.log(values);
     props.setSubmitting(false);
-    console.log(props);
   };
 
   // **************** backend stuff
@@ -80,8 +80,9 @@ const LoginScreen = ({ handleChange }) => {
             </Avatar>
             <h2>Sign In</h2>
           </Grid>
-          {error && <span className="error-message">{error}</span>}
-          {loading && <h3>Loading...</h3>}
+          {error && <Alert severity="error">{error}</Alert>}
+          {loading && <Alert severity="info">Loading...</Alert>}
+
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}

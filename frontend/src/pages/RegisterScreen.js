@@ -17,6 +17,7 @@ import * as Yup from "yup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
+import { Alert } from "@mui/material";
 
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
@@ -47,7 +48,6 @@ const RegisterScreen = ({ handleChange }) => {
   const onSubmit = (values, props) => {
     console.log(values);
     props.setSubmitting(false);
-    console.log(props);
   };
 
   // ************* Backend Stuff
@@ -78,9 +78,9 @@ const RegisterScreen = ({ handleChange }) => {
       setMessage("Passwords do not match");
       setTimeout(() => {
         setMessage(null);
-      }, 5000); 
+      }, 5000);
     } else {
-       dispatch(register(username, email, password));
+      dispatch(register(username, email, password));
     }
   };
 
@@ -96,9 +96,9 @@ const RegisterScreen = ({ handleChange }) => {
             Please fill this form to create an account!
           </Typography>
         </Grid>
-        {error && <span className="error-message">{error}</span>}
-        {message && <span className="error-message">{message}</span>}
-        {loading && <h3>Loading...</h3>}
+        {message && <Alert severity="error">{message}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+        {loading && <Alert severity="info">Loading...</Alert>}
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
@@ -112,8 +112,8 @@ const RegisterScreen = ({ handleChange }) => {
                 name="yourName"
                 style={textstyle}
                 placeholder="Enter Your Name"
-                required
                 fullWidth
+                required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 helperText={<ErrorMessage name="yourName" />}

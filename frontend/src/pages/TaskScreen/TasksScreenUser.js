@@ -24,7 +24,7 @@ const textStyle = {
 const TasksScreenUser = () => {
   let history = useHistory();
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const { userInfo } = userLogin;
 
   useEffect(() => {
     if (!userInfo) {

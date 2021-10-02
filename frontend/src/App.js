@@ -4,16 +4,15 @@ import ForgotPasswordScreen from "./pages/ForgotPasswordScreen";
 import ResetPasswordScreen from "./pages/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import UserListScreen from "./pages/HomePageFolder/UserListScreen";
-import TasksScreenUser from "./pages/TaskScreen/TasksScreenUser";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
-import TaskScreenAdmin from "./pages/TaskScreen/TasksScreenAdmin";
+import TaskScreen from "./pages/TaskScreen/TaskScreen";
 
 const App = () => {
   return (
@@ -43,8 +42,7 @@ const App = () => {
 
           <div>
             <Navbar />
-            <Route exact path="/" component={() => <TasksScreenUser />} />
-            <Route exact path="/"></Route>
+            <Route exact path="/" component={() => <TaskScreen />} />
             <Route
               exact
               path="/Dashboard"
@@ -52,7 +50,6 @@ const App = () => {
             />
             <Route exact path="/Help" component={() => <HelpScreen />} />
             <Route exact path="/Settings" component={() => <SettingScreen />} />
-            <Route exact path="/admin" component={() => <TaskScreenAdmin />} />
           </div>
         </Switch>
         {/* <Footer /> */}
