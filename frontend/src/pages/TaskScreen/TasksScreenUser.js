@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialTable, { MTablePagination } from "material-table";
+import MaterialTable from "material-table";
 import Box from '@material-ui/core/Box';
 import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
@@ -147,7 +147,7 @@ const TasksScreenUser = () => {
                     ]}
                     components={{
                         Pagination: (props) => <div>
-                            {console.log(props)}
+                            {/* {console.log(props)} */}
                             <Grid container style={{ padding: 15, background: "rgb(232 226 226)" }}>
                                 <Grid sm={1} item ><Typography variant="subtitle2">Total</Typography></Grid>
                                 <Grid sm={1} item align="center"><Typography variant="subtitle2">Number of rows:{props.count}</Typography></Grid>

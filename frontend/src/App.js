@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar/NavbarScreen";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
+import TaskScreenAdmin from "./pages/TaskScreen/TasksScreenAdmin";
 
 const App = () => {
   return (
@@ -46,6 +47,8 @@ const App = () => {
           path="/view"
           component={() => <LeadDetails />}
           />
+          
+          
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TasksScreenUser />} />
@@ -57,6 +60,11 @@ const App = () => {
             />
             <Route exact path="/Help" component={() => <HelpScreen />} />
             <Route exact path="/Settings" component={() => <SettingScreen />} />
+            <Route 
+          exact
+          path="/admin"
+          component={() => <TaskScreenAdmin />}
+          />
           </div>
         </Switch>
       </Router>
