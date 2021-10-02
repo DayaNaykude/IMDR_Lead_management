@@ -51,7 +51,14 @@ const SignInOutContainer = ({ history }) => {
   return (
     <div
       className="imageStyle"
-      style={{ backgroundImage: 'url("images/IMDRPicture.png")' }}
+      style={{
+        backgroundImage: 'url("images/IMDRPicture.png")',
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
+      }}
     >
       <Grid>
         <Paper style={paperStyle}>

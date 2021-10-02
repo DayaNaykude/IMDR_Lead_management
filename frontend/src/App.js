@@ -9,6 +9,7 @@ import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
 import Navbar from "./components/Navbar/NavbarScreen";
+import Footer from "./components/Footer";
 import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 
@@ -35,16 +36,12 @@ const App = () => {
             path="/profile"
             component={() => <UserProfileScreen />}
           />
-          <Route
-            exact
-            path="/add"
-            component={() => <AddContact />}
-          />
+          <Route exact path="/add" component={() => <AddContact />} />
 
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TasksScreenUser />} />
-            <Route exact path="/"></Route>
+            {/* <Route exact path="/"></Route> */}
 
             {/* <Route exact path="/Task" component={() => <TasksScreenUser />} /> */}
             <Route
@@ -56,6 +53,7 @@ const App = () => {
             <Route exact path="/Settings" component={() => <SettingScreen />} />
           </div>
         </Switch>
+        {/* <Footer /> */}
       </Router>
     </div>
   );
