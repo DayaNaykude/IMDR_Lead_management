@@ -4,7 +4,10 @@ import Box from "@material-ui/core/Box";
 import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getAllLeads } from "../../helper/leadApiCalls";
+import { isAuthenticated } from "../../helper/index";
+
 const boxStyle = {
   marginTop: "60px",
   marginLeft: "20px",
@@ -32,67 +35,39 @@ const TasksScreenUser = () => {
     }
   }, [history, userInfo]);
 
-  const data = [
-    {
-      name: "Sanika more",
-      email: "sanikamore@gmail.com",
-      contact: "8888888888",
-      created_ON: "12/09/2022",
-      city: "Pune",
-      source: "Instagram",
-      entrance: "CAT",
-      percentile: "99.99",
-      lead: "lead 2",
-    },
-    {
-      name: "Sahil Kavitake",
-      email: "sahie.kavitake202@gmail.com",
-      contact: "1234567890",
-      created_ON: "12/09/2022",
-      city: "Pune",
-      source: "fb",
-      entrance: "CAT",
-      percentile: "99.99",
-      lead: "lead 2",
-    },
-    {
-      name: "Gujju",
-      email: "arushimore@gmail.com",
-      contact: "8888988967",
-      created_ON: "22/09/2022",
-      city: "Akole",
-      source: "Instagram",
-      entrance: "CAT",
-      percentile: "99",
-      lead: "lead 2",
-    },
-    {
-      name: "Prajakta maruti more",
-      email: "prajumore@gmail.com",
-      contact: "8767610063",
-      created_ON: "13/09/2022",
-      city: "Akole",
-      source: "Instagram",
-      entrance: "CAT",
-      percentile: "98",
-      lead: "completed",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const { _id, token } = isAuthenticated();
+
+  const preload = () => {
+    getAllLeads(_id, token)
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          setData(data);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    preload();
+  }, []);
+
   const column = [
-    { title: "Name", field: "name", filtering: false },
+    { title: "Name", field: "applicantName", filtering: false },
     { title: "Email ID", field: "email", align: "center", filtering: false },
     {
       title: "Contact Number",
-      field: "contact",
+      field: "mobile",
       align: "center",
       filtering: false,
     },
-    { title: "Created ON", field: "created_ON", searchable: false },
+    { title: "Created ON", field: "createdAt", searchable: false },
     { title: "City", field: "city" },
     { title: "Source", field: "source", align: "left", searchable: false },
     { title: "Entrance", field: "entrance", searchable: false },
-    { title: "Percentile", field: "percentile", searchable: false },
-    { title: "Lead Status", field: "lead", searchable: false },
+    { title: "Percentile", field: "percentileGK", searchable: false },
+    { title: "Lead Status", field: "status", searchable: false },
   ];
   return (
     <>

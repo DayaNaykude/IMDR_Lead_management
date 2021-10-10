@@ -36,4 +36,17 @@ const admin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin };
+const getUserById = (req, res, next, id) => {
+  User.findById(id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: "No User was Found In DB",
+      });
+    }
+    req.profile = user;
+    next();
+  });
+};
+
+module.exports = { protect, admin, getUserById};
+

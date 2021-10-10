@@ -5,6 +5,8 @@ const morgan = require("morgan");
 // const errorHandler = require("./middleware/error");
 const express = require("express");
 const app = express();
+const cors = require("cors");
+app.use(cors());
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -12,6 +14,7 @@ if (process.env.NODE_ENV === "development") {
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const leadRoutes = require("./routes/leadRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 connectDB();
@@ -23,6 +26,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api", leadRoutes);
 
 // app.use("/api/private", require("./routes/private"));
 
