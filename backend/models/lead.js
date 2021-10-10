@@ -151,11 +151,9 @@ const leadSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "userModel",
     },
-    updated: Date,
     status: {
       type: String,
       default: 0,
-      enum: [0, "level 1", "level 2", "level 3", "level 4"],
     },
     source: {
       type: String,
