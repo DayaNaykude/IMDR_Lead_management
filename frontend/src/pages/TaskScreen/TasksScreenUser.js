@@ -8,10 +8,33 @@ import { useEffect, useState } from "react";
 import { getAllLeads } from "../../helper/leadApiCalls";
 import { isAuthenticated } from "../../helper/index";
 
+import Button from '@mui/material/Button';
+
+import Modal from '@mui/material/Modal';
+
+
 const boxStyle = {
   marginTop: "60px",
   marginLeft: "20px",
   marginRight: "20px",
+};
+const style = {
+  position: 'absolute',
+  top: '40%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '40%',
+  height: '60%',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+const sendStyle = {
+  marginLeft:"45%",
+  marginTop:"55%",
+  
+
 };
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
@@ -25,6 +48,10 @@ const textStyle = {
   color: "red",
 };
 const TasksScreenUser = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   let history = useHistory();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -117,11 +144,14 @@ const TasksScreenUser = () => {
                   isFreeAction: true,
                 },
                 {
-                  icon: () => <button style={btnstyle}>Send Email</button>,
+                  icon: () => <Button style={btnstyle}  onClick={handleOpen}>Send Email</Button>,
                   tooltip: "Send Email",
-                  onClick: () => window.open("/profile"),
+                 
                   isFreeAction: false,
                 },
+               
+           
+  
               ]}
               components={{
                 Pagination: (props) => (
@@ -145,6 +175,28 @@ const TasksScreenUser = () => {
                 ),
               }}
             />
+            <div>
+             <Modal
+                  open={open}
+                  onClose={handleClose}
+                >
+                  
+                  <Box sx={style}>
+                    <Typography id="modal-modal-description" sx={{ mt: 8}}>
+                     Heyy Sahil,<br/>
+                     <p>
+                     Mail from IMDR.
+                     </p>
+                    </Typography>
+                    <Button 
+                     type="submit"
+                     color="primary"
+                     variant="contained"
+                     style={sendStyle}>
+                      SEND</Button>
+                  </Box>
+                </Modal>
+                </div>
           </Box>
         </div>
       )}

@@ -13,7 +13,7 @@ import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
 import TaskScreen from "./pages/TaskScreen/TaskScreen";
-
+import SendEmailTemplate from "./pages/TaskScreen/SendEmailTemplate";
 const App = () => {
   return (
     <div className="App">
@@ -39,7 +39,7 @@ const App = () => {
           />
           <Route exact path="/add" component={() => <AddContact />} />
           <Route exact path="/view" component={() => <LeadDetails />} />
-
+          <Route exact path="/sendemail" component={() => <SendEmailTemplate />} />
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TaskScreen />} />

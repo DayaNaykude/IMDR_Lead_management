@@ -6,10 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import LoginScreen from "../pages/LoginScreen";
 import RegisterScreen from "../pages/RegisterScreen";
-
+import Container from "@material-ui/core/Container";
 import { Grid } from "@mui/material";
 
-// import Grid from "@material-ui/core/Grid";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
 import "./index.css";
 
@@ -24,6 +25,11 @@ const SignInOutContainer = ({ history }) => {
     width: 380,
     marginLeft: "150px",
     marginTop: "50px",
+  };
+  const copyrightStyle ={
+    marginLeft:"80%",
+    marginTop:"90vh",
+    
   };
 
   function TabPanel(props) {
@@ -78,6 +84,18 @@ const SignInOutContainer = ({ history }) => {
             <RegisterScreen handleChange={handleChange} />
           </TabPanel>
         </Paper>
+      </Grid>
+      <Grid >
+         <AppBar style={copyrightStyle} position="static" color="primary" >
+          <Container maxWidth="md">
+            <Toolbar>
+              <Typography variant="body1" color="inherit">
+                Copyright © imdr 2021 
+              </Typography>
+            </Toolbar>
+          </Container>
+        </AppBar>
+
       </Grid>
     </div>
   );
