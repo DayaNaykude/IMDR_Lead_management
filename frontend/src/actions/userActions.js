@@ -29,6 +29,7 @@ import {
   USER_RESETPASSWORD_REQUEST,
   USER_RESETPASSWORD_SUCCESS,
   USER_RESETPASSWORD_FAIL,
+  USER_UPDATE_RESET,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -355,9 +356,7 @@ export const updateUser = (updateUser) => async (dispatch, getState) => {
 
     dispatch({ type: USER_UPDATE_SUCCESS });
 
-    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
-
-    dispatch({ type: USER_DETAILS_RESET });
+    dispatch({ type: USER_UPDATE_RESET });
   } catch (error) {
     const message =
       error.response && error.response.data.message
