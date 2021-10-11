@@ -1,6 +1,11 @@
 const User = require("../models/userModel");
+const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
-const { sendEmail, message } = require("../utils/sendEmail");
+const {
+  sendEmail,
+  resetPasswordMail,
+  firstMailToLead,
+} = require("../utils/sendEmail");
 const crypto = require("crypto");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
@@ -93,7 +98,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
     // HTML Message
-    const resetPassMail = message(user.username, resetUrl);
+    const resetPassMail = resetPasswordMail(user.username, resetUrl);
 
     try {
       // await sendEmail({
@@ -267,6 +272,47 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User Not Found !");
   }
+});
+
+exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
+  const { emails } = req.body;
+
+  const failedMails = [];
+  let counter = 0;
+
+  emails.map(async (mailid) => {
+    const lead = await Lead.findOne({ email: mailid });
+    if (lead) {
+      const firstMail = firstMailToLead(lead.applicantName);
+      try {
+        // await sendEmail({
+        //   to: lead.email,
+        //   subject: "Visit IMDR",
+        //   text: mail,
+        // });
+        console.log(firstMail);
+        if (lead.status == "0") {
+          lead.status = "1";
+          const review = {
+            name: req.user.username,
+            status: "1",
+            comment: "First contact to lead email sent",
+            user: req.user._id,
+          };
+
+          lead.reviews.push(review);
+        }
+
+        lead.save();
+        counter++;
+      } catch (err) {
+        failedMails.push(mailid);
+      }
+    }
+  });
+
+  res.status(200);
+  res.json({ failed: failedMails, data: `${counter} Emails sent` });
 });
 
 const sendToken = (user, statusCode, res) => {

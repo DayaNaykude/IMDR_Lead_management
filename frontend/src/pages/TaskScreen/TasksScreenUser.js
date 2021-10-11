@@ -6,7 +6,6 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllLeads } from "../../helper/leadApiCalls";
-import { isAuthenticated } from "../../helper/index";
 
 const boxStyle = {
   marginTop: "60px",
@@ -36,15 +35,16 @@ const TasksScreenUser = () => {
   }, [history, userInfo]);
 
   const [data, setData] = useState([]);
-  const { _id, token } = isAuthenticated();
+  const [loading, setLoading] = useState(true);
 
   const preload = () => {
-    getAllLeads(_id, token)
+    getAllLeads(userInfo._id, userInfo.token)
       .then((data) => {
         if (data.error) {
           console.log(data.error);
         } else {
           setData(data);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
@@ -52,6 +52,14 @@ const TasksScreenUser = () => {
   useEffect(() => {
     preload();
   }, []);
+
+  const sendEmailHandler = (data) => {
+    const leads = [];
+    data.forEach((element) => {
+      leads.push(element.email);
+    });
+    console.log(leads);
+  };
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -83,11 +91,13 @@ const TasksScreenUser = () => {
               title=""
               data={data}
               columns={column}
+              isLoading={loading}
               editable={{}}
               options={{
                 filtering: true,
                 search: true,
                 toolbar: true,
+
                 searchFieldVariant: "outlined",
                 searchFieldAlignment: "left",
                 pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
@@ -119,7 +129,9 @@ const TasksScreenUser = () => {
                 {
                   icon: () => <button style={btnstyle}>Send Email</button>,
                   tooltip: "Send Email",
-                  onClick: () => window.open("/profile"),
+                  onClick: (evt, data) => {
+                    sendEmailHandler(data);
+                  },
                   isFreeAction: false,
                 },
               ]}
