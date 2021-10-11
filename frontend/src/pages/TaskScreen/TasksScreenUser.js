@@ -6,8 +6,11 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllLeads } from "../../helper/leadApiCalls";
-
+import { isAuthenticated } from "../../helper/index";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
+
+import Modal from "@mui/material/Modal";
 
 import Modal from "@mui/material/Modal";
 
@@ -30,7 +33,11 @@ const style = {
 };
 const sendStyle = {
   marginLeft: "45%",
-  marginTop: "55%",
+  marginTop: "0%",
+};
+const textareaStyle = {
+  width: "100%",
+  height: "90%",
 };
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
@@ -192,10 +199,13 @@ const TasksScreenUser = () => {
             <div>
               <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
-                  <Typography id="modal-modal-description" sx={{ mt: 8 }}>
-                    Mail from IMDR.
-                    <br />
-                  </Typography>
+                  <TextareaAutosize
+                    // maxRows={20}
+
+                    defaultValue="Heyy,Sahil
+                          mail from imdr."
+                    style={textareaStyle}
+                  />
                   <Button
                     type="submit"
                     color="primary"
