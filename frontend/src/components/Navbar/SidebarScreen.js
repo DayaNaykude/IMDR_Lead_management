@@ -96,7 +96,7 @@ function Sidebar() {
         </ListItem>
       )}
 
-      <Divider style={{ marginTop: "175%" }} />
+      <Divider style={{ marginTop: "30%" }} />
 
       <ListItem
         className={classes.style}
