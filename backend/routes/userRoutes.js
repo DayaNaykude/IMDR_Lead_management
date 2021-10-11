@@ -24,6 +24,6 @@ router
   .put(protect, admin, updateUser);
 
 router.route("/:email").delete(protect, admin, deleteUser);
-router.route("/sendBulkEmails").post(protect, sendBulkEmails);
+router.route("/sendbulkemails").post(protect, sendBulkEmails);
 
 module.exports = router;

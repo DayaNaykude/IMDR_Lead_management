@@ -31,6 +31,9 @@ import {
   USER_RESETPASSWORD_SUCCESS,
   USER_RESETPASSWORD_FAIL,
   USER_DETAILS_RESET,
+  USER_SEND_EMAILS_REQUEST,
+  USER_SEND_EMAILS_SUCCESS,
+  USER_SEND_EMAILS_FAIL,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -158,6 +161,19 @@ export const userUpdateReducer = (state = { user: {} }, action) => {
       return {
         user: {},
       };
+    default:
+      return state;
+  }
+};
+
+export const userSendBulkEmailsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_SEND_EMAILS_REQUEST:
+      return { loading: true };
+    case USER_SEND_EMAILS_SUCCESS:
+      return { loading: false, success: true, status: action.payload };
+    case USER_SEND_EMAILS_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

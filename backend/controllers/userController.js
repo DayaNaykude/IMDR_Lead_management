@@ -1,11 +1,8 @@
 const User = require("../models/userModel");
 const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
-const {
-  sendEmail,
-  resetPasswordMail,
-  firstMailToLead,
-} = require("../utils/sendEmail");
+const { resetPasswordMail } = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
@@ -275,10 +272,20 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
-  const { emails } = req.body;
+  const { emails, mailContent } = req.body;
 
   let failedMails = [];
   let counter = 0;
+
+  const firstMailToLead = (applicantName) => {
+    const msg = `
+      <h3>Hi ${applicantName},</h3>
+      
+      ${mailContent}
+      `;
+
+    return msg;
+  };
 
   const asyncRes = await Promise.all(
     emails.map(async (mailid) => {
@@ -286,11 +293,11 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       if (lead) {
         const firstMail = firstMailToLead(lead.applicantName);
         try {
-          // await sendEmail({
-          //   to: lead.email,
-          //   subject: "Visit IMDR",
-          //   text: firstMail,
-          // });
+          await sendEmail({
+            to: lead.email,
+            subject: "Visit IMDR",
+            html: firstMail,
+          });
           console.log(firstMail);
           if (lead.status == "0") {
             lead.status = "1";
@@ -306,7 +313,7 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
 
           await lead.save();
         } catch (err) {
-          console.log(err.message);
+          console.log(err);
           failedMails.push(mailid);
         }
       } else {

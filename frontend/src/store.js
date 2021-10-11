@@ -11,6 +11,7 @@ import {
   userListReducer,
   userDeleteReducer,
   userUpdateReducer,
+  userSendBulkEmailsReducer,
 } from "./reducers/userReducers";
 
 const reducer = combineReducers({
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   userList: userListReducer,
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
+  userSendBulkEmails: userSendBulkEmailsReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

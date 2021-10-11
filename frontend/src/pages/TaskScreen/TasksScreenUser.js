@@ -3,21 +3,15 @@ import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
 import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-// import fs from "fs";
-
-// fs.readFile("mailContent.txt", "utf-8", (err, data) => {
-//   if (err) throw err;
-
-//   // Converting Raw Buffer to text
-//   // data using tostring function.
-//   console.log(data);
-// });
+// backend Imports
+import { sendBulkEmails } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "@mui/material";
 
 const boxStyle = {
   marginTop: "60px",
@@ -30,7 +24,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "40%",
-  height: "70%",
+  height: "max-content",
   marginTop: "60px",
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -67,21 +61,26 @@ const TasksScreenUser = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  useEffect(() => {
-    if (!userInfo) {
-      history.push("/login");
-    }
-  }, [history, userInfo]);
-
   const [data, setData] = useState([]);
   const mailContent = `
-      <h3>Are you interested in MBA ? </h3>
+      <h4>Are you interested in MBA ? </h4>
       <a href="https://www.imdr.edu/" target="__blank" clicktracking="off">
         Click Here To Visit IMDR
       </a>
     `;
+  const dispatch = useDispatch();
+
+  const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
+  const { loading, success, error, status } = userSendBulkEmails;
+
   const [selectedEmails, setSelectedEmails] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(true);
+
+  const sendEmailHandler = async (e) => {
+    e.preventDefault();
+    const content = document.getElementById("editablemail").innerHTML;
+    dispatch(sendBulkEmails(selectedEmails, JSON.stringify(content)));
+  };
 
   const preload = () => {
     getAllLeads(userInfo._id, userInfo.token)
@@ -90,28 +89,18 @@ const TasksScreenUser = () => {
           console.log(data.error);
         } else {
           setData(data);
-          setLoading(false);
+          setTableLoading(false);
         }
       })
       .catch((err) => console.log(err));
   };
+
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     preload();
-  }, []);
-
-  const sendEmailHandler = (data) => {
-    console.log(selectedEmails);
-    const content = document.getElementById("editablemail").innerHTML;
-
-    console.log(content.toString());
-  };
-
-  // const saveEmailHandler = () => {
-  //   fs.writeFile("helloworld.txt", "Hello World!", function (err) {
-  //     if (err) return console.log(err);
-  //     console.log("Hello World > helloworld.txt");
-  //   });
-  // };
+  }, [history, userInfo, success]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -143,7 +132,7 @@ const TasksScreenUser = () => {
               title=""
               data={data}
               columns={column}
-              isLoading={loading}
+              isLoading={tableLoading}
               editable={{}}
               options={{
                 filtering: true,
@@ -225,23 +214,22 @@ const TasksScreenUser = () => {
             <div>
               <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
+                  {loading && (
+                    <Alert severity="info">
+                      Sending Emails.. It make few minutes..
+                    </Alert>
+                  )}
+                  {error && <Alert severity="error">{error}</Alert>}
+                  {status && <Alert severity="success">{status.data}</Alert>}
                   <h3 align="center">Edit mail content </h3>
-                  {/* <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    style={sendStyle}
-                    onClick={saveEmailHandler}
-                  >
-                    SAVE
-                  </Button> */}
+
                   <div
                     id="editablemail"
                     // maxRows={20}
                     dangerouslySetInnerHTML={{ __html: mailContent }}
                     contentEditable="true"
                     style={textareaStyle}
-                    autofocus
+                    autoFocus
                   />
 
                   <Button

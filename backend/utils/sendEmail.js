@@ -37,13 +37,4 @@ const resetPasswordMail = (username, resetUrl) => {
   return msg;
 };
 
-const firstMailToLead = (applicantName) => {
-  const msg = `
-    <h3>Hello ${applicantName}, Are you interested in MBA</h3>
-    
-    <a href="www.imdr.com" clicktracking=off>Click Here To Visit IMDR</a>
-    `;
-
-  return msg;
-};
-module.exports = { sendEmail, resetPasswordMail, firstMailToLead };
+module.exports = { sendEmail, resetPasswordMail };
