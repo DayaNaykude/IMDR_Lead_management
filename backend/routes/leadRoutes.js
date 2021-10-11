@@ -68,7 +68,7 @@ router.post(
 );
 
 //update
-//NOTE: comeback here
+//comeback here
 router.put("/lead/:leadId/:userId", updateLead);
 
 router.put("/lead/:leadId/status/:userId", updateLeadStatus);
