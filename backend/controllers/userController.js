@@ -277,45 +277,49 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
   const { emails } = req.body;
 
-  const failedMails = [];
+  let failedMails = [];
   let counter = 0;
 
-  emails.map(async (mailid) => {
-    const lead = await Lead.findOne({ email: mailid });
-    if (lead) {
-      const firstMail = firstMailToLead(lead.applicantName);
-      try {
-        // await sendEmail({
-        //   to: lead.email,
-        //   subject: "Visit IMDR",
-        //   text: mail,
-        // });
-        console.log(firstMail);
-        if (lead.status == "0") {
-          lead.status = "1";
-          const review = {
-            name: req.user.username,
-            status: "1",
-            comment: "First contact to lead email sent",
-            user: req.user._id,
-          };
+  const asyncRes = await Promise.all(
+    emails.map(async (mailid) => {
+      const lead = await Lead.findOne({ email: mailid });
+      if (lead) {
+        const firstMail = firstMailToLead(lead.applicantName);
+        try {
+          // await sendEmail({
+          //   to: lead.email,
+          //   subject: "Visit IMDR",
+          //   text: firstMail,
+          // });
+          console.log(firstMail);
+          if (lead.status == "0") {
+            lead.status = "1";
+            const review = {
+              status: "1",
+              comment: "First contact to lead email sent",
+              user: req.user._id,
+            };
 
-          lead.reviews.push(review);
+            lead.reviews.push(review);
+            ++counter;
+          }
+
+          await lead.save();
+        } catch (err) {
+          console.log(err.message);
+          failedMails.push(mailid);
         }
-
-        lead.save();
-        counter++;
-      } catch (err) {
+      } else {
         failedMails.push(mailid);
       }
-    }
-  });
+    })
+  );
+  console.log(failedMails);
+  console.log(counter);
 
   res.status(200);
-  res.json({ failed: failedMails, data: `${counter} Emails sent` });
+  res.send({
+    failed: failedMails,
+    data: `${counter} Emails sent`,
+  });
 });
-
-const sendToken = (user, statusCode, res) => {
-  const token = user.getSignedJwtToken();
-  res.status(statusCode).json({ sucess: true, token });
-};

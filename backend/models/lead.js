@@ -3,7 +3,6 @@ const { ObjectId } = mongoose.Schema;
 
 const reviewSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
     status: { type: String, required: true },
     comment: { type: String, required: true },
     user: {

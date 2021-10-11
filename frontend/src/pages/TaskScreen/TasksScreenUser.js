@@ -59,6 +59,7 @@ const TasksScreenUser = () => {
   }, [history, userInfo]);
 
   const [data, setData] = useState([]);
+  const [selectedEmails, setSelectedEmails] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const preload = () => {
@@ -78,11 +79,11 @@ const TasksScreenUser = () => {
   }, []);
 
   const sendEmailHandler = (data) => {
-    const leads = [];
-    data.forEach((element) => {
-      leads.push(element.email);
-    });
-    console.log(leads);
+    // const leads = [];
+    // data.forEach((element) => {
+    //   leads.push(element.email);
+    // });
+    console.log(selectedEmails);
   };
 
   const column = [
@@ -151,14 +152,17 @@ const TasksScreenUser = () => {
                   isFreeAction: true,
                 },
                 {
-                  icon: () => (
-                    <Button style={btnstyle} onClick={handleOpen}>
-                      Send Email
-                    </Button>
-                  ),
+                  icon: () => <Button style={btnstyle}>Send Email</Button>,
                   tooltip: "Send Email",
                   onClick: (evt, data) => {
-                    sendEmailHandler(data);
+                    const leads = [];
+                    data.forEach((element) => {
+                      leads.push(element.email);
+                    });
+                    console.log(leads);
+                    setSelectedEmails(leads);
+
+                    handleOpen();
                   },
                   isFreeAction: false,
                 },
@@ -189,15 +193,15 @@ const TasksScreenUser = () => {
               <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                   <Typography id="modal-modal-description" sx={{ mt: 8 }}>
-                    Heyy Sahil,
+                    Mail from IMDR.
                     <br />
-                    <p>Mail from IMDR.</p>
                   </Typography>
                   <Button
                     type="submit"
                     color="primary"
                     variant="contained"
                     style={sendStyle}
+                    onClick={sendEmailHandler}
                   >
                     SEND
                   </Button>
