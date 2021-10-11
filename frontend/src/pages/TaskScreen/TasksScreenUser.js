@@ -6,13 +6,18 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllLeads } from "../../helper/leadApiCalls";
-import { isAuthenticated } from "../../helper/index";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
-
 import Modal from "@mui/material/Modal";
 
-import Modal from "@mui/material/Modal";
+// import fs from "fs";
+
+// fs.readFile("mailContent.txt", "utf-8", (err, data) => {
+//   if (err) throw err;
+
+//   // Converting Raw Buffer to text
+//   // data using tostring function.
+//   console.log(data);
+// });
 
 const boxStyle = {
   marginTop: "60px",
@@ -25,7 +30,8 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "40%",
-  height: "60%",
+  height: "70%",
+  marginTop: "60px",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -33,11 +39,13 @@ const style = {
 };
 const sendStyle = {
   marginLeft: "45%",
-  marginTop: "0%",
+  marginTop: "5%",
 };
 const textareaStyle = {
-  width: "100%",
-  height: "90%",
+  width: "95%",
+  height: "70%",
+  padding: "2%",
+  border: "2px solid orange",
 };
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
@@ -66,6 +74,12 @@ const TasksScreenUser = () => {
   }, [history, userInfo]);
 
   const [data, setData] = useState([]);
+  const mailContent = `
+      <h3>Are you interested in MBA ? </h3>
+      <a href="https://www.imdr.edu/" target="__blank" clicktracking="off">
+        Click Here To Visit IMDR
+      </a>
+    `;
   const [selectedEmails, setSelectedEmails] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -86,12 +100,18 @@ const TasksScreenUser = () => {
   }, []);
 
   const sendEmailHandler = (data) => {
-    // const leads = [];
-    // data.forEach((element) => {
-    //   leads.push(element.email);
-    // });
     console.log(selectedEmails);
+    const content = document.getElementById("editablemail").innerHTML;
+
+    console.log(content.toString());
   };
+
+  // const saveEmailHandler = () => {
+  //   fs.writeFile("helloworld.txt", "Hello World!", function (err) {
+  //     if (err) return console.log(err);
+  //     console.log("Hello World > helloworld.txt");
+  //   });
+  // };
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -166,7 +186,7 @@ const TasksScreenUser = () => {
                     data.forEach((element) => {
                       leads.push(element.email);
                     });
-                    console.log(leads);
+
                     setSelectedEmails(leads);
 
                     handleOpen();
@@ -177,7 +197,6 @@ const TasksScreenUser = () => {
               components={{
                 Pagination: (props) => (
                   <div>
-                    {/* {console.log(props)} */}
                     <Grid
                       container
                       style={{ padding: 15, background: "rgb(232 226 226)" }}
@@ -199,13 +218,25 @@ const TasksScreenUser = () => {
             <div>
               <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
-                  <TextareaAutosize
+                  <h3 align="center">Edit mail content </h3>
+                  {/* <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    style={sendStyle}
+                    onClick={saveEmailHandler}
+                  >
+                    SAVE
+                  </Button> */}
+                  <div
+                    id="editablemail"
                     // maxRows={20}
-
-                    defaultValue="Heyy,Sahil
-                          mail from imdr."
+                    dangerouslySetInnerHTML={{ __html: mailContent }}
+                    contentEditable="true"
                     style={textareaStyle}
+                    autofocus
                   />
+
                   <Button
                     type="submit"
                     color="primary"
