@@ -170,7 +170,14 @@ const TasksScreenUser = () => {
                 {
                   icon: () => <button style={btnstyle}>Add Contact</button>,
                   tooltip: "Add Contact",
-                  onClick: () => history.push("/add"),
+                  onClick: () => {
+                    return (
+                      <>
+                        {history.push("/add")}
+                        {history.go(0)}
+                      </>
+                    );
+                  },
                   isFreeAction: true,
                 },
                 {

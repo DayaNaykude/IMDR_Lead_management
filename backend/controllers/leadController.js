@@ -32,7 +32,7 @@ exports.getAllLeads = (req, res) => {
   });
 };
 
-//NOTE: Add Contact
+//Add Contact
 exports.createLead = (req, res) => {
   const errors = validationResult(req);
 

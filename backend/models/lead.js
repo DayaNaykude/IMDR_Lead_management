@@ -145,6 +145,10 @@ const leadSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    course: {
+      type: String,
+      trim: true,
+    },
     percentileGK: {
       type: Number,
       trim: true,
@@ -171,6 +175,10 @@ const leadSchema = new mongoose.Schema(
       default: 0,
     },
     source: {
+      type: String,
+      trim: true,
+    },
+    college_name:{
       type: String,
       trim: true,
     },
