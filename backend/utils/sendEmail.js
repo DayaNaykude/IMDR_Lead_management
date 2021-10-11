@@ -25,7 +25,7 @@ const sendEmail = (options) => {
   });
 };
 
-const message = (username, resetUrl) => {
+const resetPasswordMail = (username, resetUrl) => {
   const msg = `
     <h3>Hello ${username}, You have requested a password reset</h3>
     <p>You're receiving this e-mail because you requested a password reset for your user account at IMDR Lead Management.</p>
@@ -36,4 +36,5 @@ const message = (username, resetUrl) => {
 
   return msg;
 };
-module.exports = { sendEmail, message };
+
+module.exports = { sendEmail, resetPasswordMail };

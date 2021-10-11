@@ -1,6 +1,21 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
+const reviewSchema = mongoose.Schema(
+  {
+    status: { type: String, required: true },
+    comment: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const leadSchema = new mongoose.Schema(
   {
     applicationSeqNo: {
@@ -171,6 +186,7 @@ const leadSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );
