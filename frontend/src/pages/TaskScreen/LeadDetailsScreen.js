@@ -92,54 +92,9 @@ const LeadDetails = () => {
   const [disabled, setDisabled] = React.useState(true);
 
   let history = useHistory();
-  // const handleChange = (event) => {
-  //   setCategory(event.target.value);
-  // };
-  // const [entrance, setEntrance] = React.useState("");
-  // const handleChangeExam = (event) => {
-  //   setEntrance(event.target.value);
-  // };
-  // const [source, setSource] = React.useState("");
-  // const handleChangeSource = (event) => {
-  //   setSource(event.target.value);
-  // };
-
-  // const [values, setValues] = React.useState({
-  //   applicantName: "",
-  //   birthdate: "",
-  //   gender: "",
-  //   email: "",
-  //   mobileNumber: "",
-  //   course: "",
-  //   category: "",
-  //   entrance: "",
-  //   source: "",
-  //   percentile: "",
-  //   collageName: "",
-  //   city: "",
-  //   pincode: "",
-  //   disabled: "true",
-  // });
-
-  // const {
-  //   applicantName,
-  //   birthdate,
-  //   gender,
-  //   email,
-  //   mobileNumber,
-  //   course,
-  //   percentile,
-  //   collegeName,
-  //   city,
-  //   pincode,
-  //   category,
-  //   source,
-  //   entrance,
-  //   disabled,
-  // } = values;
 
   const { _id, token } = isAuthenticated();
-  //const leadId = "6161b23021de2252e41536fc";
+
   const emailId = history.location.state.email;
   const preload = () => {
     console.log(history.location.state.email);
@@ -162,31 +117,10 @@ const LeadDetails = () => {
           setPincode(data.pincode);
           setEntrance(data.entrance.toLowerCase());
           setSource("Walk in");
-
-          // setValues({
-          //   ...values,
-          //   applicantName: data.applicantName,
-          //   //birthdate: moment(data.dateOfBirth).format('dd/mm/yyyy'),
-          //   gender: data.gender.toLowerCase(),
-          //   category: data.category.toLowerCase(),
-          //   email: data.email,
-          //   mobileNumber: data.mobile,
-          //   course: "IMCA",
-          //   percentile: data.percentileGK,
-          //   collegeName: "",
-          //   city: data.city,
-          //   pincode: data.pincode,
-          //   entrance: data.entrance.toLowerCase(),
-          //   source: "Walk in",
-          // });
         }
       })
       .catch((err) => console.log(err));
   };
-  // const handleChange = (name) => (event) => {
-  //   console.log(name);
-  //   setValues({ ...values, [name]: event.target.value });
-  // };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -197,7 +131,6 @@ const LeadDetails = () => {
   useEffect(() => {
     preload();
   }, []);
-  // 
 
   return (
     <>

@@ -155,14 +155,15 @@ const TasksScreenUser = () => {
                   tooltip: "view details",
                   position: "row",
 
-                  onClick: (event,rowData) => {
-                    console.log("rowdata",rowData)
-                   // history.push("/view")
-                   history.push({
-                    pathname: "/view", // re-route to this path
-                    state: { email: rowData.email, applicantName: rowData.applicantName }
-                   })
-                  }
+                  onClick: (event, rowData) => {
+                    history.push({
+                      pathname: "/view", // re-route to this path
+                      state: {
+                        email: rowData.email,
+                        applicantName: rowData.applicantName,
+                      },
+                    });
+                  },
                 },
                 {
                   icon: () => <button style={btnstyle}>Add Contact</button>,

@@ -15,6 +15,7 @@ exports.getLeadById = (req, res, next, id) => {
   });
 };
 
+
 exports.getLead = (req, res) => {
   console.log(req.body);
   const { emailId } = req.body;
