@@ -30,16 +30,7 @@ exports.getLead = (req, res) => {
   });
 };
 
-// console.log(req.lead.user);
-// console.log(req.profile._id);
 
-// if (req.lead.user.equals(req.profile._id)) {
-//   return res.json(req.lead);
-// } else {
-//   return res.status(400).json({
-//     error: "No leads assigned.",
-//   });
-// }
 
 exports.getAllLeads = (req, res) => {
   Lead.find({ user: req.profile._id })
@@ -55,6 +46,7 @@ exports.getAllLeads = (req, res) => {
 };
 
 //NOTE: Add Contact
+//Add Contact
 exports.createLead = (req, res) => {
   const errors = validationResult(req);
 

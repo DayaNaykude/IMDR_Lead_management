@@ -1,6 +1,8 @@
 const User = require("../models/userModel");
+const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
-const { sendEmail, message } = require("../utils/sendEmail");
+const { resetPasswordMail } = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
@@ -93,7 +95,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
     // HTML Message
-    const resetPassMail = message(user.username, resetUrl);
+    const resetPassMail = resetPasswordMail(user.username, resetUrl);
 
     try {
       // await sendEmail({
@@ -269,7 +271,62 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const sendToken = (user, statusCode, res) => {
-  const token = user.getSignedJwtToken();
-  res.status(statusCode).json({ sucess: true, token });
-};
+exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
+  const { emails, mailContent } = req.body;
+
+  let failedMails = [];
+  let counter = 0;
+
+  const firstMailToLead = (applicantName) => {
+    const msg = `
+      <h3>Hi ${applicantName},</h3>
+      
+      ${mailContent}
+      `;
+
+    return msg;
+  };
+
+  const asyncRes = await Promise.all(
+    emails.map(async (mailid) => {
+      const lead = await Lead.findOne({ email: mailid });
+      if (lead) {
+        const firstMail = firstMailToLead(lead.applicantName);
+        try {
+          await sendEmail({
+            to: lead.email,
+            subject: "Visit IMDR",
+            html: firstMail,
+          });
+          console.log(firstMail);
+          if (lead.status == "0") {
+            lead.status = "1";
+            const review = {
+              status: "1",
+              comment: "First contact to lead email sent",
+              user: req.user._id,
+            };
+
+            lead.reviews.push(review);
+            ++counter;
+          }
+
+          await lead.save();
+        } catch (err) {
+          console.log(err);
+          failedMails.push(mailid);
+        }
+      } else {
+        failedMails.push(mailid);
+      }
+    })
+  );
+  console.log(failedMails);
+  console.log(counter);
+
+  res.status(200);
+  res.send({
+    failed: failedMails,
+    data: `${counter} Emails sent`,
+  });
+});

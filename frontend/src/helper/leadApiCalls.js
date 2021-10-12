@@ -21,7 +21,6 @@ export const createLead = (userId, token, lead) => {
 
 //get all leads
 export const getAllLeads = (userId, token) => {
-  console.log(API);
 
   return fetch(`${API}/leads/${userId}`, {
     method: "GET",

@@ -39,7 +39,7 @@ const App = () => {
           />
           <Route exact path="/add" component={() => <AddContact />} />
           <Route exact path="/view" component={() => <LeadDetails />} />
-
+      
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TaskScreen />} />
