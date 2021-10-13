@@ -154,7 +154,15 @@ const TasksScreenUser = () => {
                   icon: "edit",
                   tooltip: "view details",
                   position: "row",
-                  onClick: () => history.push("/view"),
+
+                  onClick: (event,rowData) => {
+                    console.log("rowdata",rowData)
+                   // history.push("/view")
+                   history.push({
+                    pathname: "/view", // re-route to this path
+                    state: { email: rowData.email, applicantName: rowData.applicantName }
+                   })
+                  }
                 },
                 {
                   icon: () => <button style={btnstyle}>Add Contact</button>,
