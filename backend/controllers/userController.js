@@ -1,9 +1,10 @@
 const User = require("../models/userModel");
 const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
-const { resetPasswordMail } = require("../utils/sendEmail");
-const { sendEmail } = require("../utils/mailgun");
+const { sendEmail, resetPasswordMail } = require("../utils/sendEmail");
+// const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
+const fs = require("fs");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -98,15 +99,19 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const resetPassMail = resetPasswordMail(user.username, resetUrl);
 
     try {
-      // await sendEmail({
+      const mailstatus = true;
+      // const mailstatus = await sendEmail({
       //   to: user.email,
       //   subject: "Password Reset Request",
       //   text: resetPassMail,
       // });
       console.log(resetPassMail);
-
-      res.status(200);
-      res.json({ success: true, data: "Email Sent" });
+      if (mailstatus) {
+        res.status(200);
+        res.json({ success: true, data: "Email Sent" });
+      } else {
+        throw new Error("Email could not be sent");
+      }
     } catch (err) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
@@ -272,7 +277,15 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
-  const { emails, mailContent } = req.body;
+  filename = "./backend/utils/mailContent.txt";
+
+  fs.readFile(filename, "utf8", function (err, data) {
+    if (err) throw err;
+
+    console.log(data);
+  });
+
+  const { emails, mailContent, subject } = req.body;
 
   let failedMails = [];
   let counter = 0;
@@ -293,25 +306,32 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       if (lead) {
         const firstMail = firstMailToLead(lead.applicantName);
         try {
-          await sendEmail({
-            to: lead.email,
-            subject: "Visit IMDR",
-            html: firstMail,
-          });
+          const mailstatus = true;
+          // const mailstatus = await sendEmail({
+          //   to: lead.email,
+          //   subject: subject,
+          //   html: firstMail,
+          // });
+          console.log(subject);
           console.log(firstMail);
-          if (lead.status == "0") {
-            lead.status = "1";
-            const review = {
-              status: "1",
-              comment: "First contact to lead email sent",
-              user: req.user._id,
-            };
+          console.log(mailstatus);
+          if (mailstatus) {
+            if (lead.status == "0") {
+              lead.status = "1";
+              const review = {
+                status: "1",
+                comment: `Mail with subject ${subject} sent`,
+                user: req.user._id,
+              };
 
-            lead.reviews.push(review);
-            ++counter;
+              lead.reviews.push(review);
+              ++counter;
+            }
+
+            await lead.save();
+          } else {
+            failedMails.push(mailid);
           }
-
-          await lead.save();
         } catch (err) {
           console.log(err);
           failedMails.push(mailid);
@@ -321,12 +341,10 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       }
     })
   );
-  console.log(failedMails);
-  console.log(counter);
 
   res.status(200);
   res.send({
     failed: failedMails,
-    data: `${counter} Emails sent`,
+    data: `${counter} /${emails.length} Emails sent`,
   });
 });

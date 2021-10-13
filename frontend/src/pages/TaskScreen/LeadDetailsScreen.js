@@ -16,7 +16,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import { isAuthenticated } from "../../helper/index";
 import { getLead } from "../../helper/leadApiCalls";
-import moment from "moment/moment.js";
+// import moment from "moment/moment.js";
 
 const paperStyle = {
   padding: 20,
@@ -197,7 +197,7 @@ const LeadDetails = () => {
   useEffect(() => {
     preload();
   }, []);
-  // 
+  //
 
   return (
     <>
