@@ -184,20 +184,6 @@ const UserProfileScreen = () => {
           />
 
           <TextField
-            id="date"
-            variant="outlined"
-            label="Birthday date"
-            type="date"
-            style={textstyle}
-            disabled={disabled}
-            // style={birthStyle}
-            defaultValue="1990-05-24"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-
-          <TextField
             label="Password"
             variant="outlined"
             placeholder="Enter Password"

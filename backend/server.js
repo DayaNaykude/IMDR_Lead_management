@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === "development") {
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const mailRoutes = require("./routes/mailRoutes");
 const leadRoutes = require("./routes/leadRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/mails", mailRoutes);
 app.use("/api", leadRoutes);
 
 // app.use("/api/private", require("./routes/private"));
