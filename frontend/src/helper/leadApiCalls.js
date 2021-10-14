@@ -54,3 +54,22 @@ export const getLead = (userId, token,emailId) => {
     })
     .catch((err) => console.log(err));
 };
+
+// update lead
+export const updateLead = (userId, token,updateInfo) => {
+  console.log(API);
+
+  return fetch(`${API}/lead/update/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateInfo),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
