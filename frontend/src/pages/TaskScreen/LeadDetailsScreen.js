@@ -14,9 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
-import { isAuthenticated } from "../../helper/index";
 import { getLead } from "../../helper/leadApiCalls";
-
+import { useSelector } from "react-redux";
 import { updateLead } from "../../helper/leadApiCalls";
 
 const paperStyle = {
@@ -90,22 +89,31 @@ const LeadDetails = () => {
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
   const [pincode, setPincode] = React.useState("");
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
 
   let history = useHistory();
 
-  const { _id, token } = isAuthenticated();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  //const { _id, token } = isAuthenticated();
 
   const emailId = history.location.state.email;
+
+  // backend call
   const preload = () => {
     console.log(history.location.state.email);
-    getLead(_id, token, { emailId })
+    getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
+          setError(true);
+          setSuccess(false);
           console.log(data.error);
         } else {
           //console.log(data);
-          //console.log(data.reviews[0])
+          console.log(data.reviews[0].comment);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
           setGender(data.gender.toLowerCase());
@@ -125,11 +133,13 @@ const LeadDetails = () => {
       .catch((err) => console.log(err));
   };
 
+  // backend call for update lead
   const submitHandler = async (event) => {
     event.preventDefault();
     setDisabled(true);
+    setSuccess(true);
     // console.log(course);
-    updateLead(_id, token, {
+    updateLead(userInfo._id, userInfo.token, {
       emailId,
       applicantName,
       dateOfBirth,
@@ -154,6 +164,35 @@ const LeadDetails = () => {
       })
       .catch();
   };
+  const successMessage = () => {
+    console.log("in success function", success);
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-success mt-4"
+            style={{ display: success ? "" : "none" }}
+          >
+            Update a lead Successfully.
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const errorMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-danger"
+            style={{ display: error ? "" : "none" }}
+          >
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     preload();
@@ -162,6 +201,8 @@ const LeadDetails = () => {
 
   return (
     <>
+      {successMessage()}
+      {errorMessage()}
       <Grid>
         <Paper elevation={20} style={paperStyle}>
           <Grid>
