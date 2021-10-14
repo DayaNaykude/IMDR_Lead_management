@@ -1,317 +1,480 @@
-import React from "react";
+import React, { useEffect } from "react";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
-import PreviewRoundedIcon from '@mui/icons-material/PreviewRounded';
+import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
 import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import EmailIcon from '@mui/icons-material/Email';
-import TextsmsIcon from '@mui/icons-material/Textsms';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import EmailIcon from "@mui/icons-material/Email";
+import TextsmsIcon from "@mui/icons-material/Textsms";
+import { isAuthenticated } from "../../helper/index";
+import { getLead } from "../../helper/leadApiCalls";
+// import moment from "moment/moment.js";
 
 const paperStyle = {
-    padding: 20,
-    maxHeight: "90%",
-    width: "45%",
-    margin: "10px auto",
+  padding: 20,
+  maxHeight: "90%",
+  width: "45%",
+  margin: "10px auto",
 
-    backgroundColor: "",
+  backgroundColor: "",
 };
 const avatarstyle = { backgroundColor: "#30af53", marginTop: "30px" };
 const headerStyle = { marginTop: "2px" };
 const textstyle = { margin: "8px 0", textSize: "20px" };
-const Style = { margin: "8px 0", marginLeft: "15%", textSize: "20px", minWidth: 250 };
+const Style = {
+  margin: "8px 0",
+  marginLeft: "15%",
+  textSize: "20px",
+  minWidth: 250,
+};
 const listStyle = { margin: "8px 20px", width: 250 };
-const mailbtnStyle={
-    backgroundColor: "#30af53",
-    color: "white",
-    fontSize: "20px",
-    padding: "5px 5px 5px 5px",
-    marginLeft: "30px",
-    marginTop: "10%",
-    width: "15%",
+const mailbtnStyle = {
+  backgroundColor: "#30af53",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "30px",
+  marginTop: "10%",
+  width: "15%",
 };
 const smsbtnStyle = {
-    backgroundColor: "#30af53",
-    color: "white",
-    fontSize: "20px",
-    padding: "5px 5px 5px 5px",
-    marginLeft: "60%",
-    marginTop: "10%",
-    width: "15%",
-
+  backgroundColor: "#30af53",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "60%",
+  marginTop: "10%",
+  width: "15%",
 };
 
 const editStyle = {
-    backgroundColor: "#26d6ca",
-    color: "white",
-    fontSize: "20px",
-    padding: "5px 5px 5px 5px",
-    marginLeft: "65%",
-    marginTop: "0%",
-    width: "12%",
+  backgroundColor: "#26d6ca",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "65%",
+  marginTop: "0%",
+  width: "12%",
 };
 
 const saveStyle = {
-    backgroundColor: "#26d6ca",
-    color: "white",
-    fontSize: "20px",
-    padding: "5px 5px 5px 5px",
-    marginLeft: "2%",
-    marginTop: "0%",
-    width: "12%",
-
+  backgroundColor: "#26d6ca",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "2%",
+  marginTop: "0%",
+  width: "12%",
 };
 
-
-
-
 const LeadDetails = () => {
+  const [applicantName, setApplicantName] = React.useState("");
+  const [birthdate, setBirthdate] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [mobileNumber, setMobileNumber] = React.useState("");
+  const [course, setCourse] = React.useState("");
+  const [category, setCategory] = React.useState("");
+  const [entrance, setEntrance] = React.useState("");
+  const [source, setSource] = React.useState("");
+  const [percentile, setPercentile] = React.useState("");
+  const [collegeName, setCollageName] = React.useState("");
+  const [city, setCity] = React.useState("");
+  const [pincode, setPincode] = React.useState("");
+  const [disabled, setDisabled] = React.useState(true);
 
-    const [category, setCategory] = React.useState('');
-    const handleChange = (event) => {
-        setCategory(event.target.value);
+  let history = useHistory();
+  // const handleChange = (event) => {
+  //   setCategory(event.target.value);
+  // };
+  // const [entrance, setEntrance] = React.useState("");
+  // const handleChangeExam = (event) => {
+  //   setEntrance(event.target.value);
+  // };
+  // const [source, setSource] = React.useState("");
+  // const handleChangeSource = (event) => {
+  //   setSource(event.target.value);
+  // };
 
-    };
-    const [entrance, setEntrance] = React.useState('');
-    const handleChangeExam = (event) => {
-        setEntrance(event.target.value);
-    };
-    const [source, setSource] = React.useState('');
-    const handleChangeSource = (event) => {
-        setSource(event.target.value);
-    };
+  // const [values, setValues] = React.useState({
+  //   applicantName: "",
+  //   birthdate: "",
+  //   gender: "",
+  //   email: "",
+  //   mobileNumber: "",
+  //   course: "",
+  //   category: "",
+  //   entrance: "",
+  //   source: "",
+  //   percentile: "",
+  //   collageName: "",
+  //   city: "",
+  //   pincode: "",
+  //   disabled: "true",
+  // });
 
-    let history = useHistory();
+  // const {
+  //   applicantName,
+  //   birthdate,
+  //   gender,
+  //   email,
+  //   mobileNumber,
+  //   course,
+  //   percentile,
+  //   collegeName,
+  //   city,
+  //   pincode,
+  //   category,
+  //   source,
+  //   entrance,
+  //   disabled,
+  // } = values;
 
-    return (
-        <>
+  const { _id, token } = isAuthenticated();
+  //const leadId = "6161b23021de2252e41536fc";
+  const emailId = history.location.state.email;
+  const preload = () => {
+    console.log(history.location.state.email);
+    getLead(_id, token, { emailId })
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+          setApplicantName(data.applicantName);
+          setBirthdate(data.dateOfBirth);
+          setGender(data.gender.toLowerCase());
+          setCategory(data.category.toLowerCase());
+          setEmail(data.email);
+          setMobileNumber(data.mobile);
+          setCourse("IMCA");
+          setPercentile(data.percentileGK);
+          setCollageName("Fergusson College");
+          setCity(data.city);
+          setPincode(data.pincode);
+          setEntrance(data.entrance.toLowerCase());
+          setSource("Walk in");
 
+          // setValues({
+          //   ...values,
+          //   applicantName: data.applicantName,
+          //   //birthdate: moment(data.dateOfBirth).format('dd/mm/yyyy'),
+          //   gender: data.gender.toLowerCase(),
+          //   category: data.category.toLowerCase(),
+          //   email: data.email,
+          //   mobileNumber: data.mobile,
+          //   course: "IMCA",
+          //   percentile: data.percentileGK,
+          //   collegeName: "",
+          //   city: data.city,
+          //   pincode: data.pincode,
+          //   entrance: data.entrance.toLowerCase(),
+          //   source: "Walk in",
+          // });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  // const handleChange = (name) => (event) => {
+  //   console.log(name);
+  //   setValues({ ...values, [name]: event.target.value });
+  // };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    setDisabled(true);
+    console.log(applicantName, gender, city, category);
+  };
+
+  useEffect(() => {
+    preload();
+  }, []);
+  //
+
+  return (
+    <>
+      <Grid>
+        <Paper elevation={20} style={paperStyle}>
+          <Grid>
+            <IconButton
+              aria-label="Back to home page"
+              color="primary"
+              variant="contained"
+              fontSize="large"
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <KeyboardBackspaceSharpIcon />
+            </IconButton>
+
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              style={editStyle}
+              onClick={(e) => {
+                setDisabled(false);
+                console.log(disabled);
+              }}
+            >
+              EDIT
+            </Button>
+
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              disabled={disabled}
+              style={saveStyle}
+              onClick={submitHandler}
+            >
+              SAVE
+            </Button>
+          </Grid>
+
+          <Grid align="center">
+            <Avatar style={avatarstyle}>
+              <PreviewRoundedIcon />
+            </Avatar>
+            <h1 style={headerStyle}>Lead Details</h1>
+          </Grid>
+
+          <form>
+            <TextField
+              label="Name"
+              style={textstyle}
+              required
+              variant="outlined"
+              placeholder="Enter Student Name"
+              fullWidth
+              disabled={disabled}
+              onChange={(e) => setApplicantName(e.target.value)}
+              value={applicantName}
+            />
+            <TextField
+              id="date"
+              variant="outlined"
+              label="Birthday date"
+              type="date"
+              defaultValue="19-05-1990"
+              style={textstyle}
+              disabled={disabled}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              // value={birthdate}
+            />
+            <FormControl
+              style={{ margin: "0px 30px auto" }}
+              component="fieldset"
+            >
+              <FormLabel component="legend">Gender</FormLabel>
+              <RadioGroup
+                row
+                aria-label="gender"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                  checked={gender === "female"}
+                  disabled={disabled}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                  disabled={disabled}
+                  checked={gender === "male"}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <FormControlLabel
+                  value="other"
+                  control={<Radio />}
+                  label="Other"
+                  disabled={disabled}
+                  checked={gender === "other"}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+              </RadioGroup>
+            </FormControl>
+
+            <TextField
+              label="Email"
+              variant="outlined"
+              placeholder="Enter Email"
+              type="email"
+              style={textstyle}
+              fullWidth
+              required
+              disabled={disabled}
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+
+            <FormControl style={Style}>
+              <InputLabel>Category</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                label="Category"
+                disabled={disabled}
+                onChange={(e) => setCategory(e.target.value)}
+                value={category}
+              >
+                <MenuItem value="">
+                  <em>Other</em>
+                </MenuItem>
+                <MenuItem value={"obc"}>OBC</MenuItem>
+                <MenuItem value={"general"}>General</MenuItem>
+                <MenuItem value={"sc"}>SC</MenuItem>
+                <MenuItem value={"st"}>ST</MenuItem>
+                <MenuItem value={"nt"}>NT</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl style={listStyle}>
+              <InputLabel>Entrance Exam</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                required
+                value={entrance}
+                label="Entrance Exam"
+                disabled={disabled}
+                onChange={(e) => setEntrance(e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>OTHER</em>
+                </MenuItem>
+                <MenuItem value={"cat"}>CAT</MenuItem>
+                <MenuItem value={"mat"}>MAT</MenuItem>
+                <MenuItem value={"cmat"}>C-MAT</MenuItem>
+                <MenuItem value={"xat"}>XAT</MenuItem>
+                <MenuItem value={"mhcet"}>MH-CET</MenuItem>
+                <MenuItem value={"xat"}>XAT</MenuItem>
+                <MenuItem value={"ATMA"}>ATMA</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              label="Mobile Number"
+              variant="outlined"
+              style={Style}
+              type="number"
+              placeholder="Enter number"
+              disabled={disabled}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              value={mobileNumber}
+            />
+
+            <TextField
+              style={listStyle}
+              label="Course"
+              variant="outlined"
+              disabled={disabled}
+              placeholder="Enter Course"
+              onChange={(e) => setCourse(e.target.value)}
+              value={course}
+            />
+
+            <TextField
+              label="Percentile"
+              type="number"
+              variant="outlined"
+              placeholder="Enter Percentile"
+              style={Style}
+              required
+              disabled={disabled}
+              onChange={(e) => setPercentile(e.target.value)}
+              value={percentile}
+            />
+            <TextField
+              label="College Name"
+              style={listStyle}
+              variant="outlined"
+              disabled={disabled}
+              placeholder="Enter College Name"
+              onChange={(e) => setCollageName(e.target.value)}
+              value={collegeName}
+            />
+            <TextField
+              label="City"
+              variant="outlined"
+              required
+              placeholder="Enter City"
+              disabled={disabled}
+              style={Style}
+              onChange={(e) => setCity(e.target.value)}
+              value={city}
+            />
+            <TextField
+              label="Pin Code"
+              style={listStyle}
+              variant="outlined"
+              type="number"
+              placeholder="Enter pin code"
+              disabled={disabled}
+              onChange={(e) => setPincode(e.target.value)}
+              value={pincode}
+            />
+            <FormControl style={{ margin: "8px 230px", width: 250 }}>
+              <InputLabel>Source</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                value={source}
+                label="Source"
+                disabled={disabled}
+                onChange={(e) => setSource(e.target.value)}
+              >
+                <MenuItem value=""></MenuItem>
+                <MenuItem value={"Social Media"}>Social Media</MenuItem>
+                <MenuItem value={"Walk in"}>Walk In</MenuItem>
+                <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
+                <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
+                <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
+                <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
+              </Select>
+            </FormControl>
             <Grid>
-                <Paper elevation={20} style={paperStyle}>
-                    <Grid>
-                        <IconButton
-                            aria-label="Back to home page"
-                            color="primary"
-                            variant="contained"
-                            fontSize="large"
-                            onClick={() => {
-                                history.push("/");
-                            }}
-                        >
-                            <KeyboardBackspaceSharpIcon />
-                        </IconButton>
-
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            style={editStyle}
-                        >
-                            EDIT
-                        </Button>
-
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            style={saveStyle}
-                        >
-                            SAVE
-                        </Button>
-                    </Grid>
-
-
-                    <Grid align="center">
-                        <Avatar style={avatarstyle}>
-                            < PreviewRoundedIcon />
-                        </Avatar>
-                        <h1 style={headerStyle}>Lead Details</h1>
-                    </Grid>
-
-                    <form >
-                        <TextField
-                            label="Name"
-                            style={textstyle}
-                            required
-                            variant="outlined"
-                            placeholder="Enter Student Name"
-                            fullWidth
-
-                        />
-                        <TextField
-                            id="date"
-                            variant="outlined"
-                            label="Birthday date"
-                            type="date"
-                            style={textstyle}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <FormControl style={{ margin: "0px 30px auto" }} component="fieldset">
-                            <FormLabel component="legend">Gender</FormLabel>
-                            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-                                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            </RadioGroup>
-                        </FormControl>
-
-
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            placeholder="Enter Email"
-                            type="email"
-                            style={textstyle}
-                            fullWidth
-                            required
-                        />
-
-                        <FormControl style={Style}>
-                            <InputLabel>Category</InputLabel>
-                            <Select
-                                labelId=""
-                                id=""
-                                value={category}
-                                label="Category"
-                                onChange={handleChange}
-                            >
-                                <MenuItem value="">
-                                    <em>Other</em>
-                                </MenuItem>
-                                <MenuItem value={'obc'}>OBC</MenuItem>
-                                <MenuItem value={'general'}>General</MenuItem>
-                                <MenuItem value={'sc'}>SC</MenuItem>
-                                <MenuItem value={'st'}>ST</MenuItem>
-                                <MenuItem value={'nt'}>NT</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl style={listStyle}>
-                            <InputLabel>Entrance Exam</InputLabel>
-                            <Select
-                                labelId=""
-                                id=""
-                                required
-                                value={entrance}
-                                label="Entrance Exam"
-                                onChange={handleChangeExam}
-                            >
-                                <MenuItem value="">
-                                    <em>OTHER</em>
-                                </MenuItem>
-                                <MenuItem value={'cat'}>CAT</MenuItem>
-                                <MenuItem value={'mat'}>MAT</MenuItem>
-                                <MenuItem value={'cmat'}>C-MAT</MenuItem>
-                                <MenuItem value={'xat'}>XAT</MenuItem>
-                                <MenuItem value={'mhcet'}>MH-CET</MenuItem>
-                                <MenuItem value={'xat'}>XAT</MenuItem>
-                                <MenuItem value={'ATMA'}>ATMA</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <TextField
-                            label="Mobile Number"
-                            variant="outlined"
-                            style={Style}
-                            type="number"
-                            placeholder="Enter number"
-                        />
-
-                        <TextField style={listStyle}
-                            label="Course"
-                            variant="outlined"
-                            placeholder="Enter Course"
-                        />
-
-                        <TextField
-                            label="Percentile"
-                            type="number"
-                            variant="outlined"
-                            placeholder="Enter Percentile"
-                            style={Style}
-                            required
-                        />
-                        <TextField
-                            label="College Name" style={listStyle}
-                            variant="outlined"
-                            placeholder="Enter College Name"
-
-                        />
-                        <TextField
-                            label="City"
-                            variant="outlined"
-                            required
-                            placeholder="Enter City"
-                            style={Style}
-                        />
-                        <TextField
-                            label="Pin Code" style={listStyle}
-                            variant="outlined"
-                            type="number"
-                            placeholder="Enter pin code"
-                        />
-                        <FormControl style={{ margin: "8px 230px", width: 250 }}>
-                            <InputLabel>Source</InputLabel>
-                            <Select
-                                labelId=""
-                                id=""
-                                value={source}
-                                label="Source"
-                                onChange={handleChangeSource}
-                            >
-                                <MenuItem value="">
-                                </MenuItem>
-                                <MenuItem value={'Social Media'}>Social Media</MenuItem>
-                                <MenuItem value={'Walk in'}>Walk In</MenuItem>
-                                <MenuItem value={'Coaching Class'}>Coaching Class</MenuItem>
-                                <MenuItem value={'Outdoor'}>Outdoor</MenuItem>
-                                <MenuItem value={'Digital Fair'}>Digital Fair</MenuItem>
-                                <MenuItem value={'Paraphernalia'}>Paraphernalia</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <Grid>
-                        <Button
-                         style={mailbtnStyle}
-                            type="submit"
-                            color="#30af53"
-                            fontSize="large"
-                            startIcon={<EmailIcon fontSize="large" />}
-                            onClick={() => {
-                                
-                            }}
-                            >
-                           MAIL
-                            </Button>
-                            <Button
-                            style={smsbtnStyle}
-                            type="submit"
-                            color="#30af53"
-                            fontSize="large"
-                            startIcon={<TextsmsIcon fontSize="large" />}
-                            onClick={() => {
-                                
-                            }}
-                            >
-                                SMS
-                          
-                            </Button>
-                    </Grid>
-
-
-                    </form>
-                </Paper>
+              <Button
+                style={mailbtnStyle}
+                type="submit"
+                color="#30af53"
+                fontSize="large"
+                startIcon={<EmailIcon fontSize="large" />}
+                onClick={() => {}}
+              >
+                MAIL
+              </Button>
+              <Button
+                style={smsbtnStyle}
+                type="submit"
+                color="#30af53"
+                fontSize="large"
+                startIcon={<TextsmsIcon fontSize="large" />}
+                onClick={() => {}}
+              >
+                SMS
+              </Button>
             </Grid>
-        </>
-    );
+          </form>
+        </Paper>
+      </Grid>
+    </>
+  );
 };
 
 export default LeadDetails;

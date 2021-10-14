@@ -29,7 +29,7 @@ router.param("userId", getUserById);
 // });
 
 //read
-router.get("/lead/:leadId/:userId", getLead);
+router.post("/lead/:userId", getLead);
 router.get("/leads/:userId", getAllLeads);
 router.get("/lead/:leadId/status/:userId", getStatus);
 
@@ -68,7 +68,7 @@ router.post(
 );
 
 //update
-//NOTE: comeback here
+//comeback here
 router.put("/lead/:leadId/:userId", updateLead);
 
 router.put("/lead/:leadId/status/:userId", updateLeadStatus);

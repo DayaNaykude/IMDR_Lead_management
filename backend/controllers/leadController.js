@@ -16,23 +16,37 @@ exports.getLeadById = (req, res, next, id) => {
 };
 
 exports.getLead = (req, res) => {
-  return res.json(req.lead);
-};
+  console.log(req.body);
+  const { emailId } = req.body;
 
-exports.getAllLeads = (req, res) => {
-  Lead.find({ user: req.profile._id })
-  .sort([["createdAt", "desc"]])
-  .exec((err, leads) => {
-    if (err || !leads) {
+  Lead.findOne({ email: emailId }, (err, lead) => {
+    if (err || !lead) {
       return res.status(400).json({
-        error: "No leads assigned.",
+        error: "USER email does not exists",
       });
     }
-    return res.json(leads);
+    console.log(lead);
+    return res.json(lead);
   });
 };
 
+
+
+exports.getAllLeads = (req, res) => {
+  Lead.find({ user: req.profile._id })
+    .sort([["createdAt", "desc"]])
+    .exec((err, leads) => {
+      if (err || !leads) {
+        return res.status(400).json({
+          error: "No leads assigned.",
+        });
+      }
+      return res.json(leads);
+    });
+};
+
 //NOTE: Add Contact
+//Add Contact
 exports.createLead = (req, res) => {
   const errors = validationResult(req);
 
@@ -67,7 +81,7 @@ exports.createLead = (req, res) => {
 };
 
 //comeback here
-exports.updateLead = (req, res) => { 
+exports.updateLead = (req, res) => {
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     if (err) {
@@ -93,7 +107,7 @@ exports.updateLead = (req, res) => {
 };
 
 exports.getStatus = (req, res) => {
-  return res.send(req.lead.status); 
+  return res.send(req.lead.status);
 };
 
 exports.updateLeadStatus = (req, res) => {
@@ -103,7 +117,7 @@ exports.updateLeadStatus = (req, res) => {
     { new: true, useFindAndModify: false },
     (err, lead) => {
       if (err || !Lead) {
-        console.log(err)
+        console.log(err);
         return res.status(400).json({
           error: "Failed to update status of lead",
         });
@@ -128,6 +142,6 @@ exports.deleteLead = (req, res) => {
   });
 };
 
-exports.deleteManyLeads = (req, res) =>{
+exports.deleteManyLeads = (req, res) => {
   //
-}
+};

@@ -30,6 +30,9 @@ import {
   USER_RESETPASSWORD_SUCCESS,
   USER_RESETPASSWORD_FAIL,
   USER_UPDATE_RESET,
+  USER_SEND_EMAILS_REQUEST,
+  USER_SEND_EMAILS_SUCCESS,
+  USER_SEND_EMAILS_FAIL,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -371,3 +374,42 @@ export const updateUser = (updateUser) => async (dispatch, getState) => {
     });
   }
 };
+
+export const sendBulkEmails =
+  (emails, mailContent, subject) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_SEND_EMAILS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        "/api/users/sendbulkemails",
+        { emails, mailContent, subject },
+        config
+      );
+
+      dispatch({
+        type: USER_SEND_EMAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_SEND_EMAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
