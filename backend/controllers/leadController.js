@@ -79,7 +79,7 @@ exports.createLead = (req, res) => {
 
 //comeback here
 exports.updateLead = (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   Lead.findOneAndUpdate(
     { email: req.body.emailId },
     { $set: req.body },
