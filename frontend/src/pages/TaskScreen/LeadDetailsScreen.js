@@ -19,7 +19,6 @@ import { getLead } from "../../helper/leadApiCalls";
 
 import { updateLead } from "../../helper/leadApiCalls";
 
-
 const paperStyle = {
   padding: 20,
   maxHeight: "90%",
@@ -119,7 +118,7 @@ const LeadDetails = () => {
           setCity(data.city);
           setPincode(data.pincode);
           setEntrance(data.entrance.toLowerCase());
-          setSource(data.source);
+          setSource(data.source.toLowerCase());
         }
         //console.log(data.course);
       })
@@ -402,12 +401,12 @@ const LeadDetails = () => {
                 onChange={(e) => setSource(e.target.value)}
               >
                 <MenuItem value=""></MenuItem>
-                <MenuItem value={"Social Media"}>Social Media</MenuItem>
+                <MenuItem value={"social media"}>Social Media</MenuItem>
                 <MenuItem value={"walk in"}>Walk In</MenuItem>
-                <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
-                <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
-                <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
-                <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
+                <MenuItem value={"coaching class"}>Coaching Class</MenuItem>
+                <MenuItem value={"outdoor"}>Outdoor</MenuItem>
+                <MenuItem value={"digital fair"}>Digital Fair</MenuItem>
+                <MenuItem value={"paraphernalia"}>Paraphernalia</MenuItem>
               </Select>
             </FormControl>
             <Grid>
