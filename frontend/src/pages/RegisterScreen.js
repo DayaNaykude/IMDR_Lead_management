@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import { useState, useEffect } from "react";
 
 import {
@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik"; 
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
@@ -22,7 +22,7 @@ import { Alert } from "@mui/material";
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
     padding: 20,
-    height: "70vh",
+    height: "100%",
     width: 340,
     margin: "auto 0",
     backgroundColor: "",
@@ -34,21 +34,7 @@ const RegisterScreen = ({ handleChange }) => {
   const linkStyle = { marginTop: "50px" };
   let history = useHistory();
 
-  const initialValues = {
-    username: "",
-    email: "",
-    password: "",
-    remember: false,
-  };
-
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Please enter valid email"),
-  });
-
-  const onSubmit = (values, props) => {
-    console.log(values);
-    props.setSubmitting(false);
-  };
+  
 
   // ************* Backend Stuff
 
@@ -83,7 +69,25 @@ const RegisterScreen = ({ handleChange }) => {
       dispatch(register(username, email, password));
     }
   };
+  const initialValues = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    
+}
 
+const validationSchema = Yup.object().shape({
+username: Yup.string().required("Please Provide name "),
+email: Yup.string().email("Enter valid email").required("Required"),
+password: Yup.string().min(6, "Password minimum length should be 8").required("Required"),
+confirmPassword: Yup.string().oneOf([Yup.ref('password')], "Password not matched").required("Required"),
+})
+
+const onSubmit = (values, props) => {
+console.log(values);
+props.setSubmitting(false);
+}
   return (
     <Grid>
       <Paper elevation={20} style={paperStyle}>
@@ -99,26 +103,28 @@ const RegisterScreen = ({ handleChange }) => {
         {message && <Alert severity="error">{message}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}
         {loading && <Alert severity="info">Loading...</Alert>}
+
         <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}
-        >
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            validationSchema={validationSchema}
+          >
+
           {(props) => (
             <Form onSubmit={registerHandler}>
               <Field
                 as={TextField}
                 label="Your Name"
-                name="yourName"
+                name="username"
                 style={textstyle}
                 placeholder="Enter Your Name"
                 fullWidth
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                helperText={<ErrorMessage name="yourName" />}
+                helperText={<ErrorMessage name="username"/>}
               />
-              {/* <TextField label="Last Name" style={textstyle} placeholder="Enter Last Name" fullWidth/> */}
+              
               <Field
                 as={TextField}
                 label="Email"
@@ -143,7 +149,7 @@ const RegisterScreen = ({ handleChange }) => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                helperText={<ErrorMessage name="password" />}
+                helperText={<ErrorMessage name="password" />} 
               />
               <Field
                 as={TextField}
@@ -156,7 +162,7 @@ const RegisterScreen = ({ handleChange }) => {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                helperText={<ErrorMessage name="confirmPassword" />}
+                helperText={<ErrorMessage name="confirmPassword" />} 
               />
 
               <Button
@@ -170,15 +176,16 @@ const RegisterScreen = ({ handleChange }) => {
               >
                 Sign Up
               </Button>
-            </Form>
+              </Form>
           )}
         </Formik>
-        <Typography style={linkStyle}>
-          Already have an account ?{" "}
-          <Link to="/login" onClick={() => handleChange("event", 0)}>
-            Sign In
-          </Link>
-        </Typography>
+                  <Typography style={linkStyle}>
+                    Already have an account ?{" "}
+                    <Link to="/login" onClick={() => handleChange("event", 0)}>
+                      Sign In
+                    </Link>
+                  </Typography>
+       
       </Paper>
     </Grid>
   );

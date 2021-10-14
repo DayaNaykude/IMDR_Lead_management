@@ -21,7 +21,7 @@ import { Alert } from "@mui/material";
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
     padding: 20,
-    height: "70vh",
+    height: "100%",
     width: 340,
     margin: "auto 0",
     backgroundColor: "",
