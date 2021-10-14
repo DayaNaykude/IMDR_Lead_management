@@ -22,7 +22,7 @@ import { Alert } from "@mui/material";
 const RegisterScreen = ({ handleChange }) => {
   const paperStyle = {
     padding: 20,
-    height: "100%",
+    height: "90%",
     width: 340,
     margin: "auto 0",
     backgroundColor: "",
