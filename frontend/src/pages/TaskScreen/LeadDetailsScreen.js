@@ -16,12 +16,9 @@ import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import { isAuthenticated } from "../../helper/index";
 import { getLead } from "../../helper/leadApiCalls";
-<<<<<<< HEAD
-import moment from "moment/moment.js";
+
 import { updateLead } from "../../helper/leadApiCalls";
-=======
-// import moment from "moment/moment.js";
->>>>>>> 3f511b87423ec6cf44e9eaa2b1946be00fd4dd06
+
 
 const paperStyle = {
   padding: 20,
