@@ -22,7 +22,7 @@ const SignInOutContainer = ({ history }) => {
   };
 
   const paperStyle = {
-    width: 380,
+    width: 340,
     marginLeft: "150px",
     marginTop: "50px",
   };
