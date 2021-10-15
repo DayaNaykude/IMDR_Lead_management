@@ -92,6 +92,8 @@ const LeadDetails = () => {
   const [error, setError] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
+  const [showdate, setShowdate] = React.useState(true);
+  const [updatedate, setUpdatedate] = React.useState(false);
 
   let history = useHistory();
 
@@ -105,6 +107,7 @@ const LeadDetails = () => {
   // backend call
   const preload = () => {
     console.log(history.location.state.email);
+
     getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
@@ -138,6 +141,7 @@ const LeadDetails = () => {
     event.preventDefault();
     setDisabled(true);
     setSuccess(true);
+
     // console.log(course);
     updateLead(userInfo._id, userInfo.token, {
       emailId,
@@ -165,7 +169,6 @@ const LeadDetails = () => {
       .catch();
   };
   const successMessage = () => {
-    console.log("in success function", success);
     return (
       <div className="row">
         <div className="col-md-6 offset-sm-3 text-left">
@@ -225,6 +228,8 @@ const LeadDetails = () => {
               style={editStyle}
               onClick={(e) => {
                 setDisabled(false);
+                setUpdatedate(true);
+                setShowdate(false);
               }}
             >
               EDIT
@@ -261,20 +266,32 @@ const LeadDetails = () => {
               onChange={(e) => setApplicantName(e.target.value)}
               value={applicantName}
             />
-            <TextField
-              id="date"
-              variant="outlined"
-              label="Birthday date"
-              type="date"
-              defaultValue="19-05-1990"
-              style={textstyle}
-              disabled={disabled}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              value={dateOfBirth}
-            />
+            {updatedate && (
+              <TextField
+                id="date"
+                variant="outlined"
+                label="Birthday date"
+                type="date"
+                defaultValue="19-05-1990"
+                style={textstyle}
+                disabled={disabled}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                value={dateOfBirth}
+              />
+            )}
+            {showdate && (
+              <TextField
+                label="Birthday date"
+                style={textstyle}
+                required
+                variant="outlined"
+                disabled={disabled}
+                value={dateOfBirth}
+              />
+            )}
             <FormControl
               style={{ margin: "0px 30px auto" }}
               component="fieldset"
