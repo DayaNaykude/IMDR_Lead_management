@@ -21,16 +21,16 @@ import { Alert } from "@mui/material";
 const LoginScreen = ({ handleChange }) => {
   const paperstyle = {
     padding: 20,
-    height: "70vh",
+    height: "80%",
     width: 340,
     margin: "auto 0",
     backgroundColor: "",
   };
-  const avatarstyle = { backgroundColor: "#26d6ca" };
-  const btnstyle = { marginTop: "40px" };
+  const avatarstyle = { backgroundColor: "#26d6ca",marginTop:"20px" };
+  const btnstyle = { marginTop: "50px" };
   const textstyle = { margin: "8px 0" };
-  const linkStyle = { marginTop: "55px", cursor: "pointer" };
-  const linkstyle = { marginTop: "55px" };
+  const linkStyle = { marginTop: "65px", cursor: "pointer" };
+  const linkstyle = { marginTop: "65px" };
 
   const initialValues = {
     email: "",
@@ -91,6 +91,7 @@ const LoginScreen = ({ handleChange }) => {
             {(props) => (
               <Form onSubmit={loginHandler}>
                 <Field
+                style={{marginTop:10}}
                   as={TextField}
                   label="Email"
                   name="email"

@@ -14,9 +14,8 @@ exports.getLeadById = (req, res, next, id) => {
     next();
   });
 };
-
+//get a lead details
 exports.getLead = (req, res) => {
-  console.log(req.body);
   const { emailId } = req.body;
 
   Lead.findOne({ email: emailId }, (err, lead) => {
@@ -25,13 +24,11 @@ exports.getLead = (req, res) => {
         error: "USER email does not exists",
       });
     }
-    console.log(lead);
+
     return res.json(lead);
   });
 };
-
-
-
+// get all leads
 exports.getAllLeads = (req, res) => {
   Lead.find({ user: req.profile._id })
     .sort([["createdAt", "desc"]])
@@ -82,28 +79,47 @@ exports.createLead = (req, res) => {
 
 //comeback here
 exports.updateLead = (req, res) => {
-  let form = new formidable.IncomingForm();
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({
-        error: "problem with updation",
-      });
-    }
+  //console.log(req.body);
+  Lead.findOneAndUpdate(
+    { email: req.body.emailId },
+    { $set: req.body },
+    { new: true },
 
-    //updation code
-    let lead = req.lead;
-    lead = _.extend(lead, fields);
-
-    //save to the DB
-    lead.save((err, updatedLead) => {
-      if (err || !updatedLead) {
+    (err, lead) => {
+      if (err || !lead) {
+        console.log("failed");
         return res.status(400).json({
-          error: "Falied to update lead",
+          error: "Lead updation failed",
         });
+      } else {
+        console.log("updatedLead", lead);
       }
-      return res.json(updatedLead);
-    });
-  });
+      console.log("updatedLead");
+    }
+  );
+  //   let form = new formidable.IncomingForm();
+  //   form.parse(req, (err, fields, files) => {
+  //     if (err) {
+  //       return res.status(400).json({
+  //         error: "problem with updation",
+  //       });
+  //     }
+
+  //     //updation code
+  //     let lead = req.lead;
+  //     lead = _.extend(lead, fields);
+
+  //     //save to the DB
+  //     lead.save((err, updatedLead) => {
+  //       if (err || !updatedLead) {
+  //         return res.status(400).json({
+  //           error: "Falied to update lead",
+  //         });
+  //       }
+  //       return res.json(updatedLead);
+  //     });
+  //   });
+  // };
 };
 
 exports.getStatus = (req, res) => {

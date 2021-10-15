@@ -204,6 +204,18 @@ const TasksScreenUser = () => {
                   position: "row",
 
                   onClick: (event, rowData) => {
+                    return (
+                      <>
+                        {history.push({
+                          pathname: "/view", // re-route to this path
+                          state: {
+                            email: rowData.email,
+                            applicantName: rowData.applicantName,
+                          },
+                        })}
+                        {history.go(0)}
+                      </>
+                    );
                     console.log("rowdata", rowData);
                     // history.push("/view")
                     history.push({
