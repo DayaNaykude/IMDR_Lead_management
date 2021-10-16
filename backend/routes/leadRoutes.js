@@ -69,7 +69,7 @@ router.post(
 
 //update
 //comeback here
-router.put("/lead/:leadId/:userId", updateLead);
+router.put("/lead/update/:userId", updateLead);
 
 router.put("/lead/:leadId/status/:userId", updateLeadStatus);
 

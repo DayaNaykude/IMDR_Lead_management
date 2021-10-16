@@ -23,6 +23,8 @@ import Checkbox from '@mui/material/Checkbox';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Box from '@material-ui/core/Box';
 
+import { updateLead } from "../../helper/leadApiCalls";
+
 const paperStyle = {
   padding: 20,
   maxHeight: "90%",
@@ -94,69 +96,24 @@ width:"300%",
 
 const LeadDetails = () => {
   const [applicantName, setApplicantName] = React.useState("");
-  const [birthdate, setBirthdate] = React.useState("");
+  const [dateOfBirth, setDateOfBirth] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [mobileNumber, setMobileNumber] = React.useState("");
+  const [mobile, setMobile] = React.useState("");
   const [course, setCourse] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [entrance, setEntrance] = React.useState("");
   const [source, setSource] = React.useState("");
-  const [percentile, setPercentile] = React.useState("");
-  const [collegeName, setCollageName] = React.useState("");
+  const [percentileGK, setPercentileGK] = React.useState("");
+  const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
   const [pincode, setPincode] = React.useState("");
   const [disabled, setDisabled] = React.useState(true);
 
   let history = useHistory();
-  // const handleChange = (event) => {
-  //   setCategory(event.target.value);
-  // };
-  // const [entrance, setEntrance] = React.useState("");
-  // const handleChangeExam = (event) => {
-  //   setEntrance(event.target.value);
-  // };
-  // const [source, setSource] = React.useState("");
-  // const handleChangeSource = (event) => {
-  //   setSource(event.target.value);
-  // };
-
-  // const [values, setValues] = React.useState({
-  //   applicantName: "",
-  //   birthdate: "",
-  //   gender: "",
-  //   email: "",
-  //   mobileNumber: "",
-  //   course: "",
-  //   category: "",
-  //   entrance: "",
-  //   source: "",
-  //   percentile: "",
-  //   collageName: "",
-  //   city: "",
-  //   pincode: "",
-  //   disabled: "true",
-  // });
-
-  // const {
-  //   applicantName,
-  //   birthdate,
-  //   gender,
-  //   email,
-  //   mobileNumber,
-  //   course,
-  //   percentile,
-  //   collegeName,
-  //   city,
-  //   pincode,
-  //   category,
-  //   source,
-  //   entrance,
-  //   disabled,
-  // } = values;
 
   const { _id, token } = isAuthenticated();
-  //const leadId = "6161b23021de2252e41536fc";
+
   const emailId = history.location.state.email;
   const preload = () => {
     console.log(history.location.state.email);
@@ -165,50 +122,55 @@ const LeadDetails = () => {
         if (data.error) {
           console.log(data.error);
         } else {
-          console.log(data);
+          //console.log(data);
+          //console.log(data.reviews[0])
           setApplicantName(data.applicantName);
-          setBirthdate(data.dateOfBirth);
+          setDateOfBirth(data.dateOfBirth);
           setGender(data.gender.toLowerCase());
           setCategory(data.category.toLowerCase());
           setEmail(data.email);
-          setMobileNumber(data.mobile);
-          setCourse("IMCA");
-          setPercentile(data.percentileGK);
-          setCollageName("Fergusson College");
+          setMobile(data.mobile);
+          setCourse(data.course);
+          setPercentileGK(data.percentileGK);
+          setCollege_name(data.college_name);
           setCity(data.city);
           setPincode(data.pincode);
           setEntrance(data.entrance.toLowerCase());
-          setSource("Walk in");
-
-          // setValues({
-          //   ...values,
-          //   applicantName: data.applicantName,
-          //   //birthdate: moment(data.dateOfBirth).format('dd/mm/yyyy'),
-          //   gender: data.gender.toLowerCase(),
-          //   category: data.category.toLowerCase(),
-          //   email: data.email,
-          //   mobileNumber: data.mobile,
-          //   course: "IMCA",
-          //   percentile: data.percentileGK,
-          //   collegeName: "",
-          //   city: data.city,
-          //   pincode: data.pincode,
-          //   entrance: data.entrance.toLowerCase(),
-          //   source: "Walk in",
-          // });
+          setSource(data.source.toLowerCase());
         }
+        //console.log(data.course);
       })
       .catch((err) => console.log(err));
   };
-  // const handleChange = (name) => (event) => {
-  //   console.log(name);
-  //   setValues({ ...values, [name]: event.target.value });
-  // };
 
   const submitHandler = async (event) => {
     event.preventDefault();
     setDisabled(true);
-    console.log(applicantName, gender, city, category);
+    // console.log(course);
+    updateLead(_id, token, {
+      emailId,
+      applicantName,
+      dateOfBirth,
+      gender,
+      email,
+      mobile,
+      course,
+      category,
+      entrance,
+      source,
+      percentileGK,
+      college_name,
+      city,
+      pincode,
+    })
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+        }
+      })
+      .catch();
   };
 
   useEffect(() => {
@@ -240,7 +202,6 @@ const LeadDetails = () => {
               style={editStyle}
               onClick={(e) => {
                 setDisabled(false);
-                console.log(disabled);
               }}
             >
               EDIT
@@ -288,7 +249,8 @@ const LeadDetails = () => {
               InputLabelProps={{
                 shrink: true,
               }}
-              // value={birthdate}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              value={dateOfBirth}
             />
             <FormControl
               style={{ margin: "0px 30px auto" }}
@@ -381,7 +343,7 @@ const LeadDetails = () => {
                 <MenuItem value={"xat"}>XAT</MenuItem>
                 <MenuItem value={"mhcet"}>MH-CET</MenuItem>
                 <MenuItem value={"xat"}>XAT</MenuItem>
-                <MenuItem value={"ATMA"}>ATMA</MenuItem>
+                <MenuItem value={"atma"}>ATMA</MenuItem>
               </Select>
             </FormControl>
 
@@ -392,8 +354,8 @@ const LeadDetails = () => {
               type="number"
               placeholder="Enter number"
               disabled={disabled}
-              onChange={(e) => setMobileNumber(e.target.value)}
-              value={mobileNumber}
+              onChange={(e) => setMobile(e.target.value)}
+              value={mobile}
             />
 
             <TextField
@@ -402,8 +364,8 @@ const LeadDetails = () => {
               variant="outlined"
               disabled={disabled}
               placeholder="Enter Course"
-              onChange={(e) => setCourse(e.target.value)}
               value={course}
+              onChange={(e) => setCourse(e.target.value)}
             />
 
             <TextField
@@ -414,8 +376,8 @@ const LeadDetails = () => {
               style={Style}
               required
               disabled={disabled}
-              onChange={(e) => setPercentile(e.target.value)}
-              value={percentile}
+              onChange={(e) => setPercentileGK(e.target.value)}
+              value={percentileGK}
             />
             <TextField
               label="College Name"
@@ -423,8 +385,8 @@ const LeadDetails = () => {
               variant="outlined"
               disabled={disabled}
               placeholder="Enter College Name"
-              onChange={(e) => setCollageName(e.target.value)}
-              value={collegeName}
+              onChange={(e) => setCollege_name(e.target.value)}
+              value={college_name}
             />
             <TextField
               label="City"
@@ -457,12 +419,12 @@ const LeadDetails = () => {
                 onChange={(e) => setSource(e.target.value)}
               >
                 <MenuItem value=""></MenuItem>
-                <MenuItem value={"Social Media"}>Social Media</MenuItem>
-                <MenuItem value={"Walk in"}>Walk In</MenuItem>
-                <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
-                <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
-                <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
-                <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
+                <MenuItem value={"social media"}>Social Media</MenuItem>
+                <MenuItem value={"walk in"}>Walk In</MenuItem>
+                <MenuItem value={"coaching class"}>Coaching Class</MenuItem>
+                <MenuItem value={"outdoor"}>Outdoor</MenuItem>
+                <MenuItem value={"digital fair"}>Digital Fair</MenuItem>
+                <MenuItem value={"paraphernalia"}>Paraphernalia</MenuItem>
               </Select>
             </FormControl>
             
