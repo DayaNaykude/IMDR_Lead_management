@@ -31,9 +31,9 @@ const Style = {
   margin: "8px 0",
   marginLeft: "15%",
   textSize: "20px",
-  minWidth: 250,
+  width: "35%",
 };
-const listStyle = { margin: "8px 20px", width: 250 };
+const listStyle = { margin: "8px 20px", width: "35%" };
 
 const editStyle = {
   backgroundColor: "#26d6ca",
@@ -383,7 +383,7 @@ const AddContact = () => {
                 onChange={handleChange("pincode")}
                 placeholder="Enter pin code"
               />
-              <FormControl style={{ margin: "8px 230px", width: 250 }}>
+              <FormControl style={{ margin: "8px 230px", width: "35%" }}>
                 <InputLabel>Source</InputLabel>
                 <Select
                   labelId=""
