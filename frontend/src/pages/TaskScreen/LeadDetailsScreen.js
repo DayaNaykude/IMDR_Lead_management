@@ -115,21 +115,21 @@ const LeadDetails = () => {
           setSuccess(false);
           console.log(data.error);
         } else {
-          //console.log(data);
-          console.log(data.reviews[0].comment);
+          console.log(data);
+          //console.log(data.reviews[0].comment);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
-          setGender(data.gender.toLowerCase());
-          setCategory(data.category.toLowerCase());
+          setGender(data.gender ? data.gender.toLowerCase() : "");
+          setCategory(data.category ? data.category.toLowerCase() : "");
           setEmail(data.email);
           setMobile(data.mobile);
-          setCourse(data.course);
+          setCourse(data.course ? data.course : "NA");
           setPercentileGK(data.percentileGK);
-          setCollege_name(data.college_name);
+          setCollege_name(data.college_name ? data.college_name : "NA");
           setCity(data.city);
           setPincode(data.pincode);
-          setEntrance(data.entrance.toLowerCase());
-          setSource(data.source.toLowerCase());
+          setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
+          setSource(data.source ? data.source.toLowerCase() : "NA");
         }
         //console.log(data.course);
       })
@@ -141,6 +141,7 @@ const LeadDetails = () => {
     event.preventDefault();
     setDisabled(true);
     setSuccess(true);
+    history.go(0);
 
     // console.log(course);
     updateLead(userInfo._id, userInfo.token, {
@@ -176,7 +177,7 @@ const LeadDetails = () => {
             className="alert alert-success mt-4"
             style={{ display: success ? "" : "none" }}
           >
-            Update a lead Successfully.
+            Updation of lead Successfully.
           </div>
         </div>
       </div>
@@ -384,6 +385,7 @@ const LeadDetails = () => {
                 <MenuItem value={"mhcet"}>MH-CET</MenuItem>
                 <MenuItem value={"xat"}>XAT</MenuItem>
                 <MenuItem value={"atma"}>ATMA</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
 
@@ -465,6 +467,7 @@ const LeadDetails = () => {
                 <MenuItem value={"outdoor"}>Outdoor</MenuItem>
                 <MenuItem value={"digital fair"}>Digital Fair</MenuItem>
                 <MenuItem value={"paraphernalia"}>Paraphernalia</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
             <Grid>
