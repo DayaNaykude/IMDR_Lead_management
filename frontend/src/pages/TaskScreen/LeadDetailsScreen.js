@@ -3,11 +3,12 @@ import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSha
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
-import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
+import { Grid, Paper, Avatar, TextField, Button, Typography } from "@material-ui/core";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -16,6 +17,12 @@ import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import { getLead } from "../../helper/leadApiCalls";
 import { useSelector } from "react-redux";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Box from '@material-ui/core/Box';
+
 import { updateLead } from "../../helper/leadApiCalls";
 
 const paperStyle = {
@@ -33,9 +40,10 @@ const Style = {
   margin: "8px 0",
   marginLeft: "15%",
   textSize: "20px",
-  minWidth: 250,
+  width: "35%",
 };
-const listStyle = { margin: "8px 20px", width: 250 };
+const listStyle = { margin: "8px 20px", width:"35%"};
+
 const mailbtnStyle = {
   backgroundColor: "#30af53",
   color: "white",
@@ -73,6 +81,17 @@ const saveStyle = {
   marginLeft: "2%",
   marginTop: "0%",
   width: "12%",
+};
+const statusStyle ={
+  marginLeft:"0%",
+  marginTop:"5%",
+  
+};
+const textAreaStyle ={
+marginLeft:"40%",
+marginTop:"0%",
+width:"300%",
+ height:"100px",
 };
 
 const LeadDetails = () => {
@@ -450,7 +469,7 @@ const LeadDetails = () => {
               onChange={(e) => setPincode(e.target.value)}
               value={pincode}
             />
-            <FormControl style={{ margin: "8px 230px", width: 250 }}>
+            <FormControl style={{ margin: "8px 230px", width: "35%" }}>
               <InputLabel>Source</InputLabel>
               <Select
                 labelId=""
@@ -470,6 +489,68 @@ const LeadDetails = () => {
                 <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
+            
+            <AppBar position="static" color="primary" style={{marginTop:20}}>
+            <Toolbar>
+              <Typography variant="body1" color="inherit" style={{marginLeft:"280px"}}>
+                Lead Status
+              </Typography>
+            </Toolbar>
+            </AppBar>
+            <FormControl component="fieldset">
+            <FormGroup>
+
+            <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 4"
+              labelPlacement="lead4"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Completed."
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 3"
+              labelPlacement="lead3"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Add comments"
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 2"
+              labelPlacement="lead2"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Sent Text"
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox  color="secondary" />}
+              label="Level 1"
+              labelPlacement="lead1"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Sent Mail"
+            style={textAreaStyle}
+          />
+            </FormGroup>
+            </FormControl>
+            
             <Grid>
               <Button
                 style={mailbtnStyle}
