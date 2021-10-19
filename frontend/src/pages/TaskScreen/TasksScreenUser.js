@@ -148,7 +148,7 @@ const TasksScreenUser = () => {
       history.push("/login");
     }
     preload();
-  }, [history,userInfo, successSendBulkEmails]); 
+  }, [history, successSendBulkEmails]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },

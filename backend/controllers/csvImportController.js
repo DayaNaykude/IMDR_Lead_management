@@ -16,25 +16,14 @@ exports.uploadFile = (req, res) => {
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
     if (err) {
+      console.log(err);
       return res.status(400).json({
         error: "problem with file",
       });
     }
 
-    // finding userId using username
-    
-    // username = fields.name;
-    // console.log(username);
-    // userModel.findOne({username}).exec((err,user)=>{
-    //   if(err || !user){
-    //     return res.status(400).json({
-    //       error: "No user found with given name"
-    //     })
-    //   }
-    //   id = user._id;
-    //   console.log(id);
-    // })
-   
+    const { source, entrance } = fields;
+
     data = fs.readFileSync(files.csv.path);
     csv
       .fromString(data.toString(), {
@@ -43,20 +32,36 @@ exports.uploadFile = (req, res) => {
       })
       .on("data", function (data) {
         data["_id"] = new mongoose.Types.ObjectId();
-        data.source = fields.source;
+        data.source = source;
+        data.entrance = entrance;
         leads.push(data);
       })
       .on("end", function () {
-        Lead.create(leads, function (err, documents) {
-          if (err) {
-            let email = err.keyValue.email;
-
-            return res.json({
-              error: "Duplicate email.",
-              email,
+        userModel.find({ isAdmin: false }).exec((err, users) => {
+          if (err || !users) {
+            return res.status(400).json({
+              error: "No user present",
             });
           }
-          res.send(leads.length + " leads have been successfully uploaded.");
+          var i = 0;
+          leads.map((lead) => {
+            lead.user = users[i++ % users.length]._id;
+          });
+          Lead.create(leads, function (err, documents) {
+            if (err) {
+              let email = err.keyValue.email;
+              return res.json({
+                email: email,
+                error: " Duplicate emails.",
+              });
+            }
+            let count = leads.length;
+
+            return res.json({
+              count: count,
+              message: " leads have been successfully uploaded.",
+            });
+          });
         });
       });
   });
