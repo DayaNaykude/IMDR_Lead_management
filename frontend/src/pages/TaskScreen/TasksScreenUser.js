@@ -49,8 +49,8 @@ const saveStyle = {
 };
 
 const sendStyle = {
-  marginLeft: "45%",
-  marginTop: "5%",
+  marginLeft: "5%",
+  display: "inline-block",
 };
 const textareaStyle = {
   // width: "95%",
@@ -68,6 +68,12 @@ const textStyle = {
   marginTop: "50px",
   marginLeft: "42%",
   color: "red",
+};
+
+const inputStyle = {
+  marginLeft: "30px",
+  marginTop: "5%",
+  display: "inline-block",
 };
 
 const textstyle = { margin: "8px 0" };
@@ -121,6 +127,40 @@ const TasksScreenUser = () => {
     e.preventDefault();
     const content = document.getElementById("editablemail").innerHTML;
     dispatch(sendBulkEmails(selectedEmails, content, subject));
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files;
+    const formData = new FormData();
+
+    console.log(file);
+    // console.log(file[0].name.toString().split(".")[0]);
+    // for (let index = 0; index < e.target.files.length; index++) {
+    //   formData.append("images", file[index]);
+    // }
+
+    // setUploading(true);
+    // console.log(formData);
+
+    // try {
+    //   const config = {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   };
+
+    //   const { data } = await axios.post("/api/upload", formData, config);
+    //   const paths = [];
+    //   data.forEach((element) => {
+    //     paths.push("/" + element.path.toString().replace('\\"', "/"));
+    //   });
+    //   setImages(paths);
+    //   console.log(paths);
+    //   setUploading(false);
+    // } catch (error) {
+    //   console.error(error);
+    //   setUploading(false);
+    // }
   };
 
   const updateMailContentHandler = async (e) => {
@@ -355,16 +395,25 @@ const TasksScreenUser = () => {
                       style={textareaStyle}
                       fullwidth="true"
                     />
-
-                    <Button
-                      type="submit"
-                      color="primary"
-                      variant="contained"
-                      style={sendStyle}
-                      onClick={sendEmailHandler}
-                    >
-                      SEND
-                    </Button>
+                    <div fullwidth="true">
+                      <input
+                        style={inputStyle}
+                        type="file"
+                        custom
+                        multiple
+                        onChange={uploadFileHandler}
+                        id="contained-button-file"
+                      />
+                      <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        style={sendStyle}
+                        onClick={sendEmailHandler}
+                      >
+                        SEND
+                      </Button>
+                    </div>
                   </form>
                 </Box>
               </Modal>
