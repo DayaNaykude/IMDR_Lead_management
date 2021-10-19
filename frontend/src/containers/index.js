@@ -8,10 +8,8 @@ import LoginScreen from "../pages/LoginScreen";
 import RegisterScreen from "../pages/RegisterScreen";
 import Container from "@material-ui/core/Container";
 import { Grid } from "@mui/material";
-
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-
 import "./index.css";
 
 const SignInOutContainer = ({ history }) => {

@@ -3,19 +3,25 @@ import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSha
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
-import { Grid, Paper, Avatar, TextField, Button } from "@material-ui/core";
+import { Grid, Paper, Avatar, TextField, Button, Typography } from "@material-ui/core";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
-import { isAuthenticated } from "../../helper/index";
 import { getLead } from "../../helper/leadApiCalls";
+import { useSelector } from "react-redux";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Box from '@material-ui/core/Box';
 
 import { updateLead } from "../../helper/leadApiCalls";
 
@@ -34,9 +40,10 @@ const Style = {
   margin: "8px 0",
   marginLeft: "15%",
   textSize: "20px",
-  minWidth: 250,
+  width: "35%",
 };
-const listStyle = { margin: "8px 20px", width: 250 };
+const listStyle = { margin: "8px 20px", width:"35%"};
+
 const mailbtnStyle = {
   backgroundColor: "#30af53",
   color: "white",
@@ -75,6 +82,17 @@ const saveStyle = {
   marginTop: "0%",
   width: "12%",
 };
+const statusStyle ={
+  marginLeft:"0%",
+  marginTop:"5%",
+  
+};
+const textAreaStyle ={
+marginLeft:"40%",
+marginTop:"0%",
+width:"300%",
+ height:"100px",
+};
 
 const LeadDetails = () => {
   const [applicantName, setApplicantName] = React.useState("");
@@ -90,46 +108,62 @@ const LeadDetails = () => {
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
   const [pincode, setPincode] = React.useState("");
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
+  const [showdate, setShowdate] = React.useState(true);
+  const [updatedate, setUpdatedate] = React.useState(false);
 
   let history = useHistory();
 
-  const { _id, token } = isAuthenticated();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  //const { _id, token } = isAuthenticated();
 
   const emailId = history.location.state.email;
+
+  // backend call
   const preload = () => {
     console.log(history.location.state.email);
-    getLead(_id, token, { emailId })
+
+    getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
+          setError(true);
+          setSuccess(false);
           console.log(data.error);
         } else {
-          //console.log(data);
-          //console.log(data.reviews[0])
+          console.log(data);
+          //console.log(data.reviews[0].comment);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
-          setGender(data.gender.toLowerCase());
-          setCategory(data.category.toLowerCase());
+          setGender(data.gender ? data.gender.toLowerCase() : "");
+          setCategory(data.category ? data.category.toLowerCase() : "");
           setEmail(data.email);
           setMobile(data.mobile);
-          setCourse(data.course);
+          setCourse(data.course ? data.course : "NA");
           setPercentileGK(data.percentileGK);
-          setCollege_name(data.college_name);
+          setCollege_name(data.college_name ? data.college_name : "NA");
           setCity(data.city);
           setPincode(data.pincode);
-          setEntrance(data.entrance.toLowerCase());
-          setSource(data.source.toLowerCase());
+          setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
+          setSource(data.source ? data.source.toLowerCase() : "NA");
         }
         //console.log(data.course);
       })
       .catch((err) => console.log(err));
   };
 
+  // backend call for update lead
   const submitHandler = async (event) => {
     event.preventDefault();
     setDisabled(true);
+    setSuccess(true);
+    history.go(0);
+
     // console.log(course);
-    updateLead(_id, token, {
+    updateLead(userInfo._id, userInfo.token, {
       emailId,
       applicantName,
       dateOfBirth,
@@ -154,6 +188,34 @@ const LeadDetails = () => {
       })
       .catch();
   };
+  const successMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-success mt-4"
+            style={{ display: success ? "" : "none" }}
+          >
+            Updation of lead Successfully.
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const errorMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-danger"
+            style={{ display: error ? "" : "none" }}
+          >
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     preload();
@@ -162,6 +224,8 @@ const LeadDetails = () => {
 
   return (
     <>
+      {successMessage()}
+      {errorMessage()}
       <Grid>
         <Paper elevation={20} style={paperStyle}>
           <Grid>
@@ -184,6 +248,8 @@ const LeadDetails = () => {
               style={editStyle}
               onClick={(e) => {
                 setDisabled(false);
+                setUpdatedate(true);
+                setShowdate(false);
               }}
             >
               EDIT
@@ -220,20 +286,32 @@ const LeadDetails = () => {
               onChange={(e) => setApplicantName(e.target.value)}
               value={applicantName}
             />
-            <TextField
-              id="date"
-              variant="outlined"
-              label="Birthday date"
-              type="date"
-              defaultValue="19-05-1990"
-              style={textstyle}
-              disabled={disabled}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              value={dateOfBirth}
-            />
+            {updatedate && (
+              <TextField
+                id="date"
+                variant="outlined"
+                label="Birthday date"
+                type="date"
+                defaultValue="19-05-1990"
+                style={textstyle}
+                disabled={disabled}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                value={dateOfBirth}
+              />
+            )}
+            {showdate && (
+              <TextField
+                label="Birthday date"
+                style={textstyle}
+                required
+                variant="outlined"
+                disabled={disabled}
+                value={dateOfBirth}
+              />
+            )}
             <FormControl
               style={{ margin: "0px 30px auto" }}
               component="fieldset"
@@ -326,6 +404,7 @@ const LeadDetails = () => {
                 <MenuItem value={"mhcet"}>MH-CET</MenuItem>
                 <MenuItem value={"xat"}>XAT</MenuItem>
                 <MenuItem value={"atma"}>ATMA</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
 
@@ -390,7 +469,7 @@ const LeadDetails = () => {
               onChange={(e) => setPincode(e.target.value)}
               value={pincode}
             />
-            <FormControl style={{ margin: "8px 230px", width: 250 }}>
+            <FormControl style={{ margin: "8px 230px", width: "35%" }}>
               <InputLabel>Source</InputLabel>
               <Select
                 labelId=""
@@ -407,8 +486,71 @@ const LeadDetails = () => {
                 <MenuItem value={"outdoor"}>Outdoor</MenuItem>
                 <MenuItem value={"digital fair"}>Digital Fair</MenuItem>
                 <MenuItem value={"paraphernalia"}>Paraphernalia</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
+            
+            <AppBar position="static" color="primary" style={{marginTop:20}}>
+            <Toolbar>
+              <Typography variant="body1" color="inherit" style={{marginLeft:"280px"}}>
+                Lead Status
+              </Typography>
+            </Toolbar>
+            </AppBar>
+            <FormControl component="fieldset">
+            <FormGroup>
+
+            <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 4"
+              labelPlacement="lead4"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Completed."
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 3"
+              labelPlacement="lead3"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Add comments"
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox color="secondary" />}
+              label="Level 2"
+              labelPlacement="lead2"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Sent Text"
+            style={textAreaStyle}
+          />
+          <FormControlLabel
+              style={statusStyle}
+              value="end"
+              control={<Checkbox  color="secondary" />}
+              label="Level 1"
+              labelPlacement="lead1"
+            />
+            <TextareaAutosize
+           
+            defaultValue="Sent Mail"
+            style={textAreaStyle}
+          />
+            </FormGroup>
+            </FormControl>
+            
             <Grid>
               <Button
                 style={mailbtnStyle}
