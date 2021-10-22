@@ -142,7 +142,12 @@ const TasksScreenUser = () => {
       })
       .catch((err) => console.log(err));
   };
+  const [selectedRows,setSelectedRows]=useState([])
+  const handelBulkDelete=()=>{
+    const updatedData=data.filter(row=> !selectedRows.includes(row))
+    setData(updatedData)
 
+  };
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -179,6 +184,7 @@ const TasksScreenUser = () => {
             <MaterialTable
               title=""
               data={data}
+              onSelectionChange={(rows)=>setSelectedRows(rows)}
               columns={column}
               isLoading={tableLoading}
               editable={{}}
@@ -217,7 +223,9 @@ const TasksScreenUser = () => {
                       </>
                     );
                   },
+                  
                 },
+                
                 {
                   icon: () => <button style={btnstyle}>Add Contact</button>,
                   tooltip: "Add Contact",
@@ -251,6 +259,11 @@ const TasksScreenUser = () => {
                   },
                   isFreeAction: false,
                 },
+                {
+                  icon:"delete",
+                  tooltip:"Delete all selected rows",
+                   onClick:()=>handelBulkDelete()
+                 },
               ]}
               components={{
                 Pagination: (props) => (
