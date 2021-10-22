@@ -88,9 +88,9 @@ const statusStyle ={
   
 };
 const textAreaStyle ={
-marginLeft:"40%",
+marginLeft:"1.5%",
 marginTop:"0%",
-width:"300%",
+width:"80%",
  height:"100px",
 };
 
@@ -104,6 +104,7 @@ const LeadDetails = () => {
   const [category, setCategory] = React.useState("");
   const [entrance, setEntrance] = React.useState("");
   const [source, setSource] = React.useState("");
+  const [status,setStatus] = React.useState("");
   const [percentileGK, setPercentileGK] = React.useState("");
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -137,6 +138,7 @@ const LeadDetails = () => {
           setPincode(data.pincode);
           setEntrance(data.entrance.toLowerCase());
           setSource(data.source.toLowerCase());
+          setStatus(data.status.toLowerCase());
         }
         //console.log(data.course);
       })
@@ -162,6 +164,7 @@ const LeadDetails = () => {
       college_name,
       city,
       pincode,
+      status,
     })
       .then((data) => {
         if (data.error) {
@@ -430,64 +433,38 @@ const LeadDetails = () => {
             
             <AppBar position="static" color="primary" style={{marginTop:20}}>
             <Toolbar>
-              <Typography variant="body1" color="inherit" style={{marginLeft:"280px"}}>
+              <Typography variant="body1" color="inherit" style={{marginLeft:"250px"}}>
                 Lead Status
               </Typography>
             </Toolbar>
             </AppBar>
-            <FormControl component="fieldset">
-            <FormGroup>
-
-            <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 4"
-              labelPlacement="lead4"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Completed."
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 3"
-              labelPlacement="lead3"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Add comments"
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 2"
-              labelPlacement="lead2"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Sent Text"
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox  color="secondary" />}
-              label="Level 1"
-              labelPlacement="lead1"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Sent Mail"
-            style={textAreaStyle}
-          />
-            </FormGroup>
+            <Typography style={{margin:"8px",color:"red"}}>Select Status</Typography>
+            
+            <FormControl style={{ margin: "8px", width: "50%" }}>
+              <InputLabel>Status</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                value={status}
+                label="Status"
+                disabled={disabled}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <em>Select status</em>
+                <MenuItem value=""></MenuItem>
+                <MenuItem value={"Level 1"}>Level 1</MenuItem>
+                <MenuItem value={"Level 2"}>Level 2</MenuItem>
+                <MenuItem value={"Level 3"}>Level 3</MenuItem>
+                <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                </Select>
             </FormControl>
+            
+            <Typography style={{margin:"8px",color:"red"}}>Comment</Typography>
+            <TextareaAutosize
+           
+            defaultValue="Write comment here"
+            style={textAreaStyle}
+          />
             
             <Grid>
               <Button
