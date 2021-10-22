@@ -94,19 +94,11 @@ const statusStyle = {
   marginLeft: "0%",
   marginTop: "5%",
 };
-<<<<<<< HEAD
 const textAreaStyle = {
-  marginLeft: "40%",
+  marginLeft: "1.5%",
   marginTop: "0%",
-  width: "300%",
+  width: "80%",
   height: "100px",
-=======
-const textAreaStyle ={
-marginLeft:"1.5%",
-marginTop:"0%",
-width:"80%",
- height:"100px",
->>>>>>> 8264465a71f997326a80f0ce4ac221097c1edbee
 };
 
 const LeadDetails = () => {
@@ -119,7 +111,7 @@ const LeadDetails = () => {
   const [category, setCategory] = React.useState("");
   const [entrance, setEntrance] = React.useState("");
   const [source, setSource] = React.useState("");
-  const [status,setStatus] = React.useState("");
+  const [status, setStatus] = React.useState("");
   const [percentileGK, setPercentileGK] = React.useState("");
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -160,16 +152,13 @@ const LeadDetails = () => {
           setCollege_name(data.college_name ? data.college_name : "NA");
           setCity(data.city);
           setPincode(data.pincode);
-<<<<<<< HEAD
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "na");
           setSource(data.source ? data.source.toLowerCase() : "na");
-=======
           setEntrance(data.entrance.toLowerCase());
           setSource(data.source.toLowerCase());
           setStatus(data.status.toLowerCase());
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
           setSource(data.source ? data.source.toLowerCase() : "NA");
->>>>>>> 8264465a71f997326a80f0ce4ac221097c1edbee
         }
       })
       .catch((err) => console.log(err));
@@ -511,16 +500,22 @@ const LeadDetails = () => {
                 <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
-            
-            <AppBar position="static" color="primary" style={{marginTop:20}}>
-            <Toolbar>
-              <Typography variant="body1" color="inherit" style={{marginLeft:"250px"}}>
-                Lead Status
-              </Typography>
-            </Toolbar>
+
+            <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
+              <Toolbar>
+                <Typography
+                  variant="body1"
+                  color="inherit"
+                  style={{ marginLeft: "250px" }}
+                >
+                  Lead Status
+                </Typography>
+              </Toolbar>
             </AppBar>
-            <Typography style={{margin:"8px",color:"red"}}>Select Status</Typography>
-            
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Select Status
+            </Typography>
+
             <FormControl style={{ margin: "8px", width: "50%" }}>
               <InputLabel>Status</InputLabel>
               <Select
@@ -537,16 +532,18 @@ const LeadDetails = () => {
                 <MenuItem value={"Level 2"}>Level 2</MenuItem>
                 <MenuItem value={"Level 3"}>Level 3</MenuItem>
                 <MenuItem value={"Level 4"}>Level 4</MenuItem>
-                </Select>
+              </Select>
             </FormControl>
-            
-            <Typography style={{margin:"8px",color:"red"}}>Comment</Typography>
+
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Comment
+            </Typography>
             <TextareaAutosize
-           
-            defaultValue="Write comment here"
-            style={textAreaStyle}
-          />
-            
+              defaultValue="Write comment here"
+              disabled={disabled}
+              style={textAreaStyle}
+            />
+
             <Grid>
               <Button
                 style={mailbtnStyle}
