@@ -16,6 +16,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const mailRoutes = require("./routes/mailRoutes");
 const leadRoutes = require("./routes/leadRoutes");
+const csvImportRoutes = require("./routes/csvImportRoutes")
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 connectDB();
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/mails", mailRoutes);
 app.use("/api", leadRoutes);
+app.use("/api", csvImportRoutes);
 
 // app.use("/api/private", require("./routes/private"));
 

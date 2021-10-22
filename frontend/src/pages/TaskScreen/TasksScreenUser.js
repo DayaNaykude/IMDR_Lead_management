@@ -148,7 +148,7 @@ const TasksScreenUser = () => {
       history.push("/login");
     }
     preload();
-  }, [history, userInfo, successSendBulkEmails]);
+  }, [history,userInfo, successSendBulkEmails]); 
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -216,15 +216,6 @@ const TasksScreenUser = () => {
                         {history.go(0)}
                       </>
                     );
-                    console.log("rowdata", rowData);
-                    // history.push("/view")
-                    history.push({
-                      pathname: "/view", // re-route to this path
-                      state: {
-                        email: rowData.email,
-                        applicantName: rowData.applicantName,
-                      },
-                    });
                   },
                 },
                 {

@@ -97,29 +97,6 @@ exports.updateLead = (req, res) => {
       console.log("updatedLead");
     }
   );
-  //   let form = new formidable.IncomingForm();
-  //   form.parse(req, (err, fields, files) => {
-  //     if (err) {
-  //       return res.status(400).json({
-  //         error: "problem with updation",
-  //       });
-  //     }
-
-  //     //updation code
-  //     let lead = req.lead;
-  //     lead = _.extend(lead, fields);
-
-  //     //save to the DB
-  //     lead.save((err, updatedLead) => {
-  //       if (err || !updatedLead) {
-  //         return res.status(400).json({
-  //           error: "Falied to update lead",
-  //         });
-  //       }
-  //       return res.json(updatedLead);
-  //     });
-  //   });
-  // };
 };
 
 exports.getStatus = (req, res) => {

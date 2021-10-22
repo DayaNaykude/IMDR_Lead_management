@@ -15,8 +15,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
-import { isAuthenticated } from "../../helper/index";
 import { getLead } from "../../helper/leadApiCalls";
+import { useSelector } from "react-redux";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Checkbox from '@mui/material/Checkbox';
@@ -109,47 +109,65 @@ const LeadDetails = () => {
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
   const [pincode, setPincode] = React.useState("");
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
+  const [showdate, setShowdate] = React.useState(true);
+  const [updatedate, setUpdatedate] = React.useState(false);
 
   let history = useHistory();
 
-  const { _id, token } = isAuthenticated();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  //const { _id, token } = isAuthenticated();
 
   const emailId = history.location.state.email;
+
+  // backend call
   const preload = () => {
     console.log(history.location.state.email);
-    getLead(_id, token, { emailId })
+
+    getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
+          setError(true);
+          setSuccess(false);
           console.log(data.error);
         } else {
-          //console.log(data);
-          //console.log(data.reviews[0])
+          console.log(data);
+          //console.log(data.reviews[0].comment);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
-          setGender(data.gender.toLowerCase());
-          setCategory(data.category.toLowerCase());
+          setGender(data.gender ? data.gender.toLowerCase() : "");
+          setCategory(data.category ? data.category.toLowerCase() : "");
           setEmail(data.email);
           setMobile(data.mobile);
-          setCourse(data.course);
+          setCourse(data.course ? data.course : "NA");
           setPercentileGK(data.percentileGK);
-          setCollege_name(data.college_name);
+          setCollege_name(data.college_name ? data.college_name : "NA");
           setCity(data.city);
           setPincode(data.pincode);
           setEntrance(data.entrance.toLowerCase());
           setSource(data.source.toLowerCase());
           setStatus(data.status.toLowerCase());
+          setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
+          setSource(data.source ? data.source.toLowerCase() : "NA");
         }
         //console.log(data.course);
       })
       .catch((err) => console.log(err));
   };
 
+  // backend call for update lead
   const submitHandler = async (event) => {
     event.preventDefault();
     setDisabled(true);
+    setSuccess(true);
+    history.go(0);
+
     // console.log(course);
-    updateLead(_id, token, {
+    updateLead(userInfo._id, userInfo.token, {
       emailId,
       applicantName,
       dateOfBirth,
@@ -175,6 +193,34 @@ const LeadDetails = () => {
       })
       .catch();
   };
+  const successMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-success mt-4"
+            style={{ display: success ? "" : "none" }}
+          >
+            Updation of lead Successfully.
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const errorMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-danger"
+            style={{ display: error ? "" : "none" }}
+          >
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     preload();
@@ -183,6 +229,8 @@ const LeadDetails = () => {
 
   return (
     <>
+      {successMessage()}
+      {errorMessage()}
       <Grid>
         <Paper elevation={20} style={paperStyle}>
           <Grid>
@@ -205,6 +253,8 @@ const LeadDetails = () => {
               style={editStyle}
               onClick={(e) => {
                 setDisabled(false);
+                setUpdatedate(true);
+                setShowdate(false);
               }}
             >
               EDIT
@@ -241,20 +291,32 @@ const LeadDetails = () => {
               onChange={(e) => setApplicantName(e.target.value)}
               value={applicantName}
             />
-            <TextField
-              id="date"
-              variant="outlined"
-              label="Birthday date"
-              type="date"
-              defaultValue="19-05-1990"
-              style={textstyle}
-              disabled={disabled}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              value={dateOfBirth}
-            />
+            {updatedate && (
+              <TextField
+                id="date"
+                variant="outlined"
+                label="Birthday date"
+                type="date"
+                defaultValue="19-05-1990"
+                style={textstyle}
+                disabled={disabled}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                value={dateOfBirth}
+              />
+            )}
+            {showdate && (
+              <TextField
+                label="Birthday date"
+                style={textstyle}
+                required
+                variant="outlined"
+                disabled={disabled}
+                value={dateOfBirth}
+              />
+            )}
             <FormControl
               style={{ margin: "0px 30px auto" }}
               component="fieldset"
@@ -347,6 +409,7 @@ const LeadDetails = () => {
                 <MenuItem value={"mhcet"}>MH-CET</MenuItem>
                 <MenuItem value={"xat"}>XAT</MenuItem>
                 <MenuItem value={"atma"}>ATMA</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
 
@@ -428,6 +491,7 @@ const LeadDetails = () => {
                 <MenuItem value={"outdoor"}>Outdoor</MenuItem>
                 <MenuItem value={"digital fair"}>Digital Fair</MenuItem>
                 <MenuItem value={"paraphernalia"}>Paraphernalia</MenuItem>
+                <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
             
