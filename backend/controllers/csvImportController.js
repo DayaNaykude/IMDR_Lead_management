@@ -10,31 +10,19 @@ const fs = require("fs");
 exports.uploadFile = (req, res) => {
   let data;
   var leads = [];
-  var id;
-  var username;
+
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
     if (err) {
+      console.log(err);
       return res.status(400).json({
         error: "problem with file",
       });
     }
 
-    // finding userId using username
-    
-    // username = fields.name;
-    // console.log(username);
-    // userModel.findOne({username}).exec((err,user)=>{
-    //   if(err || !user){
-    //     return res.status(400).json({
-    //       error: "No user found with given name"
-    //     })
-    //   }
-    //   id = user._id;
-    //   console.log(id);
-    // })
-   
+    const { source, entrance } = fields;
+
     data = fs.readFileSync(files.csv.path);
     csv
       .fromString(data.toString(), {
@@ -43,20 +31,60 @@ exports.uploadFile = (req, res) => {
       })
       .on("data", function (data) {
         data["_id"] = new mongoose.Types.ObjectId();
-        data.source = fields.source;
+        data.source = source;
+        data.entrance = entrance;
         leads.push(data);
       })
       .on("end", function () {
-        Lead.create(leads, function (err, documents) {
-          if (err) {
-            let email = err.keyValue.email;
-
-            return res.json({
-              error: "Duplicate email.",
-              email,
+        userModel.find({ isAdmin: false }).exec((err, users) => {
+          if (err || !users) {
+            return res.status(400).json({
+              error: "No user present",
             });
           }
-          res.send(leads.length + " leads have been successfully uploaded.");
+          var i = 0;
+
+          const uniqueLeads = [];
+          const map = new Map();
+          for (const lead of leads) {
+            if (!map.has(lead.email)) {
+              map.set(lead.email, true); // set any value to Map
+              uniqueLeads.push(lead);
+            }
+          }
+          const len = uniqueLeads.length;
+          if (len > 0) {
+            uniqueLeads.map((lead) => {
+              Lead.findOne({ email: lead.email }).exec((err, f_lead) => {
+                if (err || !f_lead) {
+                  lead.user = users[i++ % users.length]._id;
+                  Lead.create(lead, function (error, document) {
+                    if (error) {
+                      console.log(error);
+                      return res.json({
+                        error: " Duplicate emails.",
+                      });
+                    }
+                    if (document.email === uniqueLeads[len - 1].email) {
+                      return res.json({
+                        message: " leads have been uploaded successfully.",
+                      });
+                    }
+                  });
+                }
+
+                if (f_lead && f_lead.email === uniqueLeads[len - 1].email) {
+                  return res.json({
+                    message: " leads have been uploaded successfully.",
+                  });
+                }
+              });
+            });
+          } else {
+            return res.json({
+              message: " leads have been uploaded successfully.",
+            });
+          }
         });
       });
   });
