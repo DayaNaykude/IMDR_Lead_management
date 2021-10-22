@@ -6,7 +6,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import { csvImport } from "../../helper/csvImportApiCalls";
 
 const listStyle = { margin: "8px 20px", width: 250 };
@@ -115,8 +115,12 @@ const TaskScreenAdmin = () => {
   const loadingMessage = () => {
     return (
       loading && (
-        <div className="alert alert-info">
-          <h2>Loading...</h2>
+        <div className="row mt-3">
+          <div className="col-md-6 offset-sm-3 text-left">
+            <div className="alert alert-info">
+              <h5>Loading...</h5>
+            </div>
+          </div>
         </div>
       )
     );

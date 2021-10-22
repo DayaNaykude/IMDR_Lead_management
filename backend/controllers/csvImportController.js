@@ -10,8 +10,7 @@ const fs = require("fs");
 exports.uploadFile = (req, res) => {
   let data;
   var leads = [];
-  var id;
-  var username;
+
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
@@ -44,24 +43,48 @@ exports.uploadFile = (req, res) => {
             });
           }
           var i = 0;
-          leads.map((lead) => {
-            lead.user = users[i++ % users.length]._id;
-          });
-          Lead.create(leads, function (err, documents) {
-            if (err) {
-              let email = err.keyValue.email;
-              return res.json({
-                email: email,
-                error: " Duplicate emails.",
-              });
-            }
-            let count = leads.length;
 
-            return res.json({
-              count: count,
-              message: " leads have been successfully uploaded.",
+          const uniqueLeads = [];
+          const map = new Map();
+          for (const lead of leads) {
+            if (!map.has(lead.email)) {
+              map.set(lead.email, true); // set any value to Map
+              uniqueLeads.push(lead);
+            }
+          }
+          const len = uniqueLeads.length;
+          if (len > 0) {
+            uniqueLeads.map((lead) => {
+              Lead.findOne({ email: lead.email }).exec((err, f_lead) => {
+                if (err || !f_lead) {
+                  lead.user = users[i++ % users.length]._id;
+                  Lead.create(lead, function (error, document) {
+                    if (error) {
+                      console.log(error);
+                      return res.json({
+                        error: " Duplicate emails.",
+                      });
+                    }
+                    if (document.email === uniqueLeads[len - 1].email) {
+                      return res.json({
+                        message: " leads have been uploaded successfully.",
+                      });
+                    }
+                  });
+                }
+
+                if (f_lead && f_lead.email === uniqueLeads[len - 1].email) {
+                  return res.json({
+                    message: " leads have been uploaded successfully.",
+                  });
+                }
+              });
             });
-          });
+          } else {
+            return res.json({
+              message: " leads have been uploaded successfully.",
+            });
+          }
         });
       });
   });
