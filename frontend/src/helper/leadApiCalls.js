@@ -21,7 +21,6 @@ export const createLead = (userId, token, lead) => {
 
 //get all leads
 export const getAllLeads = (userId, token) => {
-
   return fetch(`${API}/leads/${userId}`, {
     method: "GET",
     headers: {
@@ -37,7 +36,7 @@ export const getAllLeads = (userId, token) => {
 };
 
 //get a lead details
-export const getLead = (userId, token,emailId) => {
+export const getLead = (userId, token, emailId) => {
   console.log(API);
 
   return fetch(`${API}/lead/${userId}`, {
@@ -56,7 +55,7 @@ export const getLead = (userId, token,emailId) => {
 };
 
 // update lead
-export const updateLead = (userId, token,updateInfo) => {
+export const updateLead = (userId, token, updateInfo) => {
   console.log(API);
 
   return fetch(`${API}/lead/update/${userId}`, {

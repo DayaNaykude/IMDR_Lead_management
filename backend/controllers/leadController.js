@@ -2,6 +2,7 @@ const Lead = require("../models/lead");
 const formidable = require("formidable");
 const _ = require("lodash");
 const { validationResult } = require("express-validator");
+const lead = require("../models/lead");
 
 exports.getLeadById = (req, res, next, id) => {
   Lead.findById(id).exec((err, lead) => {
@@ -77,9 +78,7 @@ exports.createLead = (req, res) => {
   });
 };
 
-//comeback here
 exports.updateLead = (req, res) => {
-  //console.log(req.body);
   Lead.findOneAndUpdate(
     { email: req.body.emailId },
     { $set: req.body },
@@ -87,12 +86,13 @@ exports.updateLead = (req, res) => {
 
     (err, lead) => {
       if (err || !lead) {
-        console.log("failed");
         return res.status(400).json({
           error: "Lead updation failed",
         });
       } else {
-        console.log("updatedLead", lead);
+        return res.json({
+          message: "updation of done successfully !",
+        });
       }
       console.log("updatedLead");
     }
