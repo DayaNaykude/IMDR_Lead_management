@@ -216,7 +216,6 @@ const TasksScreenUser = () => {
                           pathname: "/view", // re-route to this path
                           state: {
                             email: rowData.email,
-                            applicantName: rowData.applicantName,
                           },
                         })}
                         {history.go(0)}
