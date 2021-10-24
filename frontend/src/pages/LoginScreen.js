@@ -62,6 +62,7 @@ const LoginScreen = ({ handleChange }) => {
   useEffect(() => {
     if (userInfo) {
       history.push("/");
+      history.go(0);
     }
   }, [history, userInfo]);
 

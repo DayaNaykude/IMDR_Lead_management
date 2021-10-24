@@ -8,6 +8,6 @@ const { uploadFile } = require("../controllers/csvImportController");
 router.param("userId", getUserById);
 
 //actual routes
-router.post("/upload/:userId", uploadFile);
+router.post("/upload", uploadFile);
 
 module.exports = router;

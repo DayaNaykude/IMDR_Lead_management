@@ -3,7 +3,14 @@ import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSha
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import PreviewRoundedIcon from "@mui/icons-material/PreviewRounded";
-import { Grid, Paper, Avatar, TextField, Button, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Avatar,
+  TextField,
+  Button,
+  Typography,
+} from "@material-ui/core";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,11 +26,12 @@ import { getLead } from "../../helper/leadApiCalls";
 import { useSelector } from "react-redux";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Checkbox from '@mui/material/Checkbox';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import Box from '@material-ui/core/Box';
+import Checkbox from "@mui/material/Checkbox";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import Box from "@material-ui/core/Box";
 
-import { updateLead } from "../../helper/leadApiCalls";
+import { updateLead, updateStatus } from "../../helper/leadApiCalls";
+import { tabScrollButtonClasses } from "@mui/material";
 
 const paperStyle = {
   padding: 20,
@@ -42,7 +50,7 @@ const Style = {
   textSize: "20px",
   width: "35%",
 };
-const listStyle = { margin: "8px 20px", width:"35%"};
+const listStyle = { margin: "8px 20px", width: "35%" };
 
 const mailbtnStyle = {
   backgroundColor: "#30af53",
@@ -82,16 +90,15 @@ const saveStyle = {
   marginTop: "0%",
   width: "12%",
 };
-const statusStyle ={
-  marginLeft:"0%",
-  marginTop:"5%",
-  
+const statusStyle = {
+  marginLeft: "0%",
+  marginTop: "5%",
 };
-const textAreaStyle ={
-marginLeft:"40%",
-marginTop:"0%",
-width:"300%",
- height:"100px",
+const textAreaStyle = {
+  marginLeft: "1.5%",
+  marginTop: "0%",
+  width: "80%",
+  height: "100px",
 };
 
 const LeadDetails = () => {
@@ -104,6 +111,7 @@ const LeadDetails = () => {
   const [category, setCategory] = React.useState("");
   const [entrance, setEntrance] = React.useState("");
   const [source, setSource] = React.useState("");
+  const [status, setStatus] = React.useState("");
   const [percentileGK, setPercentileGK] = React.useState("");
   const [college_name, setCollege_name] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -125,8 +133,6 @@ const LeadDetails = () => {
 
   // backend call
   const preload = () => {
-    console.log(history.location.state.email);
-
     getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
@@ -135,7 +141,6 @@ const LeadDetails = () => {
           console.log(data.error);
         } else {
           console.log(data);
-          //console.log(data.reviews[0].comment);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
           setGender(data.gender ? data.gender.toLowerCase() : "");
@@ -147,10 +152,14 @@ const LeadDetails = () => {
           setCollege_name(data.college_name ? data.college_name : "NA");
           setCity(data.city);
           setPincode(data.pincode);
+          setEntrance(data.entrance ? data.entrance.toLowerCase() : "na");
+          setSource(data.source ? data.source.toLowerCase() : "na");
+          setEntrance(data.entrance.toLowerCase());
+          setSource(data.source.toLowerCase());
+          setStatus(data.status.toLowerCase());
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
           setSource(data.source ? data.source.toLowerCase() : "NA");
         }
-        //console.log(data.course);
       })
       .catch((err) => console.log(err));
   };
@@ -178,6 +187,7 @@ const LeadDetails = () => {
       college_name,
       city,
       pincode,
+      status,
     })
       .then((data) => {
         if (data.error) {
@@ -188,6 +198,7 @@ const LeadDetails = () => {
       })
       .catch();
   };
+
   const successMessage = () => {
     return (
       <div className="row">
@@ -357,7 +368,7 @@ const LeadDetails = () => {
               style={textstyle}
               fullWidth
               required
-              disabled={disabled}
+              disabled={true}
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
@@ -489,68 +500,50 @@ const LeadDetails = () => {
                 <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
-            
-            <AppBar position="static" color="primary" style={{marginTop:20}}>
-            <Toolbar>
-              <Typography variant="body1" color="inherit" style={{marginLeft:"280px"}}>
-                Lead Status
-              </Typography>
-            </Toolbar>
-            </AppBar>
-            <FormControl component="fieldset">
-            <FormGroup>
 
-            <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 4"
-              labelPlacement="lead4"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Completed."
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 3"
-              labelPlacement="lead3"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Add comments"
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox color="secondary" />}
-              label="Level 2"
-              labelPlacement="lead2"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Sent Text"
-            style={textAreaStyle}
-          />
-          <FormControlLabel
-              style={statusStyle}
-              value="end"
-              control={<Checkbox  color="secondary" />}
-              label="Level 1"
-              labelPlacement="lead1"
-            />
-            <TextareaAutosize
-           
-            defaultValue="Sent Mail"
-            style={textAreaStyle}
-          />
-            </FormGroup>
+            <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
+              <Toolbar>
+                <Typography
+                  variant="body1"
+                  color="inherit"
+                  style={{ marginLeft: "250px" }}
+                >
+                  Lead Status
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Select Status
+            </Typography>
+
+            <FormControl style={{ margin: "8px", width: "50%" }}>
+              <InputLabel>Status</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                value={status}
+                label="Status"
+                disabled={disabled}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <em>Select status</em>
+                <MenuItem value=""></MenuItem>
+                <MenuItem value={"Level 1"}>Level 1</MenuItem>
+                <MenuItem value={"Level 2"}>Level 2</MenuItem>
+                <MenuItem value={"Level 3"}>Level 3</MenuItem>
+                <MenuItem value={"Level 4"}>Level 4</MenuItem>
+              </Select>
             </FormControl>
-            
+
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Comment
+            </Typography>
+            <TextareaAutosize
+              defaultValue="Write comment here"
+              disabled={disabled}
+              style={textAreaStyle}
+            />
+
             <Grid>
               <Button
                 style={mailbtnStyle}
@@ -562,6 +555,7 @@ const LeadDetails = () => {
               >
                 MAIL
               </Button>
+
               <Button
                 style={smsbtnStyle}
                 type="submit"
