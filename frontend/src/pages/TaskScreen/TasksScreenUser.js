@@ -70,6 +70,12 @@ const textStyle = {
   color: "red",
 };
 
+const inputStyle = {
+  marginLeft: "30px",
+  marginTop: "5%",
+  display: "inline-block",
+};
+
 const textstyle = { margin: "8px 0" };
 const TasksScreenUser = () => {
   const [open, setOpen] = React.useState(false);
@@ -81,12 +87,6 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-  // const mailContent = `
-  //     <h4>Are you interested in MBA ? </h4>
-  //     <a href="https://www.imdr.edu/" target="__blank" clicktracking="off">
-  //       Click Here To Visit IMDR
-  //     </a>
-  //   `;
 
   const dispatch = useDispatch();
 
