@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
@@ -15,7 +15,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -23,15 +22,20 @@ import Select from "@mui/material/Select";
 import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import { getLead } from "../../helper/leadApiCalls";
-import { useSelector } from "react-redux";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Checkbox from "@mui/material/Checkbox";
+
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Box from "@material-ui/core/Box";
 
 import { updateLead, updateStatus } from "../../helper/leadApiCalls";
 import { tabScrollButtonClasses } from "@mui/material";
+import Modal from "@mui/material/Modal";
+
+// backend Imports
+import { sendBulkEmails } from "../../actions/userActions";
+import { readMailContent, updateMailContent } from "../../actions/mailActions";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "@mui/material";
 
 const paperStyle = {
   padding: 20,
@@ -100,6 +104,40 @@ const submitStyle = {
   marginTop: "0%",
   width: "15%",
 };
+const style = {
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "40%",
+  height: "max-content",
+  marginTop: "60px",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+const saveContentStyle = {
+  backgroundColor: "#26d6ca",
+  color: "white",
+  display: "inline-block",
+  fontSize: "15px",
+  padding: "5px",
+  float: "right",
+  marginTop: "0%",
+  width: "fit-content",
+};
+
+const sendStyle = {
+  marginLeft: "45%",
+  marginTop: "5%",
+};
+const textareaStyle = {
+  // width: "95%",
+  height: "70%",
+  padding: "2%",
+  border: "2px solid orange",
+};
 const statusStyle = {
   marginLeft: "0%",
   marginTop: "5%",
@@ -134,8 +172,53 @@ const LeadDetails = () => {
 
   let history = useHistory();
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const dispatch = useDispatch();
+
+  const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
+  const {
+    loading,
+    success: successSendBulkEmails,
+    error: errorSendBulkEmails,
+    status: statusSendBulkEmails,
+  } = userSendBulkEmails;
+
+  const mailReadContent = useSelector((state) => state.mailReadContent);
+  const {
+    loading: loadingMailRead,
+    error: errorMailRead,
+    mailContent,
+  } = mailReadContent;
+
+  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
+  const {
+    loading: loadingMailUpdate,
+    success: successMailUpdate,
+    error: errorMailUpdate,
+    status: statusMailUpdate,
+  } = mailUpdateContent;
+
+  const [selectedEmails, setSelectedEmails] = useState(null);
+  const [subject, setSubject] = useState("Visit IMDR");
+
+  const sendEmailHandler = async (e) => {
+    e.preventDefault();
+    const content = document.getElementById("editablemail").innerHTML;
+    dispatch(sendBulkEmails(selectedEmails, content, subject));
+  };
+
+  const updateMailContentHandler = async (e) => {
+    e.preventDefault();
+    const content = document.getElementById("editablemail").innerHTML;
+    console.log(content.toString());
+    dispatch(updateMailContent(content));
+  };
 
   //const { _id, token } = isAuthenticated();
 
@@ -244,8 +327,11 @@ const LeadDetails = () => {
   };
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
     preload();
-  }, []);
+  }, [history, userInfo, successSendBulkEmails]);
   //
 
   return (
@@ -591,7 +677,11 @@ const LeadDetails = () => {
                 color="#30af53"
                 fontSize="large"
                 startIcon={<EmailIcon fontSize="large" />}
-                onClick={() => {}}
+                onClick={(e) => {
+                  dispatch(readMailContent());
+                  setSelectedEmails(email);
+                  handleOpen();
+                }}
               >
                 MAIL
               </Button>
@@ -610,6 +700,91 @@ const LeadDetails = () => {
           </form>
         </Paper>
       </Grid>
+      <div>
+        <Modal open={open} onClose={handleClose}>
+          <Box sx={style}>
+            {loading && (
+              <Alert severity="info">
+                Sending Emails.. It make few minutes..
+              </Alert>
+            )}
+            {loadingMailUpdate && (
+              <Alert severity="info">Updating mail content...</Alert>
+            )}
+            {loadingMailRead && (
+              <Alert severity="info">Loading mail content...</Alert>
+            )}
+            {errorSendBulkEmails && (
+              <Alert severity="error">{errorSendBulkEmails}</Alert>
+            )}
+            {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>}
+            {errorMailUpdate && (
+              <Alert severity="error">{errorMailUpdate}</Alert>
+            )}
+            {statusSendBulkEmails && (
+              <Alert severity="success">{statusSendBulkEmails.data}</Alert>
+            )}
+            {statusMailUpdate && (
+              <Alert severity="success">{statusMailUpdate.status}</Alert>
+            )}
+
+            <form>
+              <div fullwidth="true">
+                <h3
+                  style={{
+                    display: "inline-block",
+                    textAlign: "center",
+                    float: "left",
+                  }}
+                >
+                  Mail Content{" "}
+                </h3>
+                <Button
+                  type="submit"
+                  align="right"
+                  color="primary"
+                  variant="contained"
+                  style={saveContentStyle}
+                  onClick={updateMailContentHandler}
+                >
+                  Save Content
+                </Button>
+              </div>
+
+              <TextField
+                label="Subject"
+                style={textstyle}
+                required
+                variant="outlined"
+                placeholder="Enter Subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                fullWidth
+              />
+              <div
+                id="editablemail"
+                // maxRows={20}
+                dangerouslySetInnerHTML={{
+                  __html: mailContent && mailContent,
+                }}
+                contentEditable="true"
+                style={textareaStyle}
+                fullwidth="true"
+              />
+
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                style={sendStyle}
+                onClick={sendEmailHandler}
+              >
+                SEND
+              </Button>
+            </form>
+          </Box>
+        </Modal>
+      </div>
     </>
   );
 };
