@@ -30,6 +30,7 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.1",
     "@sendgrid/mail": "^7.4.7",
+    "@supercharge/promise-pool": "^1.8.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",

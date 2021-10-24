@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
+const PromisePool = require("@supercharge/promise-pool");
 const { sendEmail, resetPasswordMail } = require("../utils/sendEmail");
 // const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
@@ -300,13 +301,18 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
     return msg;
   };
 
-  const asyncRes = await Promise.all(
-    emails.map(async (mailid) => {
+  // const asyncRes = await Promise.all(
+
+  const { results, errors } = await PromisePool.withConcurrency(20)
+    .for(emails)
+    .process(async (mailid, index) => {
+      // emails.map(async (mailid) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
         const firstMail = firstMailToLead(lead.applicantName);
         try {
           const mailstatus = true;
+
           // const mailstatus = await sendEmail({
           //   to: lead.email,
           //   subject: subject,
@@ -318,15 +324,15 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
           if (mailstatus) {
             if (lead.status == "0") {
               lead.status = "1";
-              const review = {
-                status: "1",
-                comment: `Mail with subject ${subject} sent`,
-                user: req.user._id,
-              };
-
-              lead.reviews.push(review);
-              ++counter;
             }
+            const review = {
+              status: lead.status,
+              comment: `Mail with subject ${subject} sent`,
+              user: req.user._id,
+            };
+
+            lead.reviews.push(review);
+            ++counter;
 
             await lead.save();
           } else {
@@ -339,8 +345,9 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       } else {
         failedMails.push(mailid);
       }
-    })
-  );
+    });
+
+  console.log("results: ", results);
 
   res.status(200);
   res.send({

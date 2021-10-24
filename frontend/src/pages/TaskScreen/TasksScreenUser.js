@@ -49,8 +49,8 @@ const saveStyle = {
 };
 
 const sendStyle = {
-  marginLeft: "5%",
-  display: "inline-block",
+  marginLeft: "45%",
+  marginTop: "5%",
 };
 const textareaStyle = {
   // width: "95%",
@@ -87,12 +87,6 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-  // const mailContent = `
-  //     <h4>Are you interested in MBA ? </h4>
-  //     <a href="https://www.imdr.edu/" target="__blank" clicktracking="off">
-  //       Click Here To Visit IMDR
-  //     </a>
-  //   `;
 
   const dispatch = useDispatch();
 
@@ -129,40 +123,6 @@ const TasksScreenUser = () => {
     dispatch(sendBulkEmails(selectedEmails, content, subject));
   };
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files;
-    const formData = new FormData();
-
-    console.log(file);
-    // console.log(file[0].name.toString().split(".")[0]);
-    // for (let index = 0; index < e.target.files.length; index++) {
-    //   formData.append("images", file[index]);
-    // }
-
-    // setUploading(true);
-    // console.log(formData);
-
-    // try {
-    //   const config = {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   };
-
-    //   const { data } = await axios.post("/api/upload", formData, config);
-    //   const paths = [];
-    //   data.forEach((element) => {
-    //     paths.push("/" + element.path.toString().replace('\\"', "/"));
-    //   });
-    //   setImages(paths);
-    //   console.log(paths);
-    //   setUploading(false);
-    // } catch (error) {
-    //   console.error(error);
-    //   setUploading(false);
-    // }
-  };
-
   const updateMailContentHandler = async (e) => {
     e.preventDefault();
     const content = document.getElementById("editablemail").innerHTML;
@@ -188,7 +148,7 @@ const TasksScreenUser = () => {
       history.push("/login");
     }
     preload();
-  }, [history,userInfo, successSendBulkEmails]); 
+  }, [history, userInfo, successSendBulkEmails]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -386,25 +346,16 @@ const TasksScreenUser = () => {
                       style={textareaStyle}
                       fullwidth="true"
                     />
-                    <div fullwidth="true">
-                      <input
-                        style={inputStyle}
-                        type="file"
-                        custom
-                        multiple
-                        onChange={uploadFileHandler}
-                        id="contained-button-file"
-                      />
-                      <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
-                        style={sendStyle}
-                        onClick={sendEmailHandler}
-                      >
-                        SEND
-                      </Button>
-                    </div>
+
+                    <Button
+                      type="submit"
+                      color="primary"
+                      variant="contained"
+                      style={sendStyle}
+                      onClick={sendEmailHandler}
+                    >
+                      SEND
+                    </Button>
                   </form>
                 </Box>
               </Modal>
