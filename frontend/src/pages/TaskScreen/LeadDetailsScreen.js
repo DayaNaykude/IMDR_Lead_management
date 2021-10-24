@@ -90,6 +90,16 @@ const saveStyle = {
   marginTop: "0%",
   width: "12%",
 };
+
+const submitStyle = {
+  backgroundColor: "#26d6ca",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "2%",
+  marginTop: "0%",
+  width: "15%",
+};
 const statusStyle = {
   marginLeft: "0%",
   marginTop: "5%",
@@ -162,6 +172,11 @@ const LeadDetails = () => {
         }
       })
       .catch((err) => console.log(err));
+  };
+
+  // backend call for update lead
+  const addReviewHandler = async (event) => {
+    console.log("review added");
   };
 
   // backend call for update lead
@@ -480,7 +495,13 @@ const LeadDetails = () => {
               onChange={(e) => setPincode(e.target.value)}
               value={pincode}
             />
-            <FormControl style={{ margin: "8px 230px", width: "35%" }}>
+            <FormControl
+              style={{
+                margin: "8px 8px 8px 15%",
+                width: "35%",
+                textSize: "20px",
+              }}
+            >
               <InputLabel>Source</InputLabel>
               <Select
                 labelId=""
@@ -500,8 +521,16 @@ const LeadDetails = () => {
                 <MenuItem value={"na"}>NA</MenuItem>
               </Select>
             </FormControl>
+            <TextField
+              label="Status"
+              style={listStyle}
+              variant="outlined"
+              disabled="disabled"
+              onChange={(e) => setStatus(e.target.value)}
+              value={status}
+            />
 
-            <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
+            {/* <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
               <Toolbar>
                 <Typography
                   variant="body1"
@@ -511,7 +540,9 @@ const LeadDetails = () => {
                   Lead Status
                 </Typography>
               </Toolbar>
-            </AppBar>
+            </AppBar> */}
+            <hr />
+            <h3 style={headerStyle}>Write a Lead Review</h3>
             <Typography style={{ margin: "8px", color: "red" }}>
               Select Status
             </Typography>
@@ -521,12 +552,10 @@ const LeadDetails = () => {
               <Select
                 labelId=""
                 id=""
-                value={status}
+                defaultValue={status}
                 label="Status"
-                disabled={disabled}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <em>Select status</em>
                 <MenuItem value=""></MenuItem>
                 <MenuItem value={"Level 1"}>Level 1</MenuItem>
                 <MenuItem value={"Level 2"}>Level 2</MenuItem>
@@ -539,10 +568,21 @@ const LeadDetails = () => {
               Comment
             </Typography>
             <TextareaAutosize
-              defaultValue="Write comment here"
-              disabled={disabled}
+              placeholder="Write comment here"
               style={textAreaStyle}
             />
+            <br />
+            <Button
+              color="primary"
+              variant="contained"
+              style={submitStyle}
+              onClick={addReviewHandler}
+            >
+              Submit
+            </Button>
+            <hr />
+            <h3 style={headerStyle}> Reviews</h3>
+            <p>display reviews here sort by timestamp new first</p>
 
             <Grid>
               <Button

@@ -322,8 +322,8 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
           console.log(firstMail);
           console.log(mailstatus);
           if (mailstatus) {
-            if (lead.status == "0") {
-              lead.status = "1";
+            if (lead.status == "level 0") {
+              lead.status = "level 1";
             }
             const review = {
               status: lead.status,
