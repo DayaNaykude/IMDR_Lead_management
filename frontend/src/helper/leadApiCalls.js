@@ -72,3 +72,21 @@ export const updateLead = (userId, token, updateInfo) => {
     })
     .catch((err) => console.log(err));
 };
+
+//delete leads
+export const deleteLeads = (userId, token, leads) => {
+  console.log(leads);
+  return fetch(`${API}deleteLeads/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      'Content-Type':'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: leads,
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
