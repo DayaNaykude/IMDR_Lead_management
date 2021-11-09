@@ -5,11 +5,6 @@ const reviewSchema = mongoose.Schema(
   {
     status: { type: String, required: true },
     comment: { type: String, required: true },
-    // user: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: "User",
-    // },
   },
   {
     timestamps: true,
@@ -172,13 +167,13 @@ const leadSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: 0,
+      default: "level 0",
     },
     source: {
       type: String,
       trim: true,
     },
-    college_name:{
+    college_name: {
       type: String,
       trim: true,
     },
