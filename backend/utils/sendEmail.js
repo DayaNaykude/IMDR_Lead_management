@@ -1,5 +1,6 @@
 // const nodemailer = require("nodemailer");
 const sgMail = require("@sendgrid/mail");
+const fs = require("fs");
 // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function sendEmail(options) {
@@ -8,7 +9,23 @@ async function sendEmail(options) {
       from: process.env.EMAIL_FROM,
       to: options.to,
       subject: options.subject,
-      html: options.html,
+      // html: options.html,
+      templateId: templates["firstmail"],
+      dynamic_template_data: {
+        applicantName: options.applicantName,
+      },
+
+      // attachments: [
+      //   {
+      //     filename: "email_template",
+      //     type: "image/jpg",
+      //     content_id: "email_template",
+      //     content: fs.readFileSync(filename, {
+      //       encoding: "base64",
+      //     }),
+      //     disposition: "inline",
+      //   },
+      // ],
     };
 
     sgMail

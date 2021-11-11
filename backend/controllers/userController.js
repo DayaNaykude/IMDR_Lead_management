@@ -278,28 +278,19 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
-  filename = "./backend/utils/mailContent.txt";
+  // filename = "./backend/utils/mailContent.txt";
 
-  fs.readFile(filename, "utf8", function (err, data) {
-    if (err) throw err;
+  // fs.readFile(filename, "utf8", function (err, data) {
+  //   if (err) throw err;
 
-    console.log(data);
-  });
+  //   console.log(data);
+  // });
 
-  const { emails, mailContent, subject } = req.body;
+  // const { emails, mailContent, subject } = req.body;
+  const { emails, subject } = req.body;
 
   let failedMails = [];
   let counter = 0;
-
-  const firstMailToLead = (applicantName) => {
-    const msg = `
-      <h3>Hi ${applicantName},</h3>
-      
-      ${mailContent}
-      `;
-
-    return msg;
-  };
 
   // const asyncRes = await Promise.all(
 
@@ -309,17 +300,17 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       // emails.map(async (mailid) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
-        const firstMail = firstMailToLead(lead.applicantName);
         try {
           const mailstatus = true;
 
           // const mailstatus = await sendEmail({
           //   to: lead.email,
           //   subject: subject,
-          //   html: firstMail,
+          //   // html: firstMail,
+          //   applicantName: lead.applicantName,
           // });
-          console.log(subject);
-          console.log(firstMail);
+          // console.log(subject);
+
           console.log(mailstatus);
           if (mailstatus) {
             if (lead.status == "level 0") {
