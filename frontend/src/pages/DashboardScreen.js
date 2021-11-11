@@ -19,7 +19,6 @@ const Dashboard = () => {
     };
   };
 
-
   const autoRefresh = 3000;
 
   const src_leads_count = `https://charts.mongodb.com/charts-project-0-yxocx/embed/charts?id=5f79da52-0be2-4fe3-93a1-ed6226d2c72b&autoRefresh=${autoRefresh}&theme=light`;
@@ -33,13 +32,41 @@ const Dashboard = () => {
   return (
     <>
       <h1 style={textStyle}>Dashboard</h1>
-      <iframe style={chartstyle(30, 40)} src={src_leads_count}></iframe>
-      <iframe style={chartstyle(30, 40)} src={src_leadsByUsers}></iframe>
-      <iframe style={chartstyle(30, 40)} src={src_leadsByStatus}></iframe>
-      <iframe style={chartstyle(46, 60)} src={src_leadsByUsersStatus}></iframe>
-      <iframe style={chartstyle(46, 60)} src={src_leadsByEntrance}></iframe>
-      <iframe style={chartstyle(90, 80)} src={src_leadsBySource}></iframe>
-      <iframe style={chartstyle(90, 80)} src={src_leadsByCity}></iframe>
+      <iframe
+        style={chartstyle(30, 40)}
+        src={src_leads_count}
+        title="src_leads_count"
+      ></iframe>
+      <iframe
+        style={chartstyle(30, 40)}
+        src={src_leadsByUsers}
+        title="src_leadsByUsers"
+      ></iframe>
+      <iframe
+        style={chartstyle(30, 40)}
+        src={src_leadsByStatus}
+        title="src_leadsByStatus"
+      ></iframe>
+      <iframe
+        style={chartstyle(46, 60)}
+        src={src_leadsByUsersStatus}
+        title="src_leadsByUsersStatus"
+      ></iframe>
+      <iframe
+        style={chartstyle(46, 60)}
+        src={src_leadsByEntrance}
+        title="src_leadsByEntrance"
+      ></iframe>
+      <iframe
+        style={chartstyle(90, 80)}
+        src={src_leadsBySource}
+        title="src_leadsBySource"
+      ></iframe>
+      <iframe
+        style={chartstyle(90, 80)}
+        src={src_leadsByCity}
+        title="src_leadsByCity"
+      ></iframe>
     </>
   );
 };

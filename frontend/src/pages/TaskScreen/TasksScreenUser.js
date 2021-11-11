@@ -105,6 +105,10 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
+  const handelBulkDelete = () => {
+    console.log("please implement");
+  };
+
   const deleteALlLeads = () => {
     setValues({ ...values, dError: "", dLoading: true });
     const jsonString = JSON.stringify(Object.assign({}, dleads));
@@ -194,7 +198,7 @@ const TasksScreenUser = () => {
     }
   };
   const [selectedRows, setSelectedRows] = useState([]);
-  
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");

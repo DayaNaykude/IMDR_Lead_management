@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
 const PromisePool = require("@supercharge/promise-pool");
-const { sendEmail, resetPasswordMail } = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/sendEmail");
 // const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -96,16 +96,18 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     // Create reset url to email to provided email
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
-    // HTML Message
-    const resetPassMail = resetPasswordMail(user.username, resetUrl);
-
     try {
-      const mailstatus = true;
-      // const mailstatus = await sendEmail({
-      //   to: user.email,
-      //   subject: "Password Reset Request",
-      //   text: resetPassMail,
-      // });
+      // const mailstatus = true;
+      const mailstatus = await sendEmail({
+        to: user.email,
+
+        template: "resetpass",
+        data: {
+          username: user.username,
+          resetpassURL: resetUrl,
+          subject: "Password Reset Request IMDR LMS",
+        },
+      });
       console.log(resetPassMail);
       if (mailstatus) {
         res.status(200);
@@ -301,14 +303,18 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
         try {
-          const mailstatus = true;
+          // const mailstatus = true;
 
-          // const mailstatus = await sendEmail({
-          //   to: lead.email,
-          //   subject: subject,
-          //   // html: firstMail,
-          //   applicantName: lead.applicantName,
-          // });
+          const mailstatus = await sendEmail({
+            to: lead.email,
+
+            // html: firstMail,
+            template: "firstmail",
+            data: {
+              applicantName: lead.applicantName,
+              subject: subject,
+            },
+          });
           // console.log(subject);
 
           console.log(mailstatus);
