@@ -7,17 +7,26 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
+import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllLeads } from "../../helper/leadApiCalls";
+import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 // backend Imports
 import { sendBulkEmails } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
+import { isAuthenticated } from "../../helper";
 
 const boxStyle = {
   marginTop: "60px",
@@ -82,6 +91,44 @@ const TasksScreenUser = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [flag, setFlag] = React.useState(false);
+  const showDeleteWindow = () => setFlag(true);
+  const hideDeleteWindow = () => setFlag(false);
+
+  const [dleads, setDleads] = React.useState([]);
+  const [values, setValues] = React.useState({
+    dError: "",
+    dSuccess: false,
+    dLoading: false,
+  });
+
+  const { dError, dSuccess, dLoading } = values;
+  const { _id, token } = isAuthenticated();
+
+  const deleteALlLeads = () => {
+    setValues({ ...values, dError: "", dLoading: true });
+    const jsonString = JSON.stringify(Object.assign({}, dleads));
+    console.log(jsonString);
+    deleteLeads(_id, token, jsonString)
+      .then((data) => {
+        if (data.error) {
+          setValues({
+            ...values,
+            dError: data.error,
+            dLoading: false,
+          });
+        } else {
+          setValues({
+            ...values,
+            dError: "",
+            dSuccess: true,
+            dLoading: false,
+          });
+        }
+      })
+      .catch(console.log("Error in lead deletion"));
+  };
+
   let history = useHistory();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -131,22 +178,21 @@ const TasksScreenUser = () => {
   };
 
   const preload = () => {
-    getAllLeads(userInfo._id, userInfo.token)
-      .then((data) => {
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          setData(data);
-          setTableLoading(false);
-        }
-      })
-      .catch((err) => console.log(err));
+    if (userInfo) {
+      getAllLeads(userInfo._id, userInfo.token)
+        .then((data) => {
+          if (data.error) {
+            console.log(data.error);
+          } else {
+            setData(data);
+            setTableLoading(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const [selectedRows, setSelectedRows] = useState([]);
-  const handelBulkDelete = () => {
-    const updatedData = data.filter((row) => !selectedRows.includes(row));
-    setData(updatedData);
-  };
+  
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -258,6 +304,17 @@ const TasksScreenUser = () => {
                 },
                 {
                   icon: "delete",
+                  tooltip: "Delete all selected leads",
+                  onClick: (evt, data) => {
+                    const leads = [];
+                    data.forEach((element) => {
+                      leads.push(element.email);
+                    });
+                    setDleads(leads);
+                    console.log(leads);
+                    showDeleteWindow();
+                  },
+                  isFreeAction: false,
                   tooltip: "Delete all selected rows",
                   onClick: () => handelBulkDelete(),
                 },
@@ -369,6 +426,53 @@ const TasksScreenUser = () => {
                   </form>
                 </Box>
               </Modal>
+            </div>
+
+            <div>
+              <Dialog
+                open={flag}
+                onClose={hideDeleteWindow}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <div>
+                  <IconButton
+                    aria-label="Back to home page"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                      history.go(0);
+                    }}
+                  >
+                    <KeyboardBackspaceSharpIcon />
+                  </IconButton>{" "}
+                </div>
+                {dSuccess && (
+                  <Alert severity="success">leads deleted successfully</Alert>
+                )}
+                {dError && <Alert severity="error">{dError}</Alert>}
+                {dLoading && <Alert severity="info">Deleting...</Alert>}
+                <DialogTitle id="alert-dialog-title">
+                  {"Are you sure?"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Selected leads will be deleted permanently from the
+                    database.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={deleteALlLeads}>Yes</Button>
+                  <Button
+                    onClick={() => {
+                      history.go(0);
+                    }}
+                    autoFocus
+                  >
+                    No
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </div>
           </Box>
         </div>

@@ -2,7 +2,6 @@ const Lead = require("../models/lead");
 const formidable = require("formidable");
 const _ = require("lodash");
 const { validationResult } = require("express-validator");
-const lead = require("../models/lead");
 
 exports.getLeadById = (req, res, next, id) => {
   Lead.findById(id).exec((err, lead) => {
@@ -15,6 +14,7 @@ exports.getLeadById = (req, res, next, id) => {
     next();
   });
 };
+
 //get a lead details
 exports.getLead = (req, res) => {
   const { emailId } = req.body;
@@ -29,6 +29,7 @@ exports.getLead = (req, res) => {
     return res.json(lead);
   });
 };
+
 // get all leads
 exports.getAllLeads = (req, res) => {
   Lead.find({ user: req.profile._id })
@@ -43,7 +44,6 @@ exports.getAllLeads = (req, res) => {
     });
 };
 
-//NOTE: Add Contact
 //Add Contact
 exports.createLead = (req, res) => {
   const errors = validationResult(req);
@@ -78,6 +78,7 @@ exports.createLead = (req, res) => {
   });
 };
 
+//update lead
 exports.updateLead = (req, res) => {
   Lead.findOneAndUpdate(
     { email: req.body.emailId },
@@ -120,21 +121,26 @@ exports.updateLeadStatus = (req, res) => {
   );
 };
 
-exports.deleteLead = (req, res) => {
-  let lead = req.lead;
-  lead.remove((err, deletedLead) => {
-    if (err || !deletedLead) {
-      return res.status(400).json({
-        error: "Lead can't be deleted.",
-        lead,
-      });
-    }
-    return res.json({
-      message: "Lead is deleted successfully",
+//delete
+exports.deleteManyLeads = (req, res) => {
+  const jsonObj = req.body;
+  var result = [];
+
+  for (var i in jsonObj) result.push(jsonObj[i]);
+  console.log(result.length);
+  console.log(result);
+  result.map((email) => {
+    Lead.findOneAndRemove({ email: email }).exec((err, lead) => {
+      if (err || !lead) {
+        return res.status(400).json({
+          error: "Can't delete lead",
+        });
+      }
+      if (lead && lead.email === result[result.length - 1]) {
+        return res.json({
+          message: "Selected leads have been deleted successfully",
+        });
+      }
     });
   });
-};
-
-exports.deleteManyLeads = (req, res) => {
-  //
 };
