@@ -105,6 +105,10 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
+  const handelBulkDelete = () => {
+    console.log("please implement");
+  };
+
   const deleteALlLeads = () => {
     setValues({ ...values, dError: "", dLoading: true });
     const jsonString = JSON.stringify(Object.assign({}, dleads));
@@ -161,13 +165,15 @@ const TasksScreenUser = () => {
   } = mailUpdateContent;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
-  const [subject, setSubject] = useState("Visit IMDR");
+  const [subject, setSubject] = useState(
+    "Craft Your Career with the First B-School of Pune"
+  );
   const [tableLoading, setTableLoading] = useState(true);
 
   const sendEmailHandler = async (e) => {
     e.preventDefault();
-    const content = document.getElementById("editablemail").innerHTML;
-    dispatch(sendBulkEmails(selectedEmails, content, subject));
+    // const content = document.getElementById("editablemail").innerHTML;
+    dispatch(sendBulkEmails(selectedEmails, subject));
   };
 
   const updateMailContentHandler = async (e) => {
@@ -192,13 +198,13 @@ const TasksScreenUser = () => {
     }
   };
   const [selectedRows, setSelectedRows] = useState([]);
-  
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     }
     preload();
-  }, [history, preload, userInfo, successSendBulkEmails]);
+  }, [history, userInfo, successSendBulkEmails]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -387,9 +393,9 @@ const TasksScreenUser = () => {
                         color="primary"
                         variant="contained"
                         style={saveStyle}
-                        onClick={updateMailContentHandler}
+                        onClick={handleClose}
                       >
-                        Save Content
+                        Close
                       </Button>
                     </div>
 
@@ -403,7 +409,7 @@ const TasksScreenUser = () => {
                       onChange={(e) => setSubject(e.target.value)}
                       fullWidth
                     />
-                    <div
+                    {/* <div
                       id="editablemail"
                       // maxRows={20}
                       dangerouslySetInnerHTML={{
@@ -412,7 +418,7 @@ const TasksScreenUser = () => {
                       contentEditable="true"
                       style={textareaStyle}
                       fullwidth="true"
-                    />
+                    /> */}
 
                     <Button
                       type="submit"

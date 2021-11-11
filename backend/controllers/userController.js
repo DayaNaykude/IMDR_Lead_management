@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Lead = require("../models/lead");
 const asyncHandler = require("express-async-handler");
 const PromisePool = require("@supercharge/promise-pool");
-const { sendEmail, resetPasswordMail } = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/sendEmail");
 // const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -96,16 +96,18 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     // Create reset url to email to provided email
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
-    // HTML Message
-    const resetPassMail = resetPasswordMail(user.username, resetUrl);
-
     try {
-      const mailstatus = true;
-      // const mailstatus = await sendEmail({
-      //   to: user.email,
-      //   subject: "Password Reset Request",
-      //   text: resetPassMail,
-      // });
+      // const mailstatus = true;
+      const mailstatus = await sendEmail({
+        to: user.email,
+
+        template: "resetpass",
+        data: {
+          username: user.username,
+          resetpassURL: resetUrl,
+          subject: "Password Reset Request IMDR LMS",
+        },
+      });
       console.log(resetPassMail);
       if (mailstatus) {
         res.status(200);
@@ -278,28 +280,19 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
-  filename = "./backend/utils/mailContent.txt";
+  // filename = "./backend/utils/mailContent.txt";
 
-  fs.readFile(filename, "utf8", function (err, data) {
-    if (err) throw err;
+  // fs.readFile(filename, "utf8", function (err, data) {
+  //   if (err) throw err;
 
-    console.log(data);
-  });
+  //   console.log(data);
+  // });
 
-  const { emails, mailContent, subject } = req.body;
+  // const { emails, mailContent, subject } = req.body;
+  const { emails, subject } = req.body;
 
   let failedMails = [];
   let counter = 0;
-
-  const firstMailToLead = (applicantName) => {
-    const msg = `
-      <h3>Hi ${applicantName},</h3>
-      
-      ${mailContent}
-      `;
-
-    return msg;
-  };
 
   // const asyncRes = await Promise.all(
 
@@ -309,17 +302,21 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       // emails.map(async (mailid) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
-        const firstMail = firstMailToLead(lead.applicantName);
         try {
-          const mailstatus = true;
+          // const mailstatus = true;
 
-          // const mailstatus = await sendEmail({
-          //   to: lead.email,
-          //   subject: subject,
-          //   html: firstMail,
-          // });
-          console.log(subject);
-          console.log(firstMail);
+          const mailstatus = await sendEmail({
+            to: lead.email,
+
+            // html: firstMail,
+            template: "firstmail",
+            data: {
+              applicantName: lead.applicantName,
+              subject: subject,
+            },
+          });
+          // console.log(subject);
+
           console.log(mailstatus);
           if (mailstatus) {
             if (lead.status == "level 0") {
