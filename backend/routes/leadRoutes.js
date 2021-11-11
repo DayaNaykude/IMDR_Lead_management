@@ -10,7 +10,6 @@ const {
   createLead,
   updateLead,
   getStatus,
-  deleteLead,
   deleteManyLeads,
 } = require("../controllers/leadController");
 const { getUserById } = require("../middleware/authMiddleware");
@@ -20,12 +19,6 @@ router.param("leadId", getLeadById);
 router.param("userId", getUserById);
 
 //actual routes
-
-// app.all('/', function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//   next()
-// });
 
 //read
 router.post("/lead/:userId", getLead);
@@ -70,7 +63,6 @@ router.post(
 router.put("/lead/update/:userId", updateLead);
 
 //delete
-router.delete("/lead/:leadId/:userId", deleteLead);
-router.delete("/lead/deleteLeads/:userId", deleteManyLeads);
+router.delete("/deleteLeads/:userId", deleteManyLeads);
 
 module.exports = router;
