@@ -3,6 +3,7 @@ dotenv.config();
 
 const morgan = require("morgan");
 // const errorHandler = require("./middleware/error");
+const path = require("path");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -16,7 +17,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const mailRoutes = require("./routes/mailRoutes");
 const leadRoutes = require("./routes/leadRoutes");
-const csvImportRoutes = require("./routes/csvImportRoutes")
+const csvImportRoutes = require("./routes/csvImportRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 connectDB();
