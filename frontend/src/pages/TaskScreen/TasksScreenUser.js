@@ -311,12 +311,11 @@ const TasksScreenUser = () => {
                       leads.push(element.email);
                     });
                     setDleads(leads);
-                    console.log(leads);
+                   // console.log(leads);
                     showDeleteWindow();
                   },
                   isFreeAction: false,
                   tooltip: "Delete all selected rows",
-                  onClick: () => handelBulkDelete(),
                 },
               ]}
               components={{
