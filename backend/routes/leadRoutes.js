@@ -9,6 +9,7 @@ const {
   getAllLeads,
   createLead,
   updateLead,
+  updateStatus,
   getStatus,
   deleteManyLeads,
 } = require("../controllers/leadController");
@@ -61,6 +62,9 @@ router.post(
 
 //update lead
 router.put("/lead/update/:userId", updateLead);
+
+//update status
+router.put("/lead/updateStatus/:userId", updateStatus);
 
 //delete
 router.delete("/deleteLeads/:userId", deleteManyLeads);
