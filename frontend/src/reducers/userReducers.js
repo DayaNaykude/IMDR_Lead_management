@@ -34,9 +34,12 @@ import {
   USER_SEND_EMAILS_REQUEST,
   USER_SEND_EMAILS_SUCCESS,
   USER_SEND_EMAILS_FAIL,
+<<<<<<< HEAD
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -181,6 +184,7 @@ export const userSendBulkEmailsReducer = (state = {}, action) => {
       return state;
   }
 };
+<<<<<<< HEAD
 
 export const userSendBulkSmsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -194,3 +198,5 @@ export const userSendBulkSmsReducer = (state = {}, action) => {
       return state;
   }
 };
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5

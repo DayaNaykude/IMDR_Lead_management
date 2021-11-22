@@ -44,7 +44,10 @@
     "express-jwt": "^5.3.1",
     "express-validator": "^6.2.0",
     "fast-csv": "^2.4.0",
+<<<<<<< HEAD
     "fast-two-sms": "^3.0.0",
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
     "formidable": "^1.2.1",
     "i": "^0.3.6",
     "json2csv": "^3.11.1",
@@ -61,7 +64,10 @@
     "nodemon": "^2.0.12",
     "npm": "^6.13.0",
     "react-country-region-selector": "^3.3.0",
+<<<<<<< HEAD
     "twilio": "^3.71.1",
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
     "uuid": "^3.3.3"
   },
   "devDependencies": {

@@ -176,96 +176,94 @@ const TaskScreenAdmin = () => {
 
   const TaskScreenAdminForm = () => {
     return (
-      <>
-        <form>
-          <div
-            style={{
-              display: "flex",
-              margin: "auto",
-              width: 400,
-              flexWrap: "wrap",
-            }}
-          >
-            <Grid align="center">
-              <Paper elevation={20} style={paperStyle}>
-                <div style={{ width: "100%", float: "left" }}>
-                  <p>
+      <form>
+        <div
+          style={{
+            display: "flex",
+            margin: "auto",
+            width: 400,
+            flexWrap: "wrap",
+          }}
+        >
+          <Grid align="center">
+            <Paper elevation={20} style={paperStyle}>
+              <div style={{ width: "100%", float: "left" }}>
+                <p>
+                  {" "}
+                  Use the form below to upload a csv file.Click
+                  <CSVLink data={data} filename={"leads.csv"}>
                     {" "}
-                    Use the form below to upload a csv file.Click
-                    <CSVLink data={data} filename={"leads.csv"}>
-                      {" "}
-                      here
-                    </CSVLink>{" "}
-                    for an example template.
-                  </p>
-                </div>
+                    here
+                  </CSVLink>{" "}
+                  for an example template.
+                </p>
+              </div>
 
-                <input
-                  style={inputStyle}
-                  name="csv"
-                  type="file"
-                  accept="*.csv"
-                  id="contained-button-file"
-                  onChange={handleChange("csv")}
-                />
-                <FormControl style={{ margin: "40px", width: 250 }}>
-                  <InputLabel>Source</InputLabel>
-                  <Select
-                    labelId=""
-                    id=""
-                    value={source}
-                    label="Source"
-                    onChange={handleChange("source")}
-                  >
-                    <MenuItem value=""></MenuItem>
-                    <MenuItem value={"Social Media"}>Social Media</MenuItem>
-                    <MenuItem value={"Walk in"}>Walk In</MenuItem>
-                    <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
-                    <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
-                    <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
-                    <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
-                  </Select>
-                </FormControl>
+              <input
+                style={inputStyle}
+                name="csv"
+                type="file"
+                accept="*.csv"
+                id="contained-button-file"
+                onChange={handleChange("csv")}
+              />
+              <FormControl style={{ margin: "40px", width: 250 }}>
+                <InputLabel>Source</InputLabel>
+                <Select
+                  labelId=""
+                  id=""
+                  value={source}
+                  label="Source"
+                  onChange={handleChange("source")}
+                >
+                  <MenuItem value=""></MenuItem>
+                  <MenuItem value={"Social Media"}>Social Media</MenuItem>
+                  <MenuItem value={"Walk in"}>Walk In</MenuItem>
+                  <MenuItem value={"Coaching Class"}>Coaching Class</MenuItem>
+                  <MenuItem value={"Outdoor"}>Outdoor</MenuItem>
+                  <MenuItem value={"Digital Fair"}>Digital Fair</MenuItem>
+                  <MenuItem value={"Paraphernalia"}>Paraphernalia</MenuItem>
+                </Select>
+              </FormControl>
 
-                <FormControl style={listStyle}>
-                  <InputLabel>Entrance Exam</InputLabel>
-                  <Select
-                    labelId=""
-                    id=""
-                    required
-                    value={entrance}
-                    label="Entrance Exam"
-                    onChange={handleChange("entrance")}
-                  >
-                    <MenuItem value="">
-                      <em>OTHER</em>
-                    </MenuItem>
-                    <MenuItem value={"cat"}>CAT</MenuItem>
-                    <MenuItem value={"mat"}>MAT</MenuItem>
-                    <MenuItem value={"cmat"}>C-MAT</MenuItem>
-                    <MenuItem value={"xat"}>XAT</MenuItem>
-                    <MenuItem value={"mhcet"}>MH-CET</MenuItem>
-                    <MenuItem value={"xat"}>XAT</MenuItem>
-                    <MenuItem value={"ATMA"}>ATMA</MenuItem>
-                  </Select>
-                </FormControl>
+              <FormControl style={listStyle}>
+                <InputLabel>Entrance Exam</InputLabel>
+                <Select
+                  labelId=""
+                  id=""
+                  required
+                  value={entrance}
+                  label="Entrance Exam"
+                  onChange={handleChange("entrance")}
+                >
+                  <MenuItem value="">
+                    <em>OTHER</em>
+                  </MenuItem>
+                  <MenuItem value={"cat"}>CAT</MenuItem>
+                  <MenuItem value={"mat"}>MAT</MenuItem>
+                  <MenuItem value={"cmat"}>C-MAT</MenuItem>
+                  <MenuItem value={"xat"}>XAT</MenuItem>
+                  <MenuItem value={"mhcet"}>MH-CET</MenuItem>
+                  <MenuItem value={"xat"}>XAT</MenuItem>
+                  <MenuItem value={"ATMA"}>ATMA</MenuItem>
+                </Select>
+              </FormControl>
 
-                <label htmlFor="contained-button-file">
-                  <Button
-                    style={{ marginTop: "40px" }}
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    onClick={onSubmit}
-                  >
-                    Upload
-                  </Button>
-                </label>
-              </Paper>
-            </Grid>
-          </div>
-        </form>
-      </>
+              <label htmlFor="contained-button-file">
+                <Button
+                  style={{ marginTop: "40px" }}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={onSubmit}
+                >
+                  Upload
+                </Button>
+              </label>
+            </Paper>
+          </Grid>
+        </div>
+      </form>
     );
   };
   return (

@@ -47,8 +47,8 @@ const style = {
   p: 4,
 };
 const saveStyle = {
-  backgroundColor: "white",
-  color: "red",
+  backgroundColor: "#26d6ca",
+  color: "white",
   display: "inline-block",
   fontSize: "15px",
   padding: "5px",
@@ -257,327 +257,265 @@ const TasksScreenUser = () => {
   ];
   return (
     <>
-      <div>
-        <h1 style={textStyle}>Lead Management</h1>
-        <Box style={boxStyle}>
-          <MaterialTable
-            title=""
-            data={data}
-            onSelectionChange={(rows) => setSelectedRows(rows)}
-            columns={column}
-            isLoading={tableLoading}
-            editable={{}}
-            options={{
-              filtering: true,
-              search: true,
-              toolbar: true,
+      {userInfo && userInfo.isAdmin ? (
+        <>
+          <h1 style={textStyle}>Admin Task Screen</h1>
+        </>
+      ) : (
+        <div>
+          <h1 style={textStyle}>Lead Management</h1>
+          <Box style={boxStyle}>
+            <MaterialTable
+              title=""
+              data={data}
+              onSelectionChange={(rows) => setSelectedRows(rows)}
+              columns={column}
+              isLoading={tableLoading}
+              editable={{}}
+              options={{
+                filtering: true,
+                search: true,
+                toolbar: true,
 
-              searchFieldVariant: "outlined",
-              searchFieldAlignment: "left",
-              pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
-              paginationType: "stepped",
-              actionsColumnIndex: -1,
-              rowStyle: (data, index) =>
-                index % 2 === 0 ? { background: "#f5f5f5" } : null,
-              headerStyle: { background: "#9c66e2", fontStyle: "bold" },
-              selection: true,
-            }}
-            actions={[
-              {
-                icon: "edit",
-                tooltip: "view details",
-                position: "row",
+                searchFieldVariant: "outlined",
+                searchFieldAlignment: "left",
+                pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
+                paginationType: "stepped",
+                actionsColumnIndex: -1,
+                rowStyle: (data, index) =>
+                  index % 2 === 0 ? { background: "#f5f5f5" } : null,
+                headerStyle: { background: "#9c66e2", fontStyle: "bold" },
+                selection: true,
+              }}
+              actions={[
+                {
+                  icon: "edit",
+                  tooltip: "view details",
+                  position: "row",
 
-                onClick: (event, rowData) => {
-                  return (
-                    <>
-                      {history.push({
-                        pathname: "/view", // re-route to this path
-                        state: {
-                          email: rowData.email,
-                        },
-                      })}
-                      {history.go(0)}
-                    </>
-                  );
+                  onClick: (event, rowData) => {
+                    return (
+                      <>
+                        {history.push({
+                          pathname: "/view", // re-route to this path
+                          state: {
+                            email: rowData.email,
+                          },
+                        })}
+                        {history.go(0)}
+                      </>
+                    );
+                  },
                 },
-              },
 
-              {
-                icon: () => <button style={btnstyle}>Add Contact</button>,
-                tooltip: "Add Contact",
-                onClick: () => {
-                  return (
-                    <>
-                      {history.push("/add")}
-                      {history.go(0)}
-                    </>
-                  );
+                {
+                  icon: () => <button style={btnstyle}>Add Contact</button>,
+                  tooltip: "Add Contact",
+                  onClick: () => {
+                    return (
+                      <>
+                        {history.push("/add")}
+                        {history.go(0)}
+                      </>
+                    );
+                  },
+                  isFreeAction: true,
                 },
-                isFreeAction: true,
-              },
-              {
-                icon: () => <button style={btnstyle}>Data</button>,
-                tooltip: "Data",
-                isFreeAction: true,
-              },
-              {
-                icon: () => <Button style={btnstyle}>Send Email</Button>,
-                tooltip: "Send Email",
-                onClick: (evt, data) => {
-                  const leads = [];
-                  data.forEach((element) => {
-                    leads.push(element.email);
-                  });
-                  dispatch(readMailContent());
-                  setSelectedEmails(leads);
+                {
+                  icon: () => <button style={btnstyle}>Data</button>,
+                  tooltip: "Data",
+                  isFreeAction: true,
+                },
+                {
+                  icon: () => <Button style={btnstyle}>Send Email</Button>,
+                  tooltip: "Send Email",
+                  onClick: (evt, data) => {
+                    const leads = [];
+                    data.forEach((element) => {
+                      leads.push(element.email);
+                    });
+                    dispatch(readMailContent());
+                    setSelectedEmails(leads);
 
-                  handleOpen();
+                    handleOpen();
+                  },
+                  isFreeAction: false,
                 },
-                isFreeAction: false,
-              },
-              {
-                icon: () => <Button style={btnstyle}>Send SMS</Button>,
-                tooltip: "Send SMS",
-                onClick: (evt, data) => {
-                  const leads_emails = [];
-                  const leads_numbers = [];
-                  data.forEach((element) => {
-                    leads_emails.push(element.email);
-                    leads_numbers.push(element.mobile.toString());
-                  });
-                  // dispatch(readMailContent());
-                  setSelectedEmails(leads_emails);
-                  setSelectedNumbers(leads_numbers);
-                  handleOpenSms();
+                {
+                  icon: "delete",
+                  tooltip: "Delete all selected leads",
+                  onClick: (evt, data) => {
+                    const leads = [];
+                    data.forEach((element) => {
+                      leads.push(element.email);
+                    });
+                    setDleads(leads);
+                    console.log(leads);
+                    showDeleteWindow();
+                  },
+                  isFreeAction: false,
+                  tooltip: "Delete all selected rows",
+                  onClick: () => handelBulkDelete(),
                 },
-                isFreeAction: false,
-              },
-              {
-                icon: "delete",
-                tooltip: "Delete all selected leads",
-                onClick: (evt, data) => {
-                  const leads = [];
-                  data.forEach((element) => {
-                    leads.push(element.email);
-                  });
-                  setDleads(leads);
-                  console.log(leads);
-                  showDeleteWindow();
-                },
-                isFreeAction: false,
-                tooltip: "Delete all selected rows",
-                onClick: () => handelBulkDelete(),
-              },
-            ]}
-            components={{
-              Pagination: (props) => (
-                <div>
-                  <Grid
-                    container
-                    style={{ padding: 15, background: "rgb(232 226 226)" }}
-                  >
-                    <Grid sm={1} item>
-                      <Typography variant="subtitle2">Total</Typography>
+              ]}
+              components={{
+                Pagination: (props) => (
+                  <div>
+                    <Grid
+                      container
+                      style={{ padding: 15, background: "rgb(232 226 226)" }}
+                    >
+                      <Grid sm={1} item>
+                        <Typography variant="subtitle2">Total</Typography>
+                      </Grid>
+                      <Grid sm={1} item align="center">
+                        <Typography variant="subtitle2">
+                          Number of rows:{props.count}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid sm={1} item align="center">
-                      <Typography variant="subtitle2">
-                        Number of rows:{props.count}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <TablePagination {...props} />
-                </div>
-              ),
-            }}
-          />
-          <div>
-            <Modal open={open} onClose={handleClose}>
-              <Box sx={style}>
+                    <TablePagination {...props} />
+                  </div>
+                ),
+              }}
+            />
+            <div>
+              <Modal open={open} onClose={handleClose}>
+                <Box sx={style}>
+                  {loading && (
+                    <Alert severity="info">
+                      Sending Emails.. It make few minutes..
+                    </Alert>
+                  )}
+                  {loadingMailUpdate && (
+                    <Alert severity="info">Updating mail content...</Alert>
+                  )}
+                  {loadingMailRead && (
+                    <Alert severity="info">Loading mail content...</Alert>
+                  )}
+                  {error && <Alert severity="error">{error}</Alert>}
+                  {errorMailRead && (
+                    <Alert severity="error">{errorMailRead}</Alert>
+                  )}
+                  {errorMailUpdate && (
+                    <Alert severity="error">{errorMailUpdate}</Alert>
+                  )}
+                  {statusSendBulkEmails && (
+                    <Alert severity="success">
+                      {statusSendBulkEmails.data}
+                    </Alert>
+                  )}
+                  {statusMailUpdate && (
+                    <Alert severity="success">{statusMailUpdate.status}</Alert>
+                  )}
+
+                  <form>
+                    <div fullwidth="true">
+                      <h3
+                        style={{
+                          display: "inline-block",
+                          textAlign: "center",
+                          float: "left",
+                        }}
+                      >
+                        Mail Content{" "}
+                      </h3>
+                      <Button
+                        type="submit"
+                        align="right"
+                        color="primary"
+                        variant="contained"
+                        style={saveStyle}
+                        onClick={handleClose}
+                      >
+                        Close
+                      </Button>
+                    </div>
+
+                    <TextField
+                      label="Subject"
+                      style={textstyle}
+                      required
+                      variant="outlined"
+                      placeholder="Enter Subject"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      fullWidth
+                    />
+                    {/* <div
+                      id="editablemail"
+                      // maxRows={20}
+                      dangerouslySetInnerHTML={{
+                        __html: mailContent && mailContent,
+                      }}
+                      contentEditable="true"
+                      style={textareaStyle}
+                      fullwidth="true"
+                    /> */}
+
+                    <Button
+                      type="submit"
+                      color="primary"
+                      variant="contained"
+                      style={sendStyle}
+                      onClick={sendEmailHandler}
+                    >
+                      SEND
+                    </Button>
+                  </form>
+                </Box>
+              </Modal>
+            </div>
+
+            <div>
+              <Dialog
+                open={flag}
+                onClose={hideDeleteWindow}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
                 <div>
                   <IconButton
                     aria-label="Back to home page"
                     color="primary"
                     variant="contained"
-                    onClick={handleClose}
+                    onClick={() => {
+                      history.go(0);
+                    }}
                   >
                     <KeyboardBackspaceSharpIcon />
                   </IconButton>{" "}
                 </div>
-                {loading && (
-                  <Alert severity="info">
-                    Sending Emails.. It make few minutes..
-                  </Alert>
+                {dSuccess && (
+                  <Alert severity="success">leads deleted successfully</Alert>
                 )}
-                {loadingMailUpdate && (
-                  <Alert severity="info">Updating mail content...</Alert>
-                )}
-                {loadingMailRead && (
-                  <Alert severity="info">Loading mail content...</Alert>
-                )}
-                {error && <Alert severity="error">{error}</Alert>}
-                {errorMailRead && (
-                  <Alert severity="error">{errorMailRead}</Alert>
-                )}
-                {errorMailUpdate && (
-                  <Alert severity="error">{errorMailUpdate}</Alert>
-                )}
-                {statusSendBulkEmails && (
-                  <Alert severity="success">{statusSendBulkEmails.data}</Alert>
-                )}
-                {statusMailUpdate && (
-                  <Alert severity="success">{statusMailUpdate.status}</Alert>
-                )}
-
-                <form>
-                  <div fullwidth="true">
-                    <h3
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        float: "left",
-                      }}
-                    >
-                      Mail Content{" "}
-                    </h3>
-                  </div>
-
-                  <TextField
-                    label="Subject"
-                    style={textstyle}
-                    required
-                    variant="outlined"
-                    placeholder="Enter Subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    fullWidth
-                  />
-
+                {dError && <Alert severity="error">{dError}</Alert>}
+                {dLoading && <Alert severity="info">Deleting...</Alert>}
+                <DialogTitle id="alert-dialog-title">
+                  {"Are you sure?"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Selected leads will be deleted permanently from the
+                    database.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={deleteALlLeads}>Yes</Button>
                   <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    style={sendStyle}
-                    onClick={sendEmailHandler}
+                    onClick={() => {
+                      history.go(0);
+                    }}
+                    autoFocus
                   >
-                    SEND
+                    No
                   </Button>
-                </form>
-              </Box>
-            </Modal>
-          </div>
-
-          <div>
-            <Modal open={openSms} onClose={handleCloseSms}>
-              <Box sx={style}>
-                <div>
-                  <IconButton
-                    aria-label="Back to home page"
-                    color="primary"
-                    variant="contained"
-                    onClick={handleCloseSms}
-                  >
-                    <KeyboardBackspaceSharpIcon />
-                  </IconButton>{" "}
-                </div>
-                {loadingSms && (
-                  <Alert severity="info">
-                    Sending Text Sms.. It make few minutes..
-                  </Alert>
-                )}
-
-                {errorSms && <Alert severity="error">{error}</Alert>}
-
-                {statusSendBulkSms && (
-                  <Alert severity="success">{statusSendBulkSms.data}</Alert>
-                )}
-
-                <form>
-                  <div fullwidth="true">
-                    <h3
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        float: "left",
-                      }}
-                    >
-                      SMS Content{" "}
-                    </h3>
-                  </div>
-
-                  <TextField
-                    label="Message"
-                    style={textstylesms}
-                    required
-                    variant="outlined"
-                    placeholder="Enter Message"
-                    value={message}
-                    multiline={true}
-                    onChange={(e) => setMessage(e.target.value)}
-                    fullWidth
-                  />
-
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    style={sendStyle}
-                    onClick={sendSmsHandler}
-                  >
-                    SEND
-                  </Button>
-                </form>
-              </Box>
-            </Modal>
-          </div>
-
-          <div>
-            <Dialog
-              open={flag}
-              onClose={hideDeleteWindow}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <div>
-                <IconButton
-                  aria-label="Back to home page"
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    history.go(0);
-                  }}
-                >
-                  <KeyboardBackspaceSharpIcon />
-                </IconButton>{" "}
-              </div>
-              {dSuccess && (
-                <Alert severity="success">leads deleted successfully</Alert>
-              )}
-              {dError && <Alert severity="error">{dError}</Alert>}
-              {dLoading && <Alert severity="info">Deleting...</Alert>}
-              <DialogTitle id="alert-dialog-title">
-                {"Are you sure?"}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Selected leads will be deleted permanently from the database.
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={deleteALlLeads}>Yes</Button>
-                <Button
-                  onClick={() => {
-                    history.go(0);
-                  }}
-                  autoFocus
-                >
-                  No
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        </Box>
-      </div>
+                </DialogActions>
+              </Dialog>
+            </div>
+          </Box>
+        </div>
+      )}
     </>
   );
 };

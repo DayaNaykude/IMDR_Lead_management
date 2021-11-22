@@ -8,7 +8,10 @@ const {
   updateUser,
   updateUserProfile,
   sendBulkEmails,
+<<<<<<< HEAD
   sendBulkSms,
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -26,6 +29,9 @@ router
 
 router.route("/:email").delete(protect, admin, deleteUser);
 router.route("/sendbulkemails").post(protect, sendBulkEmails);
+<<<<<<< HEAD
 router.route("/sendbulksms").post(protect, sendBulkSms);
+=======
+>>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 
 module.exports = router;
