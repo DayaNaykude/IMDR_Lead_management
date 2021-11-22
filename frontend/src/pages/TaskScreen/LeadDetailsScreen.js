@@ -169,6 +169,8 @@ const LeadDetails = () => {
   const [disabled, setDisabled] = React.useState(true);
   const [showdate, setShowdate] = React.useState(true);
   const [updatedate, setUpdatedate] = React.useState(false);
+  const [comment, setComment] = React.useState("");
+  const [reviews, setReviews] = React.useState([{}]);
 
   let history = useHistory();
 
@@ -223,7 +225,8 @@ const LeadDetails = () => {
   //const { _id, token } = isAuthenticated();
 
   const emailId = history.location.state.email;
-
+  const array = [];
+  array.push(emailId);
   // backend call
   const preload = () => {
     getLead(userInfo._id, userInfo.token, { emailId })
@@ -252,14 +255,27 @@ const LeadDetails = () => {
           setStatus(data.status.toLowerCase());
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
           setSource(data.source ? data.source.toLowerCase() : "NA");
+          setReviews(data.reviews);
         }
       })
       .catch((err) => console.log(err));
   };
 
-  // backend call for update lead
+  reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // backend call for update status
   const addReviewHandler = async (event) => {
-    console.log("review added");
+    event.preventDefault();
+    history.go(0);
+
+    updateStatus(userInfo._id, userInfo.token, { emailId, status, comment })
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+        }
+      })
+      .catch();
   };
 
   // backend call for update lead
@@ -305,7 +321,7 @@ const LeadDetails = () => {
             className="alert alert-success mt-4"
             style={{ display: success ? "" : "none" }}
           >
-            Updation of lead Successfully.
+            Updation of lead done Successfully.
           </div>
         </div>
       </div>
@@ -616,17 +632,6 @@ const LeadDetails = () => {
               value={status}
             />
 
-            {/* <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
-              <Toolbar>
-                <Typography
-                  variant="body1"
-                  color="inherit"
-                  style={{ marginLeft: "250px" }}
-                >
-                  Lead Status
-                </Typography>
-              </Toolbar>
-            </AppBar> */}
             <hr />
             <h3 style={headerStyle}>Write a Lead Review</h3>
             <Typography style={{ margin: "8px", color: "red" }}>
@@ -643,10 +648,10 @@ const LeadDetails = () => {
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <MenuItem value=""></MenuItem>
-                <MenuItem value={"Level 1"}>Level 1</MenuItem>
-                <MenuItem value={"Level 2"}>Level 2</MenuItem>
-                <MenuItem value={"Level 3"}>Level 3</MenuItem>
-                <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                <MenuItem value={"level 1"}>Level 1</MenuItem>
+                <MenuItem value={"level 2"}>Level 2</MenuItem>
+                <MenuItem value={"level 3"}>Level 3</MenuItem>
+                <MenuItem value={"level 4"}>Level 4</MenuItem>
               </Select>
             </FormControl>
 
@@ -656,6 +661,8 @@ const LeadDetails = () => {
             <TextareaAutosize
               placeholder="Write comment here"
               style={textAreaStyle}
+              required
+              onChange={(e) => setComment(e.target.value)}
             />
             <br />
             <Button
@@ -668,7 +675,17 @@ const LeadDetails = () => {
             </Button>
             <hr />
             <h3 style={headerStyle}> Reviews</h3>
-            <p>display reviews here sort by timestamp new first</p>
+
+            {reviews.map((review, index) => {
+              return (
+                <p key={index} className="alert alert-primary">
+                  <b> status:-</b>
+                  {review.status} <b>comment:-</b>
+                  {review.comment} <b>time:-</b>
+                  {review.createdAt}
+                </p>
+              );
+            })}
 
             <Grid>
               <Button
