@@ -6,10 +6,7 @@ const { sendEmail } = require("../utils/sendEmail");
 // const { sendEmail } = require("../utils/mailgun");
 const crypto = require("crypto");
 const fs = require("fs");
-<<<<<<< HEAD
 const { sendSms } = require("../utils/sendSms");
-=======
->>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;

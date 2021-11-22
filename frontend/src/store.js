@@ -12,10 +12,7 @@ import {
   userDeleteReducer,
   userUpdateReducer,
   userSendBulkEmailsReducer,
-<<<<<<< HEAD
   userSendBulkSmsReducer,
-=======
->>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 } from "./reducers/userReducers";
 
 import {
@@ -34,10 +31,7 @@ const reducer = combineReducers({
   userDelete: userDeleteReducer,
   userUpdate: userUpdateReducer,
   userSendBulkEmails: userSendBulkEmailsReducer,
-<<<<<<< HEAD
   userSendBulkSms: userSendBulkSmsReducer,
-=======
->>>>>>> 57240ec405e72037c835e8ba9017c4ccc26f7bd5
 
   mailReadContent: mailReadContentReducer,
   mailUpdateContent: mailUpdateContentReducer,

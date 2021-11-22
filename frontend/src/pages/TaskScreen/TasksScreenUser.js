@@ -442,16 +442,6 @@ const TasksScreenUser = () => {
                       onChange={(e) => setSubject(e.target.value)}
                       fullWidth
                     />
-                    {/* <div
-                      id="editablemail"
-                      // maxRows={20}
-                      dangerouslySetInnerHTML={{
-                        __html: mailContent && mailContent,
-                      }}
-                      contentEditable="true"
-                      style={textareaStyle}
-                      fullwidth="true"
-                    /> */}
 
                     <Button
                       type="submit"
