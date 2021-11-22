@@ -78,19 +78,9 @@ const smsbtnStyle = {
 const editStyle = {
   backgroundColor: "#26d6ca",
   color: "white",
-  fontSize: "20px",
+  fontSize: "15px",
   padding: "5px 5px 5px 5px",
   marginLeft: "65%",
-  marginTop: "0%",
-  width: "12%",
-};
-
-const saveStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  fontSize: "20px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "2%",
   marginTop: "0%",
   width: "12%",
 };
@@ -128,10 +118,34 @@ const saveContentStyle = {
   width: "fit-content",
 };
 
+const saveStyle = {
+  backgroundColor: "#26d6ca",
+  color: "white",
+  display: "inline-block",
+  fontSize: "15px",
+  padding: "5px",
+  float: "right",
+  marginTop: "0%",
+  width: "fit-content",
+};
+
 const sendStyle = {
   marginLeft: "45%",
   marginTop: "5%",
 };
+
+const btnstyle = {
+  backgroundColor: "rgb(30 183 30)",
+  color: "white",
+  height: "30px",
+  fontSize: "20px",
+};
+const textStyle = {
+  marginTop: "50px",
+  marginLeft: "42%",
+  color: "red",
+};
+
 const textareaStyle = {
   // width: "95%",
   height: "70%",
@@ -191,23 +205,25 @@ const LeadDetails = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
-  const mailReadContent = useSelector((state) => state.mailReadContent);
-  const {
-    loading: loadingMailRead,
-    error: errorMailRead,
-    mailContent,
-  } = mailReadContent;
+  // const mailReadContent = useSelector((state) => state.mailReadContent);
+  // const {
+  //   loading: loadingMailRead,
+  //   error: errorMailRead,
+  //   mailContent,
+  // } = mailReadContent;
 
-  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
-  const {
-    loading: loadingMailUpdate,
-    success: successMailUpdate,
-    error: errorMailUpdate,
-    status: statusMailUpdate,
-  } = mailUpdateContent;
+  // const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
+  // const {
+  //   loading: loadingMailUpdate,
+  //   success: successMailUpdate,
+  //   error: errorMailUpdate,
+  //   status: statusMailUpdate,
+  // } = mailUpdateContent;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
-  const [subject, setSubject] = useState("Visit IMDR");
+  const [subject, setSubject] = useState(
+    "Craft Your Career with the First B-School of Pune"
+  );
 
   const sendEmailHandler = async (e) => {
     e.preventDefault();
@@ -631,7 +647,33 @@ const LeadDetails = () => {
               onChange={(e) => setStatus(e.target.value)}
               value={status}
             />
+            <Grid>
+              <Button
+                style={mailbtnStyle}
+                type="submit"
+                color="#30af53"
+                fontSize="large"
+                startIcon={<EmailIcon fontSize="large" />}
+                onClick={(e) => {
+                  dispatch(readMailContent());
+                  setSelectedEmails(email);
+                  handleOpen();
+                }}
+              >
+                MAIL
+              </Button>
 
+              <Button
+                style={smsbtnStyle}
+                type="submit"
+                color="#30af53"
+                fontSize="large"
+                startIcon={<TextsmsIcon fontSize="large" />}
+                onClick={() => {}}
+              >
+                SMS
+              </Button>
+            </Grid>
             <hr />
             <h3 style={headerStyle}>Write a Lead Review</h3>
             <Typography style={{ margin: "8px", color: "red" }}>
@@ -686,34 +728,6 @@ const LeadDetails = () => {
                 </p>
               );
             })}
-
-            <Grid>
-              <Button
-                style={mailbtnStyle}
-                type="submit"
-                color="#30af53"
-                fontSize="large"
-                startIcon={<EmailIcon fontSize="large" />}
-                onClick={(e) => {
-                  dispatch(readMailContent());
-                  setSelectedEmails(email);
-                  handleOpen();
-                }}
-              >
-                MAIL
-              </Button>
-
-              <Button
-                style={smsbtnStyle}
-                type="submit"
-                color="#30af53"
-                fontSize="large"
-                startIcon={<TextsmsIcon fontSize="large" />}
-                onClick={() => {}}
-              >
-                SMS
-              </Button>
-            </Grid>
           </form>
         </Paper>
       </Grid>
@@ -725,25 +739,25 @@ const LeadDetails = () => {
                 Sending Emails.. It make few minutes..
               </Alert>
             )}
-            {loadingMailUpdate && (
+            {/* {loadingMailUpdate && (
               <Alert severity="info">Updating mail content...</Alert>
-            )}
-            {loadingMailRead && (
+            )} */}
+            {/* {loadingMailRead && (
               <Alert severity="info">Loading mail content...</Alert>
-            )}
+            )} */}
             {errorSendBulkEmails && (
               <Alert severity="error">{errorSendBulkEmails}</Alert>
             )}
-            {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>}
-            {errorMailUpdate && (
+            {/* {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>} */}
+            {/* {errorMailUpdate && (
               <Alert severity="error">{errorMailUpdate}</Alert>
-            )}
+            )} */}
             {statusSendBulkEmails && (
               <Alert severity="success">{statusSendBulkEmails.data}</Alert>
             )}
-            {statusMailUpdate && (
+            {/* {statusMailUpdate && (
               <Alert severity="success">{statusMailUpdate.status}</Alert>
-            )}
+            )} */}
 
             <form>
               <div fullwidth="true">
@@ -754,17 +768,17 @@ const LeadDetails = () => {
                     float: "left",
                   }}
                 >
-                  Mail Content{" "}
+                  Select Mail Template{" "}
                 </h3>
                 <Button
                   type="submit"
                   align="right"
                   color="primary"
                   variant="contained"
-                  style={saveContentStyle}
-                  onClick={updateMailContentHandler}
+                  style={saveStyle}
+                  onClick={handleClose}
                 >
-                  Save Content
+                  Close
                 </Button>
               </div>
 
@@ -777,16 +791,6 @@ const LeadDetails = () => {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 fullWidth
-              />
-              <div
-                id="editablemail"
-                // maxRows={20}
-                dangerouslySetInnerHTML={{
-                  __html: mailContent && mailContent,
-                }}
-                contentEditable="true"
-                style={textareaStyle}
-                fullwidth="true"
               />
 
               <Button

@@ -157,6 +157,11 @@ const TaskScreenAdmin = () => {
       </div>
     );
   };
+  const textStyle = {
+    marginTop: "50px",
+    marginLeft: "42%",
+    color: "red",
+  };
 
   const paperStyle = {
     padding: 20,
