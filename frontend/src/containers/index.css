@@ -1,0 +1,14 @@
+.imageStyle{
+
+  
+    position:fixed;
+    Width:102%;
+    Height:94%;
+    padding: 0px;
+    margin:auto;
+    background-size: cover;
+    background-position: center;
+    
+    display:flex;
+
+}

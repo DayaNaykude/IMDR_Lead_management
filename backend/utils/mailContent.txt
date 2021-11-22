@@ -1,0 +1,4 @@
+
+<a href="https://forms.eduqfix.com/deccanes/add" target="__blank">
+     <img alt="https://forms.eduqfix.com/deccanes/add" src="content_id:email_template">
+</a>
