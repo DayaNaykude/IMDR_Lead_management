@@ -78,19 +78,9 @@ const smsbtnStyle = {
 const editStyle = {
   backgroundColor: "#26d6ca",
   color: "white",
-  fontSize: "20px",
+  fontSize: "15px",
   padding: "5px 5px 5px 5px",
   marginLeft: "65%",
-  marginTop: "0%",
-  width: "12%",
-};
-
-const saveStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  fontSize: "20px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "2%",
   marginTop: "0%",
   width: "12%",
 };
@@ -128,10 +118,34 @@ const saveContentStyle = {
   width: "fit-content",
 };
 
+const saveStyle = {
+  backgroundColor: "#26d6ca",
+  color: "white",
+  display: "inline-block",
+  fontSize: "15px",
+  padding: "5px",
+  float: "right",
+  marginTop: "0%",
+  width: "fit-content",
+};
+
 const sendStyle = {
   marginLeft: "45%",
   marginTop: "5%",
 };
+
+const btnstyle = {
+  backgroundColor: "rgb(30 183 30)",
+  color: "white",
+  height: "30px",
+  fontSize: "20px",
+};
+const textStyle = {
+  marginTop: "50px",
+  marginLeft: "42%",
+  color: "red",
+};
+
 const textareaStyle = {
   // width: "95%",
   height: "70%",
@@ -169,6 +183,8 @@ const LeadDetails = () => {
   const [disabled, setDisabled] = React.useState(true);
   const [showdate, setShowdate] = React.useState(true);
   const [updatedate, setUpdatedate] = React.useState(false);
+  const [comment, setComment] = React.useState("");
+  const [reviews, setReviews] = React.useState([{}]);
 
   let history = useHistory();
 
@@ -189,23 +205,25 @@ const LeadDetails = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
-  const mailReadContent = useSelector((state) => state.mailReadContent);
-  const {
-    loading: loadingMailRead,
-    error: errorMailRead,
-    mailContent,
-  } = mailReadContent;
+  // const mailReadContent = useSelector((state) => state.mailReadContent);
+  // const {
+  //   loading: loadingMailRead,
+  //   error: errorMailRead,
+  //   mailContent,
+  // } = mailReadContent;
 
-  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
-  const {
-    loading: loadingMailUpdate,
-    success: successMailUpdate,
-    error: errorMailUpdate,
-    status: statusMailUpdate,
-  } = mailUpdateContent;
+  // const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
+  // const {
+  //   loading: loadingMailUpdate,
+  //   success: successMailUpdate,
+  //   error: errorMailUpdate,
+  //   status: statusMailUpdate,
+  // } = mailUpdateContent;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
-  const [subject, setSubject] = useState("Visit IMDR");
+  const [subject, setSubject] = useState(
+    "Craft Your Career with the First B-School of Pune"
+  );
 
   const sendEmailHandler = async (e) => {
     e.preventDefault();
@@ -223,7 +241,8 @@ const LeadDetails = () => {
   //const { _id, token } = isAuthenticated();
 
   const emailId = history.location.state.email;
-
+  const array = [];
+  array.push(emailId);
   // backend call
   const preload = () => {
     getLead(userInfo._id, userInfo.token, { emailId })
@@ -252,14 +271,27 @@ const LeadDetails = () => {
           setStatus(data.status.toLowerCase());
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
           setSource(data.source ? data.source.toLowerCase() : "NA");
+          setReviews(data.reviews);
         }
       })
       .catch((err) => console.log(err));
   };
 
-  // backend call for update lead
+  reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // backend call for update status
   const addReviewHandler = async (event) => {
-    console.log("review added");
+    event.preventDefault();
+    history.go(0);
+
+    updateStatus(userInfo._id, userInfo.token, { emailId, status, comment })
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+        }
+      })
+      .catch();
   };
 
   // backend call for update lead
@@ -305,7 +337,7 @@ const LeadDetails = () => {
             className="alert alert-success mt-4"
             style={{ display: success ? "" : "none" }}
           >
-            Updation of lead Successfully.
+            Updation of lead done Successfully.
           </div>
         </div>
       </div>
@@ -615,61 +647,6 @@ const LeadDetails = () => {
               onChange={(e) => setStatus(e.target.value)}
               value={status}
             />
-
-            {/* <AppBar position="static" color="primary" style={{ marginTop: 20 }}>
-              <Toolbar>
-                <Typography
-                  variant="body1"
-                  color="inherit"
-                  style={{ marginLeft: "250px" }}
-                >
-                  Lead Status
-                </Typography>
-              </Toolbar>
-            </AppBar> */}
-            <hr />
-            <h3 style={headerStyle}>Write a Lead Review</h3>
-            <Typography style={{ margin: "8px", color: "red" }}>
-              Select Status
-            </Typography>
-
-            <FormControl style={{ margin: "8px", width: "50%" }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                labelId=""
-                id=""
-                defaultValue={status}
-                label="Status"
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <MenuItem value=""></MenuItem>
-                <MenuItem value={"Level 1"}>Level 1</MenuItem>
-                <MenuItem value={"Level 2"}>Level 2</MenuItem>
-                <MenuItem value={"Level 3"}>Level 3</MenuItem>
-                <MenuItem value={"Level 4"}>Level 4</MenuItem>
-              </Select>
-            </FormControl>
-
-            <Typography style={{ margin: "8px", color: "red" }}>
-              Comment
-            </Typography>
-            <TextareaAutosize
-              placeholder="Write comment here"
-              style={textAreaStyle}
-            />
-            <br />
-            <Button
-              color="primary"
-              variant="contained"
-              style={submitStyle}
-              onClick={addReviewHandler}
-            >
-              Submit
-            </Button>
-            <hr />
-            <h3 style={headerStyle}> Reviews</h3>
-            <p>display reviews here sort by timestamp new first</p>
-
             <Grid>
               <Button
                 style={mailbtnStyle}
@@ -697,6 +674,60 @@ const LeadDetails = () => {
                 SMS
               </Button>
             </Grid>
+            <hr />
+            <h3 style={headerStyle}>Write a Lead Review</h3>
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Select Status
+            </Typography>
+
+            <FormControl style={{ margin: "8px", width: "50%" }}>
+              <InputLabel>Status</InputLabel>
+              <Select
+                labelId=""
+                id=""
+                defaultValue={status}
+                label="Status"
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <MenuItem value=""></MenuItem>
+                <MenuItem value={"level 1"}>Level 1</MenuItem>
+                <MenuItem value={"level 2"}>Level 2</MenuItem>
+                <MenuItem value={"level 3"}>Level 3</MenuItem>
+                <MenuItem value={"level 4"}>Level 4</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Typography style={{ margin: "8px", color: "red" }}>
+              Comment
+            </Typography>
+            <TextareaAutosize
+              placeholder="Write comment here"
+              style={textAreaStyle}
+              required
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <br />
+            <Button
+              color="primary"
+              variant="contained"
+              style={submitStyle}
+              onClick={addReviewHandler}
+            >
+              Submit
+            </Button>
+            <hr />
+            <h3 style={headerStyle}> Reviews</h3>
+
+            {reviews.map((review, index) => {
+              return (
+                <p key={index} className="alert alert-primary">
+                  <b> status:-</b>
+                  {review.status} <b>comment:-</b>
+                  {review.comment} <b>time:-</b>
+                  {review.createdAt}
+                </p>
+              );
+            })}
           </form>
         </Paper>
       </Grid>
@@ -708,25 +739,25 @@ const LeadDetails = () => {
                 Sending Emails.. It make few minutes..
               </Alert>
             )}
-            {loadingMailUpdate && (
+            {/* {loadingMailUpdate && (
               <Alert severity="info">Updating mail content...</Alert>
-            )}
-            {loadingMailRead && (
+            )} */}
+            {/* {loadingMailRead && (
               <Alert severity="info">Loading mail content...</Alert>
-            )}
+            )} */}
             {errorSendBulkEmails && (
               <Alert severity="error">{errorSendBulkEmails}</Alert>
             )}
-            {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>}
-            {errorMailUpdate && (
+            {/* {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>} */}
+            {/* {errorMailUpdate && (
               <Alert severity="error">{errorMailUpdate}</Alert>
-            )}
+            )} */}
             {statusSendBulkEmails && (
               <Alert severity="success">{statusSendBulkEmails.data}</Alert>
             )}
-            {statusMailUpdate && (
+            {/* {statusMailUpdate && (
               <Alert severity="success">{statusMailUpdate.status}</Alert>
-            )}
+            )} */}
 
             <form>
               <div fullwidth="true">
@@ -737,17 +768,17 @@ const LeadDetails = () => {
                     float: "left",
                   }}
                 >
-                  Mail Content{" "}
+                  Select Mail Template{" "}
                 </h3>
                 <Button
                   type="submit"
                   align="right"
                   color="primary"
                   variant="contained"
-                  style={saveContentStyle}
-                  onClick={updateMailContentHandler}
+                  style={saveStyle}
+                  onClick={handleClose}
                 >
-                  Save Content
+                  Close
                 </Button>
               </div>
 
@@ -760,16 +791,6 @@ const LeadDetails = () => {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 fullWidth
-              />
-              <div
-                id="editablemail"
-                // maxRows={20}
-                dangerouslySetInnerHTML={{
-                  __html: mailContent && mailContent,
-                }}
-                contentEditable="true"
-                style={textareaStyle}
-                fullwidth="true"
               />
 
               <Button

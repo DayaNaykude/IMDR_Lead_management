@@ -7,6 +7,7 @@ async function sendEmail(options) {
   return new Promise((resolve, reject) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
+      replyTo: "sahil.kavitake@outlook.com",
       to: options.to,
       templateId: templates[options.template],
       dynamic_template_data: options.data,

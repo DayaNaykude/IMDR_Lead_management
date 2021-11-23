@@ -25,7 +25,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // backend Imports
-import { sendBulkEmails } from "../../actions/userActions";
+import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
@@ -88,11 +88,19 @@ const inputStyle = {
   display: "inline-block",
 };
 
-const textstyle = { margin: "8px 0" };
+const textstyle = { margin: "8px 0", height: "fit-content" };
+const textstylesms = { margin: "8px 0", height: "fit-content" };
+
 const TasksScreenUser = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [openSms, setOpenSms] = useState(false);
+  const handleOpenSms = () => setOpenSms(true);
+  const handleCloseSms = () => setOpenSms(false);
 
   const [flag, setFlag] = React.useState(false);
   const showDeleteWindow = () => setFlag(true);
@@ -152,6 +160,14 @@ const TasksScreenUser = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
+  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
+  const {
+    loading: loadingSms,
+    success: successSendBulkSms,
+    error: errorSms,
+    status: statusSendBulkSms,
+  } = userSendBulkSms;
+
   const mailReadContent = useSelector((state) => state.mailReadContent);
   const {
     loading: loadingMailRead,
@@ -168,8 +184,14 @@ const TasksScreenUser = () => {
   } = mailUpdateContent;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
+  const [selectedNumbers, setSelectedNumbers] = useState(null);
   const [subject, setSubject] = useState(
     "Craft Your Career with the First B-School of Pune"
+  );
+
+  const [message, setMessage] = useState(
+    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
+    `
   );
   const [tableLoading, setTableLoading] = useState(true);
 
@@ -177,6 +199,11 @@ const TasksScreenUser = () => {
     e.preventDefault();
     // const content = document.getElementById("editablemail").innerHTML;
     dispatch(sendBulkEmails(selectedEmails, subject));
+  };
+
+  const sendSmsHandler = async (e) => {
+    e.preventDefault();
+    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
   };
 
   const updateMailContentHandler = async (e) => {
@@ -230,7 +257,13 @@ const TasksScreenUser = () => {
       history.push("/login");
     }
     preload();
-  }, [history, userInfo, successSendBulkEmails]);
+  }, [
+    history,
+    userInfo,
+    successSendBulkEmails,
+    statusSendBulkEmails,
+    successSendBulkSms,
+  ]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -446,16 +479,6 @@ const TasksScreenUser = () => {
                       onChange={(e) => setSubject(e.target.value)}
                       fullWidth
                     />
-                    {/* <div
-                      id="editablemail"
-                      // maxRows={20}
-                      dangerouslySetInnerHTML={{
-                        __html: mailContent && mailContent,
-                      }}
-                      contentEditable="true"
-                      style={textareaStyle}
-                      fullwidth="true"
-                    /> */}
 
                     <Button
                       type="submit"

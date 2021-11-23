@@ -33,6 +33,9 @@ import {
   USER_SEND_EMAILS_REQUEST,
   USER_SEND_EMAILS_SUCCESS,
   USER_SEND_EMAILS_FAIL,
+  USER_SEND_SMS_REQUEST,
+  USER_SEND_SMS_SUCCESS,
+  USER_SEND_SMS_FAIL,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -351,11 +354,7 @@ export const updateUser = (updateUser) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(
-      `/api/users/${updateUser.email}`,
-      updateUser,
-      config
-    );
+    await axios.put(`/api/users/${updateUser.email}`, updateUser, config);
 
     dispatch({ type: USER_UPDATE_SUCCESS });
 
@@ -406,6 +405,45 @@ export const sendBulkEmails =
     } catch (error) {
       dispatch({
         type: USER_SEND_EMAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const sendBulkSms =
+  (emails, numbers, message) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_SEND_SMS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        "/api/users/sendbulksms",
+        { emails, numbers, message },
+        config
+      );
+
+      dispatch({
+        type: USER_SEND_SMS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_SEND_SMS_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
