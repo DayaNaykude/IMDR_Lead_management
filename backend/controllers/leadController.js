@@ -127,8 +127,6 @@ exports.deleteManyLeads = (req, res) => {
   var result = [];
 
   for (var i in jsonObj) result.push(jsonObj[i]);
-  console.log(result.length);
-  console.log(result);
   result.map((email) => {
     Lead.findOneAndRemove({ email: email }).exec((err, lead) => {
       if (err || !lead) {

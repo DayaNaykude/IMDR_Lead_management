@@ -8,7 +8,7 @@ const fs = require("fs");
 
 //uploading leads into db
 exports.uploadFile = (req, res) => {
-  console.log("IN UPLOAD FILE");
+  
   let data;
   var leads = [];
 

@@ -111,26 +111,33 @@ const TasksScreenUser = () => {
 
   const deleteALlLeads = () => {
     setValues({ ...values, dError: "", dLoading: true });
-    const jsonString = JSON.stringify(Object.assign({}, dleads));
-    console.log(jsonString);
-    deleteLeads(_id, token, jsonString)
-      .then((data) => {
-        if (data.error) {
-          setValues({
-            ...values,
-            dError: data.error,
-            dLoading: false,
-          });
-        } else {
-          setValues({
-            ...values,
-            dError: "",
-            dSuccess: true,
-            dLoading: false,
-          });
-        }
-      })
-      .catch(console.log("Error in lead deletion"));
+    if (dleads.length < 500) {
+      const jsonString = JSON.stringify(Object.assign({}, dleads));
+      deleteLeads(_id, token, jsonString)
+        .then((data) => {
+          if (data.error) {
+            setValues({
+              ...values,
+              dError: data.error,
+              dLoading: false,
+            });
+          } else {
+            setValues({
+              ...values,
+              dError: "",
+              dSuccess: true,
+              dLoading: false,
+            });
+          }
+        })
+        .catch(console.log("Error in lead deletion"));
+    } else {
+      setValues({
+        ...values,
+        dError: "Select upto 500 leads to delete",
+        dLoading: false,
+      });
+    }
   };
 
   let history = useHistory();
@@ -317,7 +324,6 @@ const TasksScreenUser = () => {
                       leads.push(element.email);
                     });
                     setDleads(leads);
-                   // console.log(leads);
                     showDeleteWindow();
                   },
                   isFreeAction: false,
