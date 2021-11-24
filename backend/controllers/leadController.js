@@ -121,6 +121,71 @@ exports.updateLeadStatus = (req, res) => {
   );
 };
 
+//update status
+exports.updateStatus = (req, res) => {
+  let review = [];
+
+  review.push({
+    status: req.body.status,
+    comment: req.body.comment,
+    createdAt: new Date(),
+  });
+
+  Lead.findOneAndUpdate(
+    { email: req.body.emailId },
+    { $set: { status: req.body.status }, $push: { reviews: review } },
+    { new: true },
+    (err, lead) => {
+      if (err || !lead) {
+        console.log("in error");
+        return res.status(400).json({
+          error: "Unable to update",
+        });
+      } else {
+        return res.json({
+          message: "update lead status successfully",
+        });
+      }
+    }
+  );
+};
+
+exports.getStatus = (req, res) => {
+  return res.send(req.lead.status);
+};
+
+exports.updateLeadStatus = (req, res) => {
+  Lead.findByIdAndUpdate(
+    { _id: req.lead._id },
+    { $set: { status: req.body.status } },
+    { new: true, useFindAndModify: false },
+    (err, lead) => {
+      if (err || !Lead) {
+        console.log(err);
+        return res.status(400).json({
+          error: "Failed to update status of lead",
+        });
+      }
+      return res.json(lead);
+    }
+  );
+};
+
+exports.deleteLead = (req, res) => {
+  let lead = req.lead;
+  lead.remove((err, deletedLead) => {
+    if (err || !deletedLead) {
+      return res.status(400).json({
+        error: "Lead can't be deleted.",
+        lead,
+      });
+    }
+    return res.json({
+      message: "Lead is deleted successfully",
+    });
+  });
+};
+
 //delete
 exports.deleteManyLeads = (req, res) => {
   const jsonObj = req.body;

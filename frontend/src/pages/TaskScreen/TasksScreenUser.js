@@ -7,6 +7,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import { CsvBuilder } from 'filefy';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
@@ -14,7 +17,7 @@ import { useEffect, useState } from "react";
 import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
+import XLSX from "xlsx";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -22,7 +25,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // backend Imports
-import { sendBulkEmails } from "../../actions/userActions";
+import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
@@ -85,11 +88,19 @@ const inputStyle = {
   display: "inline-block",
 };
 
-const textstyle = { margin: "8px 0" };
+const textstyle = { margin: "8px 0", height: "fit-content" };
+const textstylesms = { margin: "8px 0", height: "fit-content" };
+
 const TasksScreenUser = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [openSms, setOpenSms] = useState(false);
+  const handleOpenSms = () => setOpenSms(true);
+  const handleCloseSms = () => setOpenSms(false);
 
   const [flag, setFlag] = React.useState(false);
   const showDeleteWindow = () => setFlag(true);
@@ -156,6 +167,14 @@ const TasksScreenUser = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
+  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
+  const {
+    loading: loadingSms,
+    success: successSendBulkSms,
+    error: errorSms,
+    status: statusSendBulkSms,
+  } = userSendBulkSms;
+
   const mailReadContent = useSelector((state) => state.mailReadContent);
   const {
     loading: loadingMailRead,
@@ -172,8 +191,14 @@ const TasksScreenUser = () => {
   } = mailUpdateContent;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
+  const [selectedNumbers, setSelectedNumbers] = useState(null);
   const [subject, setSubject] = useState(
     "Craft Your Career with the First B-School of Pune"
+  );
+
+  const [message, setMessage] = useState(
+    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
+    `
   );
   const [tableLoading, setTableLoading] = useState(true);
 
@@ -183,13 +208,32 @@ const TasksScreenUser = () => {
     dispatch(sendBulkEmails(selectedEmails, subject));
   };
 
+  const sendSmsHandler = async (e) => {
+    e.preventDefault();
+    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
+  };
+
   const updateMailContentHandler = async (e) => {
     e.preventDefault();
     const content = document.getElementById("editablemail").innerHTML;
     console.log(content.toString());
     dispatch(updateMailContent(content));
   };
-
+  const downloadExcel = () => {
+    const newData=data.map(row=>{
+    delete row.tableData
+    return row
+    })
+    const workSheet=XLSX.utils.json_to_sheet(newData)
+    const workBook=XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workBook,workSheet,"Leads Data")
+    //Buffer
+    let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    //Binary
+    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    //Download
+    XLSX.writeFile(workBook,"LeadsData.xlsx")
+  }
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -204,14 +248,29 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  const [selectedRows, setSelectedRows] = useState([]);
+  const exportAllSelectedRows=()=>{
 
+
+    new CsvBuilder("tableData.csv")
+     .setColumns(column.map(col=>col.title))
+     .addRows(selectedRows.map(rowData=>column.map(col=>rowData[col.field])))
+     .exportFile();
+
+    };
+  const [selectedRows, setSelectedRows] = useState([]);
+ 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     }
     preload();
-  }, [history, userInfo, successSendBulkEmails]);
+  }, [
+    history,
+    userInfo,
+    successSendBulkEmails,
+    statusSendBulkEmails,
+    successSendBulkSms,
+  ]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -250,7 +309,6 @@ const TasksScreenUser = () => {
                 filtering: true,
                 search: true,
                 toolbar: true,
-
                 searchFieldVariant: "outlined",
                 searchFieldAlignment: "left",
                 pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
@@ -262,6 +320,7 @@ const TasksScreenUser = () => {
                 selection: true,
               }}
               actions={[
+                
                 {
                   icon: "edit",
                   tooltip: "view details",
@@ -301,6 +360,12 @@ const TasksScreenUser = () => {
                   isFreeAction: true,
                 },
                 {
+                  icon: "download",
+                  tooltip:"Export to excel",
+                  onClick:()=>downloadExcel(),
+                  isFreeAction:true,
+                },
+                {
                   icon: () => <Button style={btnstyle}>Send Email</Button>,
                   tooltip: "Send Email",
                   onClick: (evt, data) => {
@@ -329,6 +394,11 @@ const TasksScreenUser = () => {
                   isFreeAction: false,
                   tooltip: "Delete all selected rows",
                 },
+                {
+                  icon: ()=><SaveAltIcon/>,
+                  tooltip: "Export all selected rows",
+                  onClick: () => exportAllSelectedRows()
+                }
               ]}
               components={{
                 Pagination: (props) => (
@@ -414,16 +484,6 @@ const TasksScreenUser = () => {
                       onChange={(e) => setSubject(e.target.value)}
                       fullWidth
                     />
-                    {/* <div
-                      id="editablemail"
-                      // maxRows={20}
-                      dangerouslySetInnerHTML={{
-                        __html: mailContent && mailContent,
-                      }}
-                      contentEditable="true"
-                      style={textareaStyle}
-                      fullwidth="true"
-                    /> */}
 
                     <Button
                       type="submit"

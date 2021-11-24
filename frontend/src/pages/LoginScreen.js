@@ -81,7 +81,7 @@ const LoginScreen = ({ handleChange }) => {
             </Avatar>
             <h2>Sign In</h2>
           </Grid>
-          {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">Invalid credentials !</Alert>}
           {loading && <Alert severity="info">Loading...</Alert>}
 
           <Formik

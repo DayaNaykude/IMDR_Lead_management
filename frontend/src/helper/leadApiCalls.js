@@ -90,3 +90,22 @@ export const deleteLeads = (userId, token, leads) => {
     })
     .catch((err) => console.log(err));
 };
+
+//update lead status
+export const updateStatus = (userId, token, updateInfo) => {
+  console.log(API);
+
+  return fetch(`${API}/lead/updateStatus/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateInfo),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
