@@ -721,10 +721,10 @@ const LeadDetails = () => {
             {reviews.map((review, index) => {
               return (
                 <p key={index} className="alert alert-primary">
-                  <b> status:-</b>
-                  {review.status} <b>comment:-</b>
-                  {review.comment} <b>time:-</b>
-                  {review.createdAt}
+                  <b> Status:-</b>
+                  {review.status} <b>Comment:-</b>
+                  {review.comment} <b>Date:-</b>
+                  {review.createdAt ? review.createdAt.slice(0, 10) : ""}
                 </p>
               );
             })}

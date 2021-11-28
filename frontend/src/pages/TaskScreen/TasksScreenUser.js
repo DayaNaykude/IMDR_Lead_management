@@ -24,7 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // backend Imports
 import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { useDispatch, useSelector } from "react-redux";
+import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
