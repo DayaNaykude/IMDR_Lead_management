@@ -7,6 +7,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import { CsvBuilder } from 'filefy';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
@@ -14,7 +17,7 @@ import { useEffect, useState } from "react";
 import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
+import XLSX from "xlsx";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -209,7 +212,21 @@ const TasksScreenUser = () => {
     console.log(content.toString());
     dispatch(updateMailContent(content));
   };
-
+  const downloadExcel = () => {
+    const newData=data.map(row=>{
+    delete row.tableData
+    return row
+    })
+    const workSheet=XLSX.utils.json_to_sheet(newData)
+    const workBook=XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workBook,workSheet,"Leads Data")
+    //Buffer
+    let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    //Binary
+    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    //Download
+    XLSX.writeFile(workBook,"LeadsData.xlsx")
+  }
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -224,8 +241,17 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  const [selectedRows, setSelectedRows] = useState([]);
+  const exportAllSelectedRows=()=>{
 
+
+    new CsvBuilder("tableData.csv")
+     .setColumns(column.map(col=>col.title))
+     .addRows(selectedRows.map(rowData=>column.map(col=>rowData[col.field])))
+     .exportFile();
+
+    };
+  const [selectedRows, setSelectedRows] = useState([]);
+ 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -276,7 +302,6 @@ const TasksScreenUser = () => {
                 filtering: true,
                 search: true,
                 toolbar: true,
-
                 searchFieldVariant: "outlined",
                 searchFieldAlignment: "left",
                 pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
@@ -288,6 +313,7 @@ const TasksScreenUser = () => {
                 selection: true,
               }}
               actions={[
+                
                 {
                   icon: "edit",
                   tooltip: "view details",
@@ -327,6 +353,12 @@ const TasksScreenUser = () => {
                   isFreeAction: true,
                 },
                 {
+                  icon: "download",
+                  tooltip:"Export to excel",
+                  onClick:()=>downloadExcel(),
+                  isFreeAction:true,
+                },
+                {
                   icon: () => <Button style={btnstyle}>Send Email</Button>,
                   tooltip: "Send Email",
                   onClick: (evt, data) => {
@@ -357,6 +389,11 @@ const TasksScreenUser = () => {
                   tooltip: "Delete all selected rows",
                   onClick: () => handelBulkDelete(),
                 },
+                {
+                  icon: ()=><SaveAltIcon/>,
+                  tooltip: "Export all selected rows",
+                  onClick: () => exportAllSelectedRows()
+                }
               ]}
               components={{
                 Pagination: (props) => (
