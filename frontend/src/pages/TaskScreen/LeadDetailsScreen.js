@@ -27,12 +27,11 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Box from "@material-ui/core/Box";
 
 import { updateLead, updateStatus } from "../../helper/leadApiCalls";
-import { tabScrollButtonClasses } from "@mui/material";
 import Modal from "@mui/material/Modal";
 
 // backend Imports
 import { sendBulkEmails } from "../../actions/userActions";
-import { readMailContent, updateMailContent } from "../../actions/mailActions";
+import { readMailContent } from "../../actions/mailActions";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
@@ -107,16 +106,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const saveContentStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  display: "inline-block",
-  fontSize: "15px",
-  padding: "5px",
-  float: "right",
-  marginTop: "0%",
-  width: "fit-content",
-};
 
 const saveStyle = {
   backgroundColor: "#26d6ca",
@@ -134,28 +123,6 @@ const sendStyle = {
   marginTop: "5%",
 };
 
-const btnstyle = {
-  backgroundColor: "rgb(30 183 30)",
-  color: "white",
-  height: "30px",
-  fontSize: "20px",
-};
-const textStyle = {
-  marginTop: "50px",
-  marginLeft: "42%",
-  color: "red",
-};
-
-const textareaStyle = {
-  // width: "95%",
-  height: "70%",
-  padding: "2%",
-  border: "2px solid orange",
-};
-const statusStyle = {
-  marginLeft: "0%",
-  marginTop: "5%",
-};
 const textAreaStyle = {
   marginLeft: "1.5%",
   marginTop: "0%",
@@ -231,12 +198,12 @@ const LeadDetails = () => {
     dispatch(sendBulkEmails(selectedEmails, content, subject));
   };
 
-  const updateMailContentHandler = async (e) => {
-    e.preventDefault();
-    const content = document.getElementById("editablemail").innerHTML;
-    console.log(content.toString());
-    dispatch(updateMailContent(content));
-  };
+  // const updateMailContentHandler = async (e) => {
+  //   e.preventDefault();
+  //   const content = document.getElementById("editablemail").innerHTML;
+  //   console.log(content.toString());
+  //   dispatch(updateMailContent(content));
+  // };
 
   //const { _id, token } = isAuthenticated();
 

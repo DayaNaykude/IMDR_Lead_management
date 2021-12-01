@@ -70,31 +70,45 @@ function Sidebar() {
         <ListItemText primary="Tasks" />
       </ListItem>
 
-      <ListItem
-        button
-        style={{ minWidth: 300 }}
-        component={Link}
-        to="/Dashboard"
-        title="Dashboard"
-      >
-        <ListItemIcon>
-          <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
       {userInfo && userInfo.isAdmin && (
-        <ListItem
-          button
-          style={{ minWidth: 300 }}
-          component={Link}
-          to="/users"
-          title="Users"
-        >
-          <ListItemIcon>
-            <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
-          </ListItemIcon>
-          <ListItemText primary="Users List" />
-        </ListItem>
+        <>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/Dashboard"
+            title="Dashboard"
+          >
+            <ListItemIcon>
+              <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/users"
+            title="Users"
+          >
+            <ListItemIcon>
+              <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Users List" />
+          </ListItem>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/report"
+            title="Report"
+          >
+            <ListItemIcon>
+              <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem>
+        </>
       )}
       {userInfo && userInfo.isAdmin && (
         <ListItem

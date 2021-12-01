@@ -4,6 +4,7 @@ import ForgotPasswordScreen from "./pages/ForgotPasswordScreen";
 import ResetPasswordScreen from "./pages/ResetPasswordScreen";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import UserListScreen from "./pages/HomePageFolder/UserListScreen";
+import ReportScreen from "./pages/ReportScreen";
 import HelpScreen from "./pages/HelpScreen";
 import DashboardScreen from "./pages/DashboardScreen";
 import SettingScreen from "./pages/SettingScreen";
@@ -33,6 +34,7 @@ const App = () => {
             component={() => <ResetPasswordScreen />}
           />
           <Route exact path="/users" component={() => <UserListScreen />} />
+          <Route exact path="/report" component={() => <ReportScreen />} />
           <Route
             exact
             path="/profile"
@@ -40,7 +42,7 @@ const App = () => {
           />
           <Route exact path="/add" component={() => <AddContact />} />
           <Route exact path="/view" component={() => <LeadDetails />} />
-      
+
           <div>
             <Navbar />
             <Route exact path="/" component={() => <TaskScreen />} />
