@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid, Paper, Button } from "@material-ui/core";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -167,7 +166,7 @@ const TaskScreenAdmin = () => {
     padding: 20,
     height: "90%",
     width: "80%",
-    margin: "50px 50px 50px 50px",
+    margin: "0px 50px 50px 50px",
   };
   const inputStyle = {
     marginLeft: "30px",

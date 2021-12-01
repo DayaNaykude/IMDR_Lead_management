@@ -36,7 +36,8 @@ const Navbar = () => {
       flexGrow: 1,
       letterSpacing: "0.175em",
       fontSize: "140%",
-    },
+      textTransform: "uppercase",
+      },
     list: {
       width: 300,
     },
@@ -123,13 +124,11 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          {/* <Typography variant="h6" className={classes.title}>
-            IMDR
-          </Typography> */}
+         
           <Typography variant="h6" className={classes.title}>
             {userInfo ? userInfo.username : "IMDR"}
           </Typography>
-          {/* <Button color="inherit">Login</Button> */}
+          
           <Button
             type="submit"
             color="inherit"
@@ -148,7 +147,7 @@ const Navbar = () => {
             startIcon={<PowerSettingsNewIcon fontSize="large" />}
             onClick={logoutHandler}
           >
-            Logout
+            LOGOUT
           </Button>
         </Toolbar>
       </AppBar>

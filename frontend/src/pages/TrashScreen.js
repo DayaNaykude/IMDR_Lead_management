@@ -9,13 +9,13 @@ import {
 } from "@material-ui/core";
 import { CsvBuilder } from 'filefy';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
+import { getAllLeads, deleteLeads } from "../helper/leadApiCalls";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
 import XLSX from "xlsx";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -24,11 +24,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // backend Imports
-import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
-import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
-import { isAuthenticated } from "../../helper";
+import { isAuthenticated } from "../helper";
 
 const boxStyle = {
   marginTop: "60px",
@@ -81,26 +79,18 @@ const textStyle = {
   color: "red",
 };
 
-const inputStyle = {
-  marginLeft: "30px",
-  marginTop: "5%",
-  display: "inline-block",
-};
+
 
 const textstyle = { margin: "8px 0", height: "fit-content" };
-const textstylesms = { margin: "8px 0", height: "fit-content" };
 
-const TasksScreenUser = () => {
+const TrashScreen = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [openSms, setOpenSms] = useState(false);
-  const handleOpenSms = () => setOpenSms(true);
-  const handleCloseSms = () => setOpenSms(false);
-
+  
   const [flag, setFlag] = React.useState(false);
   const showDeleteWindow = () => setFlag(true);
   const hideDeleteWindow = () => setFlag(false);
@@ -150,67 +140,8 @@ const TasksScreenUser = () => {
   const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
-
-  const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
-  const {
-    loading,
-    success: successSendBulkEmails,
-    error,
-    status: statusSendBulkEmails,
-  } = userSendBulkEmails;
-
-  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
-  const {
-    loading: loadingSms,
-    success: successSendBulkSms,
-    error: errorSms,
-    status: statusSendBulkSms,
-  } = userSendBulkSms;
-
-  const mailReadContent = useSelector((state) => state.mailReadContent);
-  const {
-    loading: loadingMailRead,
-    error: errorMailRead,
-    mailContent,
-  } = mailReadContent;
-
-  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
-  const {
-    loading: loadingMailUpdate,
-    success: successMailUpdate,
-    error: errorMailUpdate,
-    status: statusMailUpdate,
-  } = mailUpdateContent;
-
-  const [selectedEmails, setSelectedEmails] = useState(null);
-  const [selectedNumbers, setSelectedNumbers] = useState(null);
-  const [subject, setSubject] = useState(
-    "Craft Your Career with the First B-School of Pune"
-  );
-
-  const [message, setMessage] = useState(
-    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
-    `
-  );
   const [tableLoading, setTableLoading] = useState(true);
 
-  const sendEmailHandler = async (e) => {
-    e.preventDefault();
-    // const content = document.getElementById("editablemail").innerHTML;
-    dispatch(sendBulkEmails(selectedEmails, subject));
-  };
-
-  const sendSmsHandler = async (e) => {
-    e.preventDefault();
-    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
-  };
-
-  const updateMailContentHandler = async (e) => {
-    e.preventDefault();
-    const content = document.getElementById("editablemail").innerHTML;
-    console.log(content.toString());
-    dispatch(updateMailContent(content));
-  };
   const downloadExcel = () => {
     const newData=data.map(row=>{
     delete row.tableData
@@ -259,36 +190,24 @@ const TasksScreenUser = () => {
   }, [
     history,
     userInfo,
-    successSendBulkEmails,
-    statusSendBulkEmails,
-    successSendBulkSms,
   ]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
     { title: "Email ID", field: "email", align: "center", filtering: false },
-    {
-      title: "Contact Number",
-      field: "mobile",
-      align: "center",
-      filtering: false,
-    },
-    { title: "Created ON", field: "createdAt", searchable: false },
+    {title: "Contact Number",field: "mobile",align: "center",filtering: false},
+    { title: "Created ON", field: "createdAt" },
     { title: "City", field: "city" },
-    { title: "Source", field: "source", align: "left", searchable: false },
-    { title: "Entrance", field: "entrance", searchable: false },
-    { title: "Percentile", field: "percentileGK", searchable: false },
-    { title: "Lead Status", field: "status", searchable: false },
+    { title: "Source", field: "source", align: "left" },
+    { title: "Entrance", field: "entrance" },
+    { title: "Percentile", field: "percentileGK"},
+    { title: "Lead Status", field: "status" },
   ];
   return (
     <>
-      {userInfo && userInfo.isAdmin ? (
-        <>
-          <h1 style={textStyle}>Admin Task Screen</h1>
-        </>
-      ) : (
+      
         <div>
-          <h1 style={textStyle}>Lead Management</h1>
+          <h1 style={textStyle}>Trash Bin</h1>
           <Box style={boxStyle}>
             <MaterialTable
               title=""
@@ -298,11 +217,9 @@ const TasksScreenUser = () => {
               isLoading={tableLoading}
               editable={{}}
               options={{
-                filtering: true,
-                search: true,
+
                 toolbar: true,
-                searchFieldVariant: "outlined",
-                searchFieldAlignment: "left",
+                search:false,
                 pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
                 paginationType: "stepped",
                 actionsColumnIndex: -1,
@@ -313,44 +230,7 @@ const TasksScreenUser = () => {
               }}
               actions={[
                 
-                {
-                  icon: "edit",
-                  tooltip: "edit details",
-                  position: "row",
-
-                  onClick: (event, rowData) => {
-                    return (
-                      <>
-                        {history.push({
-                          pathname: "/view", // re-route to this path
-                          state: {
-                            email: rowData.email,
-                          },
-                        })}
-                        {history.go(0)}
-                      </>
-                    );
-                  },
-                },
-
-                {
-                  icon: () => <button style={btnstyle}>Add Contact</button>,
-                  tooltip: "Add Contact",
-                  onClick: () => {
-                    return (
-                      <>
-                        {history.push("/add")}
-                        {history.go(0)}
-                      </>
-                    );
-                  },
-                  isFreeAction: true,
-                },
-                {
-                  icon: () => <button style={btnstyle}>Data</button>,
-                  tooltip: "Data",
-                  isFreeAction: true,
-                },
+               
                 {
                   icon: "download",
                   tooltip:"Export to excel",
@@ -358,18 +238,8 @@ const TasksScreenUser = () => {
                   isFreeAction:true,
                 },
                 {
-                  icon: () => <Button style={btnstyle}>Send Email</Button>,
-                  tooltip: "Send Email",
-                  onClick: (evt, data) => {
-                    const leads = [];
-                    data.forEach((element) => {
-                      leads.push(element.email);
-                    });
-                    dispatch(readMailContent());
-                    setSelectedEmails(leads);
-
-                    handleOpen();
-                  },
+                  icon: () => <Button style={btnstyle}  onClick={handleOpen}>Assign Leads</Button>,
+                  tooltip: "Assign Leads",
                   isFreeAction: false,
                 },
                 {
@@ -415,83 +285,8 @@ const TasksScreenUser = () => {
                 ),
               }}
             />
-            <div>
-              <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                  {loading && (
-                    <Alert severity="info">
-                      Sending Emails.. It make few minutes..
-                    </Alert>
-                  )}
-                  {loadingMailUpdate && (
-                    <Alert severity="info">Updating mail content...</Alert>
-                  )}
-                  {loadingMailRead && (
-                    <Alert severity="info">Loading mail content...</Alert>
-                  )}
-                  {error && <Alert severity="error">{error}</Alert>}
-                  {errorMailRead && (
-                    <Alert severity="error">{errorMailRead}</Alert>
-                  )}
-                  {errorMailUpdate && (
-                    <Alert severity="error">{errorMailUpdate}</Alert>
-                  )}
-                  {statusSendBulkEmails && (
-                    <Alert severity="success">
-                      {statusSendBulkEmails.data}
-                    </Alert>
-                  )}
-                  {statusMailUpdate && (
-                    <Alert severity="success">{statusMailUpdate.status}</Alert>
-                  )}
-
-                  <form>
-                    <div fullwidth="true">
-                      <h3
-                        style={{
-                          display: "inline-block",
-                          textAlign: "center",
-                          float: "left",
-                        }}
-                      >
-                        Mail Content{" "}
-                      </h3>
-                      <Button
-                        type="submit"
-                        align="right"
-                        color="primary"
-                        variant="contained"
-                        style={saveStyle}
-                        onClick={handleClose}
-                      >
-                        Close
-                      </Button>
-                    </div>
-
-                    <TextField
-                      label="Subject"
-                      style={textstyle}
-                      required
-                      variant="outlined"
-                      placeholder="Enter Subject"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      fullWidth
-                    />
-
-                    <Button
-                      type="submit"
-                      color="primary"
-                      variant="contained"
-                      style={sendStyle}
-                      onClick={sendEmailHandler}
-                    >
-                      SEND
-                    </Button>
-                  </form>
-                </Box>
-              </Modal>
-            </div>
+            
+                 
 
             <div>
               <Dialog
@@ -541,8 +336,8 @@ const TasksScreenUser = () => {
             </div>
           </Box>
         </div>
-      )}
+      )
     </>
   );
 };
-export default TasksScreenUser;
+export default TrashScreen;

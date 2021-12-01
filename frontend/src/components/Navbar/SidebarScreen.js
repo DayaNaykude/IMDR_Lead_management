@@ -6,6 +6,7 @@ import HelpIcon from "@material-ui/icons/Help";
 import SettingsIcon from "@material-ui/icons/Settings";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
+import DeleteIcon from '@material-ui/icons/Delete';
 import PeopleIcon from "@material-ui/icons/People";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -93,6 +94,20 @@ function Sidebar() {
             <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
           </ListItemIcon>
           <ListItemText primary="Users List" />
+        </ListItem>
+      )}
+      {userInfo && userInfo.isAdmin && (
+        <ListItem
+          button
+          style={{ minWidth: 300 }}
+          component={Link}
+          to="/trash"
+          title="Trash"
+        >
+          <ListItemIcon>
+            <DeleteIcon style={{ fill: "purple" }} fontSize="large" />
+          </ListItemIcon>
+          <ListItemText primary="Trash" />
         </ListItem>
       )}
 
