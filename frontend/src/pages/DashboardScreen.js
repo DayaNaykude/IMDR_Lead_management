@@ -33,17 +33,17 @@ const Dashboard = () => {
     <>
       <h1 style={textStyle}>Dashboard</h1>
       <iframe
-        style={chartstyle(30, 40)}
+        style={chartstyle(46, 60)}
         src={src_leads_count}
         title="src_leads_count"
       ></iframe>
       <iframe
-        style={chartstyle(30, 40)}
+        style={chartstyle(46, 60)}
         src={src_leadsByUsers}
         title="src_leadsByUsers"
       ></iframe>
       <iframe
-        style={chartstyle(30, 40)}
+        style={chartstyle(46, 60)}
         src={src_leadsByStatus}
         title="src_leadsByStatus"
       ></iframe>
@@ -53,17 +53,17 @@ const Dashboard = () => {
         title="src_leadsByUsersStatus"
       ></iframe>
       <iframe
-        style={chartstyle(46, 60)}
+        style={chartstyle(92, 80)}
         src={src_leadsByEntrance}
         title="src_leadsByEntrance"
       ></iframe>
       <iframe
-        style={chartstyle(90, 80)}
+        style={chartstyle(92, 80)}
         src={src_leadsBySource}
         title="src_leadsBySource"
       ></iframe>
       <iframe
-        style={chartstyle(90, 80)}
+        style={chartstyle(92, 80)}
         src={src_leadsByCity}
         title="src_leadsByCity"
       ></iframe>

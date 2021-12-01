@@ -13,6 +13,7 @@ import {
   userUpdateReducer,
   userSendBulkEmailsReducer,
   userSendBulkSmsReducer,
+  userReportReducer,
 } from "./reducers/userReducers";
 
 import {
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   userUpdate: userUpdateReducer,
   userSendBulkEmails: userSendBulkEmailsReducer,
   userSendBulkSms: userSendBulkSmsReducer,
+  userReport: userReportReducer,
 
   mailReadContent: mailReadContentReducer,
   mailUpdateContent: mailUpdateContentReducer,
