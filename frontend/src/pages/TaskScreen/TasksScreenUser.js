@@ -371,7 +371,7 @@ const TasksScreenUser = () => {
               },
               {
                 icon: "delete",
-                tooltip: "Delete all selected leads",
+                tooltip: "Move To Trash",
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
@@ -382,8 +382,6 @@ const TasksScreenUser = () => {
                   showDeleteWindow();
                 },
                 isFreeAction: false,
-                tooltip: "Delete all selected rows",
-                onClick: () => handelBulkDelete(),
               },
               {
                 icon: () => <SaveAltIcon />,
@@ -508,20 +506,20 @@ const TasksScreenUser = () => {
                 </IconButton>{" "}
               </div>
               {dSuccess && (
-                <Alert severity="success">leads deleted successfully</Alert>
+                <Alert severity="success">Leads Moved Into Trash Successfully</Alert>
               )}
               {dError && <Alert severity="error">{dError}</Alert>}
-              {dLoading && <Alert severity="info">Deleting...</Alert>}
+              {dLoading && <Alert severity="info">Moving...</Alert>}
               <DialogTitle id="alert-dialog-title">
                 {"Are you sure?"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Selected leads will be deleted permanently from the database.
+                  Selected Leads Will Be Moved Into Trash.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={deleteALlLeads}>Yes</Button>
+                <Button onClick={tempDeleteALlLeads}>Yes</Button>
                 <Button
                   onClick={() => {
                     history.go(0);
