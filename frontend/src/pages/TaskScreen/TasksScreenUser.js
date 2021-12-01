@@ -7,14 +7,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
-<<<<<<< HEAD
-import { CsvBuilder } from 'filefy';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-=======
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 
->>>>>>> ecf79087ef95c74ed090fa6f3872a561d94fdd1c
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
@@ -287,71 +282,6 @@ const TasksScreenUser = () => {
   ];
   return (
     <>
-<<<<<<< HEAD
-      {userInfo && userInfo.isAdmin ? (
-        <>
-          <h1 style={textStyle}>Admin Task Screen</h1>
-        </>
-      ) : (
-        <div>
-          <h1 style={textStyle}>Lead Management</h1>
-          <Box style={boxStyle}>
-            <MaterialTable
-              title=""
-              data={data}
-              onSelectionChange={(rows) => setSelectedRows(rows)}
-              columns={column}
-              isLoading={tableLoading}
-              editable={{}}
-              options={{
-                filtering: true,
-                search: true,
-                toolbar: true,
-                searchFieldVariant: "outlined",
-                searchFieldAlignment: "left",
-                pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
-                paginationType: "stepped",
-                actionsColumnIndex: -1,
-                rowStyle: (data, index) =>
-                  index % 2 === 0 ? { background: "#f5f5f5" } : null,
-                headerStyle: { background: "#9c66e2", fontStyle: "bold" },
-                selection: true,
-              }}
-              actions={[
-                
-                {
-                  icon: "edit",
-                  tooltip: "edit details",
-                  position: "row",
-
-                  onClick: (event, rowData) => {
-                    return (
-                      <>
-                        {history.push({
-                          pathname: "/view", // re-route to this path
-                          state: {
-                            email: rowData.email,
-                          },
-                        })}
-                        {history.go(0)}
-                      </>
-                    );
-                  },
-                },
-
-                {
-                  icon: () => <button style={btnstyle}>Add Contact</button>,
-                  tooltip: "Add Contact",
-                  onClick: () => {
-                    return (
-                      <>
-                        {history.push("/add")}
-                        {history.go(0)}
-                      </>
-                    );
-                  },
-                  isFreeAction: true,
-=======
       <div>
         <h1 style={textStyle}>Lead Management</h1>
         <Box style={boxStyle}>
@@ -394,7 +324,6 @@ const TasksScreenUser = () => {
                       {history.go(0)}
                     </>
                   );
->>>>>>> ecf79087ef95c74ed090fa6f3872a561d94fdd1c
                 },
               },
 

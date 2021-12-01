@@ -149,13 +149,13 @@ const TrashScreen = () => {
     })
     const workSheet=XLSX.utils.json_to_sheet(newData)
     const workBook=XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workBook,workSheet,"Leads Data")
+    XLSX.utils.book_append_sheet(workBook,workSheet,"Trash Data")
     //Buffer
     let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
     //Binary
     XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
     //Download
-    XLSX.writeFile(workBook,"LeadsData.xlsx")
+    XLSX.writeFile(workBook,"TrashData.xlsx")
   }
   const preload = () => {
     if (userInfo) {
