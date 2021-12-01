@@ -65,7 +65,6 @@
     "uuid": "^3.3.3",
     "xlsx": "^0.17.4",
     "twilio": "^3.71.1"
-   
   },
   "devDependencies": {
     "concurrently": "^6.2.1",
