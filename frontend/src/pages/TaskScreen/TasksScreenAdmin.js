@@ -167,7 +167,7 @@ const TaskScreenAdmin = () => {
     padding: 20,
     height: "90%",
     width: "80%",
-    margin: "50px 50px 50px 50px",
+    margin: "2px 50px 50px 50px",
   };
   const inputStyle = {
     marginLeft: "30px",

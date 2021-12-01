@@ -401,7 +401,7 @@ const LeadDetails = () => {
               <TextField
                 id="date"
                 variant="outlined"
-                label="Birthday date"
+                label="Birth Date"
                 type="date"
                 defaultValue="19-05-1990"
                 style={textstyle}
@@ -415,7 +415,7 @@ const LeadDetails = () => {
             )}
             {showdate && (
               <TextField
-                label="Birthday date"
+                label="Birth date"
                 style={textstyle}
                 required
                 variant="outlined"

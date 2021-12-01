@@ -234,7 +234,7 @@ const AddContact = () => {
               <TextField
                 id="date"
                 variant="outlined"
-                label="Birthday date"
+                label="Birth Date"
                 type="date"
                 value={dateOfBirth}
                 onChange={handleChange("dateOfBirth")}

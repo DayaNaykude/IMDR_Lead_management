@@ -61,7 +61,19 @@ const SignInOutContainer = ({ history }) => {
         width: "100vw",
         height: "100vh",
       }}
-    >
+    > 
+       <div className="imageStyle"
+        style={{
+        backgroundImage: 'url("images/Logo.png")',
+        backgroundSize: "cover",
+        backgroundColor:"white",
+        width: "40%",
+        height: "30%",
+        marginLeft:"55%",
+        marginTop:"10px",
+      }}
+    ></div>
+   
       <Grid>
         <Paper style={paperStyle}>
           <Tabs

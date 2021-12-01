@@ -1,6 +1,8 @@
 import React from "react";
 import { useEffect } from "react";
-
+import { CsvBuilder } from "filefy";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import XLSX from "xlsx";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import MaterialTable from "material-table";
@@ -9,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
+import { useState } from "react";
 
 // Backend Imports
 
@@ -55,7 +58,7 @@ export const ReportScreen = () => {
   const classes = useStyles();
 
   let history = useHistory();
-
+  
   const columns = [
     {
       title: "User Name",
@@ -99,12 +102,29 @@ export const ReportScreen = () => {
   // ***************** Backend stuff
 
   const dispatch = useDispatch();
-
+  
+  const [data, setData] = useState([]);
   const userReport = useSelector((state) => state.userReport);
   const { loading, error, report } = userReport;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const downloadExcel = () => {
+    const newData = data.map((row) => {
+      delete row.tableData;
+      return row;
+    });
+    const workSheet = XLSX.utils.json_to_sheet(newData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
+    //Buffer
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+    //Binary
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+    //Download
+    XLSX.writeFile(workBook, "Report.xlsx");
+  };
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -160,12 +180,20 @@ export const ReportScreen = () => {
               sorting: true,
               search: false,
               showTitle: false,
-              toolbar: false,
+              toolbar: true,
               actionsColumnIndex: -1,
               rowStyle: (data, index) =>
                 index % 2 === 0 ? { background: "#f5f5f5" } : null,
               headerStyle: { background: "#9c66e2", fontStyle: "bold" },
             }}
+            actions={[
+            {
+              icon: "download",
+              tooltip: "Export to excel",
+              onClick: () => downloadExcel(),
+              isFreeAction: true,
+            },
+          ]}
           />
         </Box>
       </div>
