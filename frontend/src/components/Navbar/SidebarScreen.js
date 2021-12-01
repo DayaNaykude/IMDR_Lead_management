@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 function Sidebar() {
   // *************** Backend Stuff
@@ -104,7 +105,7 @@ function Sidebar() {
             title="Report"
           >
             <ListItemIcon>
-              <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+              <AssessmentIcon style={{ fill: "purple" }} fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="Report" />
           </ListItem>

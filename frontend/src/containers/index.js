@@ -12,6 +12,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import "./index.css";
 
+
 const SignInOutContainer = ({ history }) => {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -21,7 +22,7 @@ const SignInOutContainer = ({ history }) => {
 
   const paperStyle = {
     width: 340,
-    marginLeft: "150px",
+    marginLeft: "300px",
     marginTop: "50px",
   };
   const copyrightStyle ={
@@ -62,17 +63,19 @@ const SignInOutContainer = ({ history }) => {
         height: "100vh",
       }}
     > 
-       <div className="imageStyle"
-        style={{
-        backgroundImage: 'url("images/Logo.png")',
-        backgroundSize: "cover",
-        backgroundColor:"white",
-        width: "40%",
-        height: "30%",
-        marginLeft:"55%",
-        marginTop:"10px",
-      }}
-    ></div>
+      <div
+     className="imagelogo"
+    style={{
+
+      backgroundImage: 'url("images/Logo.png")',
+      
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      backgroundColor: "white",
+      
+    }}
+        >
+      </div>
    
       <Grid>
         <Paper style={paperStyle}>
@@ -107,6 +110,7 @@ const SignInOutContainer = ({ history }) => {
         </AppBar>
 
       </Grid>
+      
     </div>
   );
 };
