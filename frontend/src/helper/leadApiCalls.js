@@ -80,7 +80,24 @@ export const deleteLeads = (userId, token, leads) => {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      'Content-Type':'application/json',
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: leads,
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+//temporary delete
+export const tempDeleteLeads = (userId, token, leads) => {
+  return fetch(`${API}/lead/tempDelete/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: leads,

@@ -32,8 +32,8 @@ exports.getLead = (req, res) => {
 
 // get all leads
 exports.getAllLeads = (req, res) => {
-  Lead.find({ user: req.profile._id })
-    .sort([["createdAt", "desc"]])
+  Lead.find({ user: req.profile._id, flag: "Active" })
+    .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
         return res.status(400).json({
@@ -186,7 +186,7 @@ exports.deleteLead = (req, res) => {
   });
 };
 
-//delete
+//permanent deletion
 exports.deleteManyLeads = (req, res) => {
   const jsonObj = req.body;
   var result = [];
@@ -205,5 +205,33 @@ exports.deleteManyLeads = (req, res) => {
         });
       }
     });
+  });
+};
+
+//Temporary deletion of leads from user's account
+exports.tempDeletionOfLeadsFromUserAccount = (req, res) => {
+  const jsonObj = req.body;
+  var result = [];
+
+  for (var i in jsonObj) result.push(jsonObj[i]);
+  result.map((email) => {
+    Lead.findOneAndUpdate(
+      { email: email },
+      { $set: { flag: "Deactive" } },
+      { new: true, useFindAndModify: false },
+      (err, lead) => {
+        if (err || !Lead) {
+          console.log(err);
+          return res.status(400).json({
+            error: "Failed to update status of lead",
+          });
+        }
+        if (lead && lead.email === result[result.length - 1]) {
+          return res.json({
+            message: "Selected leads are moved to trash successfully",
+          });
+        }
+      }
+    );
   });
 };

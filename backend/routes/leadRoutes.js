@@ -12,6 +12,7 @@ const {
   updateStatus,
   getStatus,
   deleteManyLeads,
+  tempDeletionOfLeadsFromUserAccount,
 } = require("../controllers/leadController");
 const { getUserById } = require("../middleware/authMiddleware");
 
@@ -66,7 +67,10 @@ router.put("/lead/update/:userId", updateLead);
 //update status
 router.put("/lead/updateStatus/:userId", updateStatus);
 
-//delete
+//temporary delete
+router.put("/lead/tempDelete/:userId", tempDeletionOfLeadsFromUserAccount);
+
+//permanent delete
 router.delete("/deleteLeads/:userId", deleteManyLeads);
 
 module.exports = router;

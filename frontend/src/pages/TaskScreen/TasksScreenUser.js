@@ -7,14 +7,14 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
-import { CsvBuilder } from 'filefy';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { CsvBuilder } from "filefy";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
 
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
+import { getAllLeads, tempDeleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import XLSX from "xlsx";
@@ -102,12 +102,12 @@ const TasksScreenUser = () => {
   const handleOpenSms = () => setOpenSms(true);
   const handleCloseSms = () => setOpenSms(false);
 
-  const [flag, setFlag] = React.useState(false);
+  const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);
   const hideDeleteWindow = () => setFlag(false);
 
-  const [dleads, setDleads] = React.useState([]);
-  const [values, setValues] = React.useState({
+  const [dleads, setDleads] = useState([]);
+  const [values, setValues] = useState({
     dError: "",
     dSuccess: false,
     dLoading: false,
@@ -116,15 +116,11 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
-  const handelBulkDelete = () => {
-    console.log("please implement");
-  };
-
-  const deleteALlLeads = () => {
+  const tempDeleteALlLeads = () => {
     setValues({ ...values, dError: "", dLoading: true });
-    if (dleads.length < 500) {
+    if (dleads.length <= 500) {
       const jsonString = JSON.stringify(Object.assign({}, dleads));
-      deleteLeads(_id, token, jsonString)
+      tempDeleteLeads(_id, token, jsonString)
         .then((data) => {
           if (data.error) {
             setValues({
@@ -141,11 +137,11 @@ const TasksScreenUser = () => {
             });
           }
         })
-        .catch(console.log("Error in lead deletion"));
+        .catch(console.log("Error in moving lead into trash"));
     } else {
       setValues({
         ...values,
-        dError: "Select upto 500 leads to delete",
+        dError: "Select Upto 500 Leads To Move Into Trash",
         dLoading: false,
       });
     }
@@ -220,20 +216,20 @@ const TasksScreenUser = () => {
     dispatch(updateMailContent(content));
   };
   const downloadExcel = () => {
-    const newData=data.map(row=>{
-    delete row.tableData
-    return row
-    })
-    const workSheet=XLSX.utils.json_to_sheet(newData)
-    const workBook=XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workBook,workSheet,"Leads Data")
+    const newData = data.map((row) => {
+      delete row.tableData;
+      return row;
+    });
+    const workSheet = XLSX.utils.json_to_sheet(newData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Leads Data");
     //Buffer
-    let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
     //Binary
-    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
     //Download
-    XLSX.writeFile(workBook,"LeadsData.xlsx")
-  }
+    XLSX.writeFile(workBook, "LeadsData.xlsx");
+  };
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -248,17 +244,16 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  const exportAllSelectedRows=()=>{
-
-
+  const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
-     .setColumns(column.map(col=>col.title))
-     .addRows(selectedRows.map(rowData=>column.map(col=>rowData[col.field])))
-     .exportFile();
-
-    };
+      .setColumns(column.map((col) => col.title))
+      .addRows(
+        selectedRows.map((rowData) => column.map((col) => rowData[col.field]))
+      )
+      .exportFile();
+  };
   const [selectedRows, setSelectedRows] = useState([]);
- 
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -320,7 +315,6 @@ const TasksScreenUser = () => {
                 selection: true,
               }}
               actions={[
-                
                 {
                   icon: "edit",
                   tooltip: "view details",
@@ -361,9 +355,9 @@ const TasksScreenUser = () => {
                 },
                 {
                   icon: "download",
-                  tooltip:"Export to excel",
-                  onClick:()=>downloadExcel(),
-                  isFreeAction:true,
+                  tooltip: "Export to excel",
+                  onClick: () => downloadExcel(),
+                  isFreeAction: true,
                 },
                 {
                   icon: () => <Button style={btnstyle}>Send Email</Button>,
@@ -382,7 +376,7 @@ const TasksScreenUser = () => {
                 },
                 {
                   icon: "delete",
-                  tooltip: "Delete all selected leads",
+                  tooltip: "Move To Trash",
                   onClick: (evt, data) => {
                     const leads = [];
                     data.forEach((element) => {
@@ -392,13 +386,13 @@ const TasksScreenUser = () => {
                     showDeleteWindow();
                   },
                   isFreeAction: false,
-                  tooltip: "Delete all selected rows",
+                  tooltip: "Move To Trash",
                 },
                 {
-                  icon: ()=><SaveAltIcon/>,
+                  icon: () => <SaveAltIcon />,
                   tooltip: "Export all selected rows",
-                  onClick: () => exportAllSelectedRows()
-                }
+                  onClick: () => exportAllSelectedRows(),
+                },
               ]}
               components={{
                 Pagination: (props) => (
@@ -519,21 +513,22 @@ const TasksScreenUser = () => {
                   </IconButton>{" "}
                 </div>
                 {dSuccess && (
-                  <Alert severity="success">leads deleted successfully</Alert>
+                  <Alert severity="success">
+                    Leads Moved Into Trash Successfully
+                  </Alert>
                 )}
                 {dError && <Alert severity="error">{dError}</Alert>}
-                {dLoading && <Alert severity="info">Deleting...</Alert>}
+                {dLoading && <Alert severity="info">Moving...</Alert>}
                 <DialogTitle id="alert-dialog-title">
                   {"Are you sure?"}
                 </DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
-                    Selected leads will be deleted permanently from the
-                    database.
+                    Moving Selected Leads Into Trash.
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={deleteALlLeads}>Yes</Button>
+                  <Button onClick={tempDeleteALlLeads}>Yes</Button>
                   <Button
                     onClick={() => {
                       history.go(0);
