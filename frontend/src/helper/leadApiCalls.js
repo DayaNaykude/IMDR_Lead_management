@@ -19,7 +19,7 @@ export const createLead = (userId, token, lead) => {
     .catch((err) => console.log(err));
 };
 
-//get all leads
+//get all active leads
 export const getAllLeads = (userId, token) => {
   return fetch(`${API}/leads/${userId}`, {
     method: "GET",
@@ -27,6 +27,21 @@ export const getAllLeads = (userId, token) => {
       Accept: "application/json",
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+//get all leads from trash
+export const getAllLeadsFromTrash = () => {
+  return fetch(`${API}/trashedLeads`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   })
     .then((response) => {
@@ -75,7 +90,6 @@ export const updateLead = (userId, token, updateInfo) => {
 
 //delete leads
 export const deleteLeads = (userId, token, leads) => {
-  console.log(leads);
   return fetch(`${API}deleteLeads/${userId}`, {
     method: "DELETE",
     headers: {
@@ -91,9 +105,26 @@ export const deleteLeads = (userId, token, leads) => {
     .catch((err) => console.log(err));
 };
 
-//temporary delete
-export const tempDeleteLeads = (userId, token, leads) => {
-  return fetch(`${API}/lead/tempDelete/${userId}`, {
+//move into trash
+export const moveIntoTrash = (userId, token, leads) => {
+  return fetch(`${API}/lead/moveIntoTrash/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: leads,
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
+//reAssign lead
+export const reAssignLeads = (userId, token, leads) => {
+  return fetch(`${API}/lead/reAssign/${userId}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",

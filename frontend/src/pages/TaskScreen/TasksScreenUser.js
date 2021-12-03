@@ -9,12 +9,10 @@ import {
 } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllLeads, tempDeleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import XLSX from "xlsx";
@@ -30,6 +28,9 @@ import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
+
+//api calls
+import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
 
 const boxStyle = {
   marginTop: "60px",
@@ -73,7 +74,7 @@ const textareaStyle = {
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
-  height: "30px",
+  height: "36px",
   fontSize: "20px",
 };
 const textStyle = {
@@ -116,11 +117,12 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
-  const tempDeleteALlLeads = () => {
+  //move leads into trash
+  const moveLeadsIntoTrash = () => {
     setValues({ ...values, dError: "", dLoading: true });
-    if (dleads.length <= 500) {
+    if (dleads.length <= 1000) {
       const jsonString = JSON.stringify(Object.assign({}, dleads));
-      tempDeleteLeads(_id, token, jsonString)
+      moveIntoTrash(_id, token, jsonString)
         .then((data) => {
           if (data.error) {
             setValues({
@@ -141,7 +143,7 @@ const TasksScreenUser = () => {
     } else {
       setValues({
         ...values,
-        dError: "Select Upto 500 Leads To Move Into Trash",
+        dError: "Select Upto 1000 Leads To Move Into Trash",
         dLoading: false,
       });
     }
@@ -230,6 +232,8 @@ const TasksScreenUser = () => {
     //Download
     XLSX.writeFile(workBook, "LeadsData.xlsx");
   };
+
+  //loading leads
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -244,6 +248,7 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
+  
   const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
       .setColumns(column.map((col) => col.title))
@@ -378,7 +383,6 @@ const TasksScreenUser = () => {
                     leads.push(element.email);
                   });
                   setDleads(leads);
-                  console.log(leads);
                   showDeleteWindow();
                 },
                 isFreeAction: false,
@@ -497,6 +501,7 @@ const TasksScreenUser = () => {
                 <IconButton
                   aria-label="Back to home page"
                   color="primary"
+                  tooltip="Back"
                   variant="contained"
                   onClick={() => {
                     history.go(0);
@@ -506,7 +511,9 @@ const TasksScreenUser = () => {
                 </IconButton>{" "}
               </div>
               {dSuccess && (
-                <Alert severity="success">Leads Moved Into Trash Successfully</Alert>
+                <Alert severity="success">
+                  Leads Moved Into Trash Successfully
+                </Alert>
               )}
               {dError && <Alert severity="error">{dError}</Alert>}
               {dLoading && <Alert severity="info">Moving...</Alert>}
@@ -519,7 +526,7 @@ const TasksScreenUser = () => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={tempDeleteALlLeads}>Yes</Button>
+                <Button onClick={moveLeadsIntoTrash}>Yes</Button>
                 <Button
                   onClick={() => {
                     history.go(0);
