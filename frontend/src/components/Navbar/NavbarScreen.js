@@ -47,6 +47,13 @@ const Navbar = () => {
     closeButton: {
       display: "block",
       textAlign: "end",
+      height:100,
+      backgroundImage: 'url("images/Logo.png")',
+       
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      backgroundColor: "white",
+      
     },
     about: {
       backgroundColor: "#11a6da",

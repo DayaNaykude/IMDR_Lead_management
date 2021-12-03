@@ -1,7 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import { CsvBuilder } from "filefy";
-import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import XLSX from "xlsx";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
@@ -11,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
-import { useState } from "react";
+
 
 // Backend Imports
 
@@ -103,7 +101,6 @@ export const ReportScreen = () => {
 
   const dispatch = useDispatch();
   
-  const [data, setData] = useState([]);
   const userReport = useSelector((state) => state.userReport);
   const { loading, error, report } = userReport;
 
@@ -111,8 +108,10 @@ export const ReportScreen = () => {
   const { userInfo } = userLogin;
 
   const downloadExcel = () => {
-    const newData = data.map((row) => {
+    const newData = report.map((row) => {
       delete row.tableData;
+      delete row.email;
+      delete row._id;
       return row;
     });
     const workSheet = XLSX.utils.json_to_sheet(newData);

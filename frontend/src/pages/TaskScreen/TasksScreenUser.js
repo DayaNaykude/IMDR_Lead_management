@@ -220,6 +220,17 @@ const TasksScreenUser = () => {
   const downloadExcel = () => {
     const newData = data.map((row) => {
       delete row.tableData;
+      delete row.applicationSeqNo;
+      delete row.nationality;
+      delete row.physcialDisablity;
+      delete row.addressLine1;
+      delete row.addressLine2;
+      delete row.addressLine3;
+      delete row.communicationAddressCountry;
+      delete row.user;
+      delete row.__v;
+      delete row._id;
+      delete row.flag;
       return row;
     });
     const workSheet = XLSX.utils.json_to_sheet(newData);
