@@ -181,6 +181,10 @@ const leadSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    flag: {
+      type: String,
+      default: "Active",
+    },
     reviews: [reviewSchema],
   },
   { timestamps: true }

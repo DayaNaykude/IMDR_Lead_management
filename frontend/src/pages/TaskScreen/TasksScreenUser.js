@@ -9,12 +9,10 @@ import {
 } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllLeads, deleteLeads } from "../../helper/leadApiCalls";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import XLSX from "xlsx";
@@ -30,6 +28,9 @@ import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
+
+//api calls
+import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
 
 const boxStyle = {
   marginTop: "60px",
@@ -73,7 +74,7 @@ const textareaStyle = {
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
-  height: "30px",
+  height: "36px",
   fontSize: "20px",
 };
 const textStyle = {
@@ -102,12 +103,12 @@ const TasksScreenUser = () => {
   const handleOpenSms = () => setOpenSms(true);
   const handleCloseSms = () => setOpenSms(false);
 
-  const [flag, setFlag] = React.useState(false);
+  const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);
   const hideDeleteWindow = () => setFlag(false);
 
-  const [dleads, setDleads] = React.useState([]);
-  const [values, setValues] = React.useState({
+  const [dleads, setDleads] = useState([]);
+  const [values, setValues] = useState({
     dError: "",
     dSuccess: false,
     dLoading: false,
@@ -116,32 +117,36 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
-  const handelBulkDelete = () => {
-    console.log("please implement");
-  };
-
-  const deleteALlLeads = () => {
+  //move leads into trash
+  const moveLeadsIntoTrash = () => {
     setValues({ ...values, dError: "", dLoading: true });
-    const jsonString = JSON.stringify(Object.assign({}, dleads));
-    console.log(jsonString);
-    deleteLeads(_id, token, jsonString)
-      .then((data) => {
-        if (data.error) {
-          setValues({
-            ...values,
-            dError: data.error,
-            dLoading: false,
-          });
-        } else {
-          setValues({
-            ...values,
-            dError: "",
-            dSuccess: true,
-            dLoading: false,
-          });
-        }
-      })
-      .catch(console.log("Error in lead deletion"));
+    if (dleads.length <= 1000) {
+      const jsonString = JSON.stringify(Object.assign({}, dleads));
+      moveIntoTrash(_id, token, jsonString)
+        .then((data) => {
+          if (data.error) {
+            setValues({
+              ...values,
+              dError: data.error,
+              dLoading: false,
+            });
+          } else {
+            setValues({
+              ...values,
+              dError: "",
+              dSuccess: true,
+              dLoading: false,
+            });
+          }
+        })
+        .catch(console.log("Error in moving lead into trash"));
+    } else {
+      setValues({
+        ...values,
+        dError: "Select Upto 1000 Leads To Move Into Trash",
+        dLoading: false,
+      });
+    }
   };
 
   let history = useHistory();
@@ -238,6 +243,8 @@ const TasksScreenUser = () => {
     //Download
     XLSX.writeFile(workBook, "LeadsData.xlsx");
   };
+
+  //loading leads
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -252,6 +259,7 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
+  
   const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
       .setColumns(column.map((col) => col.title))
@@ -379,19 +387,16 @@ const TasksScreenUser = () => {
               },
               {
                 icon: "delete",
-                tooltip: "Delete all selected leads",
+                tooltip: "Move To Trash",
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
                     leads.push(element.email);
                   });
                   setDleads(leads);
-                  console.log(leads);
                   showDeleteWindow();
                 },
                 isFreeAction: false,
-                tooltip: "Delete all selected rows",
-                onClick: () => handelBulkDelete(),
               },
               {
                 icon: () => <SaveAltIcon />,
@@ -507,6 +512,7 @@ const TasksScreenUser = () => {
                 <IconButton
                   aria-label="Back to home page"
                   color="primary"
+                  tooltip="Back"
                   variant="contained"
                   onClick={() => {
                     history.go(0);
@@ -516,20 +522,22 @@ const TasksScreenUser = () => {
                 </IconButton>{" "}
               </div>
               {dSuccess && (
-                <Alert severity="success">leads deleted successfully</Alert>
+                <Alert severity="success">
+                  Leads Moved Into Trash Successfully
+                </Alert>
               )}
               {dError && <Alert severity="error">{dError}</Alert>}
-              {dLoading && <Alert severity="info">Deleting...</Alert>}
+              {dLoading && <Alert severity="info">Moving...</Alert>}
               <DialogTitle id="alert-dialog-title">
                 {"Are you sure?"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Selected leads will be deleted permanently from the database.
+                  Selected Leads Will Be Moved Into Trash.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={deleteALlLeads}>Yes</Button>
+                <Button onClick={moveLeadsIntoTrash}>Yes</Button>
                 <Button
                   onClick={() => {
                     history.go(0);
