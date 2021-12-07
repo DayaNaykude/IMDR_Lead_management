@@ -32,7 +32,21 @@ exports.getLead = (req, res) => {
 
 // get all leads
 exports.getAllLeads = (req, res) => {
-  Lead.find({ user: req.profile._id })
+  Lead.find(
+    { user: req.profile._id },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      entrance: 1,
+      percentileGK: 1,
+      status: 1,
+    }
+  )
+
     .sort([["createdAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {

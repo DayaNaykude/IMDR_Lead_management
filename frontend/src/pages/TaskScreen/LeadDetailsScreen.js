@@ -37,6 +37,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 
+//Date formatt
+var moment = require("moment");
+
 const paperStyle = {
   padding: 20,
   maxHeight: "90%",
@@ -253,6 +256,7 @@ const LeadDetails = () => {
           console.log(data.error);
         } else {
           console.log(data);
+          console.log(moment(data.dateOfBirth).format("DD-MM-YYYY"));
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
           setGender(data.gender ? data.gender.toLowerCase() : "");
@@ -430,23 +434,25 @@ const LeadDetails = () => {
               onChange={(e) => setApplicantName(e.target.value)}
               value={applicantName}
             />
-            {updatedate && (
-              <TextField
-                id="date"
-                variant="outlined"
-                label="Birthday date"
-                type="date"
-                defaultValue="19-05-1990"
-                style={textstyle}
-                disabled={disabled}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => setDateOfBirth(e.target.value)}
-                value={dateOfBirth}
-              />
-            )}
-            {showdate && (
+
+            <TextField
+              id="date"
+              variant="outlined"
+              label="Birthday date"
+              type="date"
+              defaultValue="19-05-1990"
+              style={textstyle}
+              disabled={disabled}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              value={
+                dateOfBirth ? moment(dateOfBirth).format("YYYY-MM-DD") : ""
+              }
+            />
+
+            {/* {showdate && (
               <TextField
                 label="Birthday date"
                 style={textstyle}
@@ -455,7 +461,7 @@ const LeadDetails = () => {
                 disabled={disabled}
                 value={dateOfBirth}
               />
-            )}
+            )} */}
             <FormControl
               style={{ margin: "0px 30px auto" }}
               component="fieldset"
@@ -724,7 +730,9 @@ const LeadDetails = () => {
                   <b> Status:-</b>
                   {review.status} <b>Comment:-</b>
                   {review.comment} <b>Date:-</b>
-                  {review.createdAt ? review.createdAt.slice(0, 10) : ""}
+                  {review.createdAt
+                    ? moment(review.createdAt).format("DD-MM-YYYY,h:mm:ss a")
+                    : ""}
                 </p>
               );
             })}

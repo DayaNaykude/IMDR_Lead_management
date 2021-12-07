@@ -7,8 +7,8 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
-import { CsvBuilder } from 'filefy';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import { CsvBuilder } from "filefy";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
 
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
@@ -30,6 +30,8 @@ import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
+
+var moment = require("moment");
 
 const boxStyle = {
   marginTop: "60px",
@@ -213,20 +215,20 @@ const TasksScreenUser = () => {
     dispatch(updateMailContent(content));
   };
   const downloadExcel = () => {
-    const newData=data.map(row=>{
-    delete row.tableData
-    return row
-    })
-    const workSheet=XLSX.utils.json_to_sheet(newData)
-    const workBook=XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workBook,workSheet,"Leads Data")
+    const newData = data.map((row) => {
+      delete row.tableData;
+      return row;
+    });
+    const workSheet = XLSX.utils.json_to_sheet(newData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Leads Data");
     //Buffer
-    let buf=XLSX.write(workBook,{bookType:"xlsx",type:"buffer"})
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
     //Binary
-    XLSX.write(workBook,{bookType:"xlsx",type:"binary"})
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
     //Download
-    XLSX.writeFile(workBook,"LeadsData.xlsx")
-  }
+    XLSX.writeFile(workBook, "LeadsData.xlsx");
+  };
   const preload = () => {
     if (userInfo) {
       getAllLeads(userInfo._id, userInfo.token)
@@ -234,6 +236,7 @@ const TasksScreenUser = () => {
           if (data.error) {
             console.log(data.error);
           } else {
+            console.log(data);
             setData(data);
             setTableLoading(false);
           }
@@ -241,17 +244,16 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  const exportAllSelectedRows=()=>{
-
-
+  const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
-     .setColumns(column.map(col=>col.title))
-     .addRows(selectedRows.map(rowData=>column.map(col=>rowData[col.field])))
-     .exportFile();
-
-    };
+      .setColumns(column.map((col) => col.title))
+      .addRows(
+        selectedRows.map((rowData) => column.map((col) => rowData[col.field]))
+      )
+      .exportFile();
+  };
   const [selectedRows, setSelectedRows] = useState([]);
- 
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -274,7 +276,12 @@ const TasksScreenUser = () => {
       align: "center",
       filtering: false,
     },
-    { title: "Created ON", field: "createdAt", searchable: false },
+    {
+      title: "Created ON",
+      field: "createdAt",
+      searchable: false,
+      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
+    },
     { title: "City", field: "city" },
     { title: "Source", field: "source", align: "left", searchable: false },
     { title: "Entrance", field: "entrance", searchable: false },
@@ -313,7 +320,6 @@ const TasksScreenUser = () => {
                 selection: true,
               }}
               actions={[
-                
                 {
                   icon: "edit",
                   tooltip: "view details",
@@ -354,9 +360,9 @@ const TasksScreenUser = () => {
                 },
                 {
                   icon: "download",
-                  tooltip:"Export to excel",
-                  onClick:()=>downloadExcel(),
-                  isFreeAction:true,
+                  tooltip: "Export to excel",
+                  onClick: () => downloadExcel(),
+                  isFreeAction: true,
                 },
                 {
                   icon: () => <Button style={btnstyle}>Send Email</Button>,
@@ -390,10 +396,10 @@ const TasksScreenUser = () => {
                   onClick: () => handelBulkDelete(),
                 },
                 {
-                  icon: ()=><SaveAltIcon/>,
+                  icon: () => <SaveAltIcon />,
                   tooltip: "Export all selected rows",
-                  onClick: () => exportAllSelectedRows()
-                }
+                  onClick: () => exportAllSelectedRows(),
+                },
               ]}
               components={{
                 Pagination: (props) => (
