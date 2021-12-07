@@ -36,6 +36,10 @@ import {
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
+  USER_REPORT_REQUEST,
+  USER_REPORT_SUCCESS,
+  USER_REPORT_FAIL,
+  USER_REPORT_RESET,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -81,6 +85,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_LIST_RESET });
+  dispatch({ type: USER_REPORT_RESET });
   document.location.href = "/login";
 };
 
@@ -282,7 +287,7 @@ export const listUsers = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users`, config);
+    const { data } = await axios.get(`/api/users/userslist`, config);
 
     dispatch({
       type: USER_LIST_SUCCESS,
@@ -451,3 +456,40 @@ export const sendBulkSms =
       });
     }
   };
+
+export const getReport = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_REPORT_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/report`, config);
+
+    dispatch({
+      type: USER_REPORT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_REPORT_FAIL,
+      payload: message,
+    });
+  }
+};

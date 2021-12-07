@@ -14,7 +14,6 @@ import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
 import XLSX from "xlsx";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -23,15 +22,16 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // backend Imports
-import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
-import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { createDispatchHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
-import { isAuthenticated } from "../../helper";
+import { isAuthenticated } from "../helper";
 
-var moment = require("moment");
 //api calls
-import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
+import {
+  getAllLeadsFromTrash,
+  deleteLeads,
+  reAssignLeads,
+} from "../helper/leadApiCalls";
 
 const boxStyle = {
   marginTop: "60px",
@@ -75,7 +75,7 @@ const textareaStyle = {
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
-  height: "36px",
+  height: "30px",
   fontSize: "20px",
 };
 const textStyle = {
@@ -84,25 +84,14 @@ const textStyle = {
   color: "red",
 };
 
-const inputStyle = {
-  marginLeft: "30px",
-  marginTop: "5%",
-  display: "inline-block",
-};
-
 const textstyle = { margin: "8px 0", height: "fit-content" };
-const textstylesms = { margin: "8px 0", height: "fit-content" };
 
-const TasksScreenUser = () => {
+const TrashScreen = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [openSms, setOpenSms] = useState(false);
-  const handleOpenSms = () => setOpenSms(true);
-  const handleCloseSms = () => setOpenSms(false);
 
   const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);
@@ -118,12 +107,21 @@ const TasksScreenUser = () => {
   const { dError, dSuccess, dLoading } = values;
   const { _id, token } = isAuthenticated();
 
-  //move leads into trash
-  const moveLeadsIntoTrash = () => {
+  const [rLeads, setRLeads] = useState([]);
+  const [rValues, setRValues] = useState({
+    rError: "",
+    rSuccess: false,
+    rLoading: false,
+  });
+
+  const { rError, rSuccess, rLoading } = rValues;
+
+  //permanent deletion
+  const deleteALlLeads = () => {
     setValues({ ...values, dError: "", dLoading: true });
     if (dleads.length <= 1000) {
       const jsonString = JSON.stringify(Object.assign({}, dleads));
-      moveIntoTrash(_id, token, jsonString)
+      deleteLeads(_id, token, jsonString)
         .then((data) => {
           if (data.error) {
             setValues({
@@ -140,11 +138,11 @@ const TasksScreenUser = () => {
             });
           }
         })
-        .catch(console.log("Error in moving lead into trash"));
+        .catch(console.log("Error In Deleting Leads."));
     } else {
       setValues({
         ...values,
-        dError: "Select Upto 1000 Leads To Move Into Trash",
+        dError: "Select Upto 1000 Leads To Delete",
         dLoading: false,
       });
     }
@@ -157,103 +155,32 @@ const TasksScreenUser = () => {
   const [data, setData] = useState([]);
 
   const dispatch = useDispatch();
-
-  const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
-  const {
-    loading,
-    success: successSendBulkEmails,
-    error,
-    status: statusSendBulkEmails,
-  } = userSendBulkEmails;
-
-  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
-  const {
-    loading: loadingSms,
-    success: successSendBulkSms,
-    error: errorSms,
-    status: statusSendBulkSms,
-  } = userSendBulkSms;
-
-  const mailReadContent = useSelector((state) => state.mailReadContent);
-  const {
-    loading: loadingMailRead,
-    error: errorMailRead,
-    mailContent,
-  } = mailReadContent;
-
-  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
-  const {
-    loading: loadingMailUpdate,
-    success: successMailUpdate,
-    error: errorMailUpdate,
-    status: statusMailUpdate,
-  } = mailUpdateContent;
-
-  const [selectedEmails, setSelectedEmails] = useState(null);
-  const [selectedNumbers, setSelectedNumbers] = useState(null);
-  const [subject, setSubject] = useState(
-    "Craft Your Career with the First B-School of Pune"
-  );
-
-  const [message, setMessage] = useState(
-    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
-    `
-  );
   const [tableLoading, setTableLoading] = useState(true);
 
-  const sendEmailHandler = async (e) => {
-    e.preventDefault();
-    // const content = document.getElementById("editablemail").innerHTML;
-    dispatch(sendBulkEmails(selectedEmails, subject));
-  };
-
-  const sendSmsHandler = async (e) => {
-    e.preventDefault();
-    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
-  };
-
-  const updateMailContentHandler = async (e) => {
-    e.preventDefault();
-    const content = document.getElementById("editablemail").innerHTML;
-    console.log(content.toString());
-    dispatch(updateMailContent(content));
-  };
   const downloadExcel = () => {
     const newData = data.map((row) => {
       delete row.tableData;
-      delete row.applicationSeqNo;
-      delete row.nationality;
-      delete row.physcialDisablity;
-      delete row.addressLine1;
-      delete row.addressLine2;
-      delete row.addressLine3;
-      delete row.communicationAddressCountry;
-      delete row.user;
-      delete row.__v;
-      delete row._id;
-      delete row.flag;
       return row;
     });
     const workSheet = XLSX.utils.json_to_sheet(newData);
     const workBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, workSheet, "Leads Data");
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
     //Buffer
     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
     //Binary
     XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
     //Download
-    XLSX.writeFile(workBook, "LeadsData.xlsx");
+    XLSX.writeFile(workBook, "TrashData.xlsx");
   };
 
   //loading leads
   const preload = () => {
     if (userInfo) {
-      getAllLeads(userInfo._id, userInfo.token)
+      getAllLeadsFromTrash(userInfo._id, userInfo.token)
         .then((data) => {
           if (data.error) {
             console.log(data.error);
           } else {
-            console.log(data);
             setData(data);
             setTableLoading(false);
           }
@@ -261,7 +188,39 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  
+
+  //re-assigning
+  const reAssignAllLeads = () => {
+    setRValues({ ...rValues, rError: "", rLoading: true });
+    if (rLeads.length <= 1000) {
+      const jsonString = JSON.stringify(Object.assign({}, rLeads));
+      reAssignLeads(_id, token, jsonString)
+        .then((data) => {
+          if (data.error) {
+            setRValues({
+              ...rValues,
+              rError: data.error,
+              rLoading: false,
+            });
+          } else {
+            setRValues({
+              ...rValues,
+              rError: "",
+              rSuccess: true,
+              rLoading: false,
+            });
+          }
+        })
+        .catch(console.log("Error in Re-assigning leads"));
+    } else {
+      setRValues({
+        ...rValues,
+        rError: "Select Upto 1000 Leads To Re-assign",
+        rLoading: false,
+      });
+    }
+  };
+
   const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
       .setColumns(column.map((col) => col.title))
@@ -277,13 +236,7 @@ const TasksScreenUser = () => {
       history.push("/login");
     }
     preload();
-  }, [
-    history,
-    userInfo,
-    successSendBulkEmails,
-    statusSendBulkEmails,
-    successSendBulkSms,
-  ]);
+  }, [history, userInfo]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -294,22 +247,17 @@ const TasksScreenUser = () => {
       align: "center",
       filtering: false,
     },
-    {
-      title: "Created ON",
-      field: "createdAt",
-      searchable: false,
-      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
-    },
+    { title: "Created ON", field: "createdAt" },
     { title: "City", field: "city" },
-    { title: "Source", field: "source", align: "left", searchable: false },
-    { title: "Entrance", field: "entrance", searchable: false },
-    { title: "Percentile", field: "percentileGK", searchable: false },
-    { title: "Lead Status", field: "status", searchable: false },
+    { title: "Source", field: "source", align: "left" },
+    { title: "Entrance", field: "entrance" },
+    { title: "Percentile", field: "percentileGK" },
+    { title: "Lead Status", field: "status" },
   ];
   return (
     <>
       <div>
-        <h1 style={textStyle}>Lead Management</h1>
+        <h1 style={textStyle}>Trash Bin</h1>
         <Box style={boxStyle}>
           <MaterialTable
             title=""
@@ -334,67 +282,27 @@ const TasksScreenUser = () => {
             }}
             actions={[
               {
-                icon: "edit",
-                tooltip: "view details",
-                position: "row",
-
-                onClick: (event, rowData) => {
-                  return (
-                    <>
-                      {history.push({
-                        pathname: "/view", // re-route to this path
-                        state: {
-                          email: rowData.email,
-                        },
-                      })}
-                      {history.go(0)}
-                    </>
-                  );
-                },
-              },
-
-              {
-                icon: () => <button style={btnstyle}>Add Contact</button>,
-                tooltip: "Add Contact",
-                onClick: () => {
-                  return (
-                    <>
-                      {history.push("/add")}
-                      {history.go(0)}
-                    </>
-                  );
-                },
-                isFreeAction: true,
-              },
-              {
-                icon: () => <button style={btnstyle}>Data</button>,
-                tooltip: "Data",
-                isFreeAction: true,
-              },
-              {
                 icon: "download",
                 tooltip: "Export to excel",
                 onClick: () => downloadExcel(),
                 isFreeAction: true,
               },
               {
-                icon: () => <Button style={btnstyle}>Send Email</Button>,
-                tooltip: "Send Email",
+                icon: () => <Button style={btnstyle}>Re-assign</Button>,
+                tooltip: "Re-assign Leads",
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
                     leads.push(element.email);
                   });
-                  dispatch(readMailContent());
-                  setSelectedEmails(leads);
-
+                  setRLeads(leads);
                   handleOpen();
                 },
                 isFreeAction: false,
               },
               {
                 icon: "delete",
-                tooltip: "Move To Trash",
+                tooltip: "Delete all selected leads",
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
@@ -432,86 +340,58 @@ const TasksScreenUser = () => {
               ),
             }}
           />
-          <div>
-            <Modal open={open} onClose={handleClose}>
-              <Box sx={style}>
-                {loading && (
-                  <Alert severity="info">
-                    Sending Emails.. It make few minutes..
-                  </Alert>
-                )}
-                {loadingMailUpdate && (
-                  <Alert severity="info">Updating mail content...</Alert>
-                )}
-                {loadingMailRead && (
-                  <Alert severity="info">Loading mail content...</Alert>
-                )}
-                {error && <Alert severity="error">{error}</Alert>}
-                {errorMailRead && (
-                  <Alert severity="error">{errorMailRead}</Alert>
-                )}
-                {errorMailUpdate && (
-                  <Alert severity="error">{errorMailUpdate}</Alert>
-                )}
-                {statusSendBulkEmails && (
-                  <Alert severity="success">{statusSendBulkEmails.data}</Alert>
-                )}
-                {statusMailUpdate && (
-                  <Alert severity="success">{statusMailUpdate.status}</Alert>
-                )}
-
-                <form>
-                  <div fullwidth="true">
-                    <h3
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        float: "left",
-                      }}
-                    >
-                      Mail Content{" "}
-                    </h3>
-                    <Button
-                      type="submit"
-                      align="right"
-                      color="primary"
-                      variant="contained"
-                      style={saveStyle}
-                      onClick={handleClose}
-                    >
-                      Close
-                    </Button>
-                  </div>
-
-                  <TextField
-                    label="Subject"
-                    style={textstyle}
-                    required
-                    variant="outlined"
-                    placeholder="Enter Subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    fullWidth
-                  />
-
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    style={sendStyle}
-                    onClick={sendEmailHandler}
-                  >
-                    SEND
-                  </Button>
-                </form>
-              </Box>
-            </Modal>
-          </div>
 
           <div>
             <Dialog
               open={flag}
               onClose={hideDeleteWindow}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <div>
+                <IconButton
+                  aria-label="Back to home page"
+                  tooltip= "Back"
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    history.go(0);
+                  }}
+                >
+                  <KeyboardBackspaceSharpIcon />
+                </IconButton>{" "}
+              </div>
+              {dSuccess && (
+                <Alert severity="success">leads deleted successfully</Alert>
+              )}
+              {dError && <Alert severity="error">{dError}</Alert>}
+              {dLoading && <Alert severity="info">Deleting...</Alert>}
+              <DialogTitle id="alert-dialog-title">
+                {"Are you sure?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Selected leads will be deleted permanently from the database.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={deleteALlLeads}>Yes</Button>
+                <Button
+                  onClick={() => {
+                    history.go(0);
+                  }}
+                  autoFocus
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+
+          <div>
+            <Dialog
+              open={open}
+              onClose={handleClose}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
@@ -528,23 +408,21 @@ const TasksScreenUser = () => {
                   <KeyboardBackspaceSharpIcon />
                 </IconButton>{" "}
               </div>
-              {dSuccess && (
-                <Alert severity="success">
-                  Leads Moved Into Trash Successfully
-                </Alert>
+              {rSuccess && (
+                <Alert severity="success">Leads Re-assigned Successfully</Alert>
               )}
-              {dError && <Alert severity="error">{dError}</Alert>}
-              {dLoading && <Alert severity="info">Moving...</Alert>}
+              {rError && <Alert severity="error">{rError}</Alert>}
+              {rLoading && <Alert severity="info">Re-assigning...</Alert>}
               <DialogTitle id="alert-dialog-title">
                 {"Are you sure?"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  Selected Leads Will Be Moved Into Trash.
+                  Selected Leads will be Re-assigned To their previous User.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={moveLeadsIntoTrash}>Yes</Button>
+                <Button onClick={reAssignAllLeads}>Yes</Button>
                 <Button
                   onClick={() => {
                     history.go(0);
@@ -558,7 +436,8 @@ const TasksScreenUser = () => {
           </div>
         </Box>
       </div>
+      )
     </>
   );
 };
-export default TasksScreenUser;
+export default TrashScreen;

@@ -182,7 +182,7 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get all users
-// @route   GET /api/users
+// @route   GET /api/users/userslist
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
@@ -407,4 +407,64 @@ exports.sendBulkSms = asyncHandler(async (req, res, next) => {
   res.send({
     data: `Sms sent`,
   });
+});
+
+// @desc    Get report
+// @route   GET /api/users/report
+// @access  Private/Admin
+exports.getReport = asyncHandler(async (req, res) => {
+  let usersEmails = await User.find({ isAdmin: false }, "email _id username");
+  let reportData = [];
+
+  const levelCounts = await Lead.aggregate([
+    {
+      $group: {
+        _id: { userId: "$user", status: "$status" },
+        data: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: "$_id.userId",
+        status: "$_id.status",
+        count: "$data",
+      },
+    },
+  ]);
+  const totalAssigned = await Lead.aggregate([
+    {
+      $group: {
+        _id: { userId: "$user" },
+        total: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: "$_id.userId",
+        totalAssigned: "$total",
+      },
+    },
+  ]);
+
+  for (let i = 0; i < usersEmails.length; i++) {
+    let tempid = usersEmails[i]._id.toString();
+    var obj = {
+      _id: tempid,
+      email: usersEmails[i].email,
+      username: usersEmails[i].username,
+    };
+    totalAssigned.forEach((data) => {
+      if (data._id == tempid) {
+        obj["totalAssigned"] = data.totalAssigned;
+      }
+    });
+    levelCounts.forEach((data) => {
+      if (data._id == tempid) {
+        obj[data.status] = data.count;
+      }
+    });
+    reportData.push(obj);
+  }
+
+  res.json(reportData);
 });

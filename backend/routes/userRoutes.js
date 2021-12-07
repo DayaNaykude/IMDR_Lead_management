@@ -3,6 +3,7 @@ const { protect, admin } = require("../middleware/authMiddleware");
 const {
   getUserProfile,
   getUsers,
+  getReport,
   getUserById,
   deleteUser,
   updateUser,
@@ -17,7 +18,8 @@ router
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
 
-router.route("/").get(protect, admin, getUsers);
+router.route("/userslist").get(protect, admin, getUsers);
+router.route("/report").get(protect, admin, getReport);
 router
   .route("/:id")
   .delete(protect, admin, deleteUser)

@@ -6,6 +6,7 @@ import HelpIcon from "@material-ui/icons/Help";
 import SettingsIcon from "@material-ui/icons/Settings";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
+import DeleteIcon from '@material-ui/icons/Delete';
 import PeopleIcon from "@material-ui/icons/People";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -13,6 +14,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 function Sidebar() {
   // *************** Backend Stuff
@@ -69,30 +71,58 @@ function Sidebar() {
         <ListItemText primary="Tasks" />
       </ListItem>
 
-      <ListItem
-        button
-        style={{ minWidth: 300 }}
-        component={Link}
-        to="/Dashboard"
-        title="Dashboard"
-      >
-        <ListItemIcon>
-          <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
+      {userInfo && userInfo.isAdmin && (
+        <>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/Dashboard"
+            title="Dashboard"
+          >
+            <ListItemIcon>
+              <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/users"
+            title="Users"
+          >
+            <ListItemIcon>
+              <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Users List" />
+          </ListItem>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/report"
+            title="Report"
+          >
+            <ListItemIcon>
+              <AssessmentIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Report" />
+          </ListItem>
+        </>
+      )}
       {userInfo && userInfo.isAdmin && (
         <ListItem
           button
           style={{ minWidth: 300 }}
           component={Link}
-          to="/users"
-          title="Users"
+          to="/trash"
+          title="Trash"
         >
           <ListItemIcon>
-            <PeopleIcon style={{ fill: "purple" }} fontSize="large" />
+            <DeleteIcon style={{ fill: "purple" }} fontSize="large" />
           </ListItemIcon>
-          <ListItemText primary="Users List" />
+          <ListItemText primary="Trash" />
         </ListItem>
       )}
 
