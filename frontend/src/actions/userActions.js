@@ -380,7 +380,7 @@ export const updateUser = (updateUser) => async (dispatch, getState) => {
 };
 
 export const sendBulkEmails =
-  (emails, subject) => async (dispatch, getState) => {
+  (usersendgridemail, emails, subject) => async (dispatch, getState) => {
     try {
       dispatch({
         type: USER_SEND_EMAILS_REQUEST,
@@ -399,7 +399,7 @@ export const sendBulkEmails =
 
       const { data } = await axios.post(
         "/api/users/sendbulkemails",
-        { emails, subject },
+        { usersendgridemail, emails, subject },
         config
       );
 
