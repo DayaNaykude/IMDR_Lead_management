@@ -52,7 +52,7 @@ export const getAllLeadsFromTrash = () => {
 
 //get a lead details
 export const getLead = (userId, token, emailId) => {
-  console.log(API);
+  console.log(API,emailId);
 
   return fetch(`${API}/lead/${userId}`, {
     method: "POST",

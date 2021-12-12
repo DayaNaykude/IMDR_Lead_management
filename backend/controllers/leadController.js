@@ -32,7 +32,20 @@ exports.getLead = (req, res) => {
 
 // get all active leads
 exports.getAllLeads = (req, res) => {
-  Lead.find({ user: req.profile._id, flag: "Active" })
+  Lead.find(
+    { user: req.profile._id, flag: "Active" },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      percentileGK: 1,
+      status: 1,
+      entrance: 1,
+    }
+  )
     .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
@@ -46,7 +59,20 @@ exports.getAllLeads = (req, res) => {
 
 // get all trashed leads
 exports.getAllTrashedLeads = (req, res) => {
-  Lead.find({ flag: "Deactive" })
+  Lead.find(
+    { flag: "Deactive" },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      percentileGK: 1,
+      status: 1,
+      entrance: 1,
+    }
+  )
     .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
@@ -145,23 +171,91 @@ exports.updateStatus = (req, res) => {
     createdAt: new Date(),
   });
 
-  Lead.findOneAndUpdate(
-    { email: req.body.emailId },
-    { $set: { status: req.body.status }, $push: { reviews: review } },
-    { new: true },
-    (err, lead) => {
-      if (err || !lead) {
-        console.log("in error");
-        return res.status(400).json({
-          error: "Unable to update",
-        });
-      } else {
-        return res.json({
-          message: "update lead status successfully",
-        });
+  if (req.body.status === "level 1") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_1_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
       }
-    }
-  );
+    );
+  } else if (req.body.status === "level 2") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_2_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  } else if (req.body.status === "level 3") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_3_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  } else {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_4_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  }
 };
 
 exports.getStatus = (req, res) => {

@@ -28,12 +28,15 @@ import { makeStyles } from "@material-ui/core/styles";
 // backend Imports
 import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { useDispatch, useSelector } from "react-redux";
+import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
+
 //api calls
 import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
+
+var moment = require("moment");
 
 const boxStyle = {
   marginTop: "60px",
@@ -267,6 +270,7 @@ const TasksScreenUser = () => {
           if (data.error) {
             console.log(data.error);
           } else {
+            console.log(data);
             setData(data);
             setTableLoading(false);
           }
@@ -307,7 +311,12 @@ const TasksScreenUser = () => {
       align: "center",
       filtering: false,
     },
-    { title: "Created ON", field: "createdAt", searchable: false },
+    {
+      title: "Created ON",
+      field: "createdAt",
+      searchable: false,
+      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
+    },
     { title: "City", field: "city" },
     { title: "Source", field: "source", align: "left", searchable: false },
     { title: "Entrance", field: "entrance", searchable: false },

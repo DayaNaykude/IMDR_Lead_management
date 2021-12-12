@@ -25,7 +25,7 @@ router.param("userId", getUserById);
 //actual routes
 
 //read
-router.get("/lead/:userId", getLead);
+router.post("/lead/:userId", getLead);
 router.get("/leads/:userId", getAllLeads);
 router.get("/trashedLeads", getAllTrashedLeads);
 router.get("/lead/:leadId/status/:userId", getStatus);

@@ -36,6 +36,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 
+//Date formatt package
+var moment = require("moment");
+
 const paperStyle = {
   padding: 20,
   maxHeight: "90%",
@@ -148,7 +151,7 @@ const LeadDetails = () => {
   const [error, setError] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
-  const [showdate, setShowdate] = React.useState(true);
+  const [loadingmsg, setLoadingmsg] = React.useState(true);
   const [updatedate, setUpdatedate] = React.useState(false);
   const [comment, setComment] = React.useState("");
   const [reviews, setReviews] = React.useState([{}]);
@@ -205,16 +208,15 @@ const LeadDetails = () => {
   //   dispatch(updateMailContent(content));
   // };
 
-  //const { _id, token } = isAuthenticated();
-
+  //import email from previous stack
   const emailId = history.location.state.email;
-  const array = [];
-  array.push(emailId);
-  // backend call
+
+  // backend call get lead details
   const preload = () => {
     getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
         if (data.error) {
+          setLoadingmsg(false);
           setError(true);
           setSuccess(false);
           console.log(data.error);
@@ -239,12 +241,15 @@ const LeadDetails = () => {
           setEntrance(data.entrance ? data.entrance.toLowerCase() : "NA");
           setSource(data.source ? data.source.toLowerCase() : "NA");
           setReviews(data.reviews);
+          setLoadingmsg(false);
         }
       })
       .catch((err) => console.log(err));
   };
 
+  //sort review array datewise
   reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   // backend call for update status
   const addReviewHandler = async (event) => {
     event.preventDefault();
@@ -268,7 +273,6 @@ const LeadDetails = () => {
     setSuccess(true);
     history.go(0);
 
-    // console.log(course);
     updateLead(userInfo._id, userInfo.token, {
       emailId,
       applicantName,
@@ -310,6 +314,20 @@ const LeadDetails = () => {
       </div>
     );
   };
+  const loadingMessage = () => {
+    return (
+      <div className="row">
+        <div className="col-md-6 offset-sm-3 text-left">
+          <div
+            className="alert alert-success mt-4"
+            style={{ display: loadingmsg ? "" : "none" }}
+          >
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
+  };
   const errorMessage = () => {
     return (
       <div className="row">
@@ -336,6 +354,7 @@ const LeadDetails = () => {
   return (
     <>
       {successMessage()}
+      {loadingMessage()}
       {errorMessage()}
       <Grid>
         <Paper elevation={20} style={paperStyle}>
@@ -359,8 +378,6 @@ const LeadDetails = () => {
               style={editStyle}
               onClick={(e) => {
                 setDisabled(false);
-                setUpdatedate(true);
-                setShowdate(false);
               }}
             >
               EDIT
@@ -397,32 +414,24 @@ const LeadDetails = () => {
               onChange={(e) => setApplicantName(e.target.value)}
               value={applicantName}
             />
-            {updatedate && (
-              <TextField
-                id="date"
-                variant="outlined"
-                label="Birth Date"
-                type="date"
-                defaultValue="19-05-1990"
-                style={textstyle}
-                disabled={disabled}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => setDateOfBirth(e.target.value)}
-                value={dateOfBirth}
-              />
-            )}
-            {showdate && (
-              <TextField
-                label="Birth date"
-                style={textstyle}
-                required
-                variant="outlined"
-                disabled={disabled}
-                value={dateOfBirth}
-              />
-            )}
+
+            <TextField
+              id="date"
+              variant="outlined"
+              label="Birthday date"
+              type="date"
+              defaultValue="19-05-1990"
+              style={textstyle}
+              disabled={disabled}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              value={
+                dateOfBirth ? moment(dateOfBirth).format("YYYY-MM-DD") : ""
+              }
+            />
+
             <FormControl
               style={{ margin: "0px 30px auto" }}
               component="fieldset"
@@ -688,10 +697,12 @@ const LeadDetails = () => {
             {reviews.map((review, index) => {
               return (
                 <p key={index} className="alert alert-primary">
-                  <b> status:-</b>
-                  {review.status} <b>comment:-</b>
-                  {review.comment} <b>time:-</b>
-                  {review.createdAt}
+                  <b> Status:-</b>
+                  {review.status} <b>Comment:-</b>
+                  {review.comment} <b>Date:-</b>
+                  {review.createdAt
+                    ? moment(review.createdAt).format("DD-MM-YYYY,h:mm:ss a")
+                    : ""}
                 </p>
               );
             })}
