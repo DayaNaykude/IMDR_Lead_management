@@ -170,6 +170,22 @@ const leadSchema = new mongoose.Schema(
       type: String,
       default: "level 0",
     },
+    level_1_date: {
+      type: Date,
+      default: null,
+    },
+    level_2_date: {
+      type: Date,
+      default: null,
+    },
+    level_3_date: {
+      type: Date,
+      default: null,
+    },
+    level_4_date: {
+      type: Date,
+      default: null,
+    },
     source: {
       type: String,
       trim: true,

@@ -33,6 +33,9 @@ import {
   reAssignLeads,
 } from "../helper/leadApiCalls";
 
+//date format package
+var moment = require("moment");
+
 const boxStyle = {
   marginTop: "60px",
   marginLeft: "20px",
@@ -181,6 +184,7 @@ const TrashScreen = () => {
           if (data.error) {
             console.log(data.error);
           } else {
+            console.log(data)
             setData(data);
             setTableLoading(false);
           }
@@ -247,7 +251,11 @@ const TrashScreen = () => {
       align: "center",
       filtering: false,
     },
-    { title: "Created ON", field: "createdAt" },
+    {
+      title: "Created ON",
+      field: "createdAt",
+      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
+    },
     { title: "City", field: "city" },
     { title: "Source", field: "source", align: "left" },
     { title: "Entrance", field: "entrance" },
@@ -351,7 +359,7 @@ const TrashScreen = () => {
               <div>
                 <IconButton
                   aria-label="Back to home page"
-                  tooltip= "Back"
+                  tooltip="Back"
                   color="primary"
                   variant="contained"
                   onClick={() => {

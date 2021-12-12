@@ -29,9 +29,11 @@ import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
-var moment = require("moment");
+
 //api calls
 import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
+
+var moment = require("moment");
 
 const boxStyle = {
   marginTop: "60px",
