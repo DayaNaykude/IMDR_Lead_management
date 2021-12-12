@@ -37,7 +37,7 @@ const Navbar = () => {
       letterSpacing: "0.175em",
       fontSize: "140%",
       textTransform: "uppercase",
-      },
+    },
     list: {
       width: 300,
     },
@@ -47,13 +47,12 @@ const Navbar = () => {
     closeButton: {
       display: "block",
       textAlign: "end",
-      height:100,
-      backgroundImage: 'url("images/Logo.png")',
-       
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
+      // height: 100,
+      // backgroundImage: 'url("images/Logo.png")',
+
+      // backgroundSize: "cover",
+      // backgroundRepeat: "no-repeat",
       backgroundColor: "white",
-      
     },
     about: {
       backgroundColor: "#11a6da",
@@ -131,11 +130,11 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-         
+
           <Typography variant="h6" className={classes.title}>
             {userInfo ? userInfo.username : "IMDR"}
           </Typography>
-          
+
           <Button
             type="submit"
             color="inherit"

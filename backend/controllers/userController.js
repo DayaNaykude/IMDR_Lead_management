@@ -29,6 +29,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      sendgridemail: user.sendgridemail,
       isAdmin: user.isAdmin,
       token: user.getSignedJwtToken(),
     });
@@ -67,6 +68,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      sendgridemail: user.sendgridemail,
       isAdmin: user.isAdmin,
       token: user.getSignedJwtToken(),
     });
@@ -98,17 +100,18 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
     try {
-      // const mailstatus = true;
-      const mailstatus = await sendEmail({
-        to: user.email,
+      const mailstatus = true;
+      // const mailstatus = await sendEmail({
+      //   from: "admissions2022@imdr.edu",
+      //   to: user.email,
 
-        template: "resetpass",
-        data: {
-          username: user.username,
-          resetpassURL: resetUrl,
-          subject: "Password Reset Request IMDR LMS",
-        },
-      });
+      //   template: "resetpass",
+      //   data: {
+      //     username: user.username,
+      //     resetpassURL: resetUrl,
+      //     subject: "Password Reset Request IMDR LMS",
+      //   },
+      // });
       console.log(resetPassMail);
       if (mailstatus) {
         res.status(200);
@@ -171,6 +174,7 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      sendgridemail: user.sendgridemail,
       contact: user.contact,
       bio: user.bio,
       isAdmin: user.isAdmin,
@@ -227,8 +231,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.params.id });
 
   if (user) {
-    user.username = req.body.username || user.username;
-    user.email = req.body.email || user.email;
+    user.sendgridemail = req.body.sendgridemail;
     user.isAdmin = req.body.isAdmin;
 
     const updatedUser = await user.save();
@@ -237,6 +240,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
+      sendgridemail: updatedUser.sendgridemail,
       isAdmin: updatedUser.isAdmin,
     });
   } else {
@@ -281,16 +285,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
-  // filename = "./backend/utils/mailContent.txt";
-
-  // fs.readFile(filename, "utf8", function (err, data) {
-  //   if (err) throw err;
-
-  //   console.log(data);
-  // });
-
-  // const { emails, mailContent, subject } = req.body;
-  const { emails, subject } = req.body;
+  const { usersendgridemail, emails, subject } = req.body;
 
   let failedMails = [];
 
@@ -306,9 +301,10 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
         try {
-          const mailstatus = true;
+          // const mailstatus = true;
 
           // const mailstatus = await sendEmail({
+          //   from: usersendgridemail,
           //   to: lead.email,
 
           //   // html: firstMail,
