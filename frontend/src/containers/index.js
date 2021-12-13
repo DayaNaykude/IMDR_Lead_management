@@ -22,7 +22,7 @@ const SignInOutContainer = ({ history }) => {
 
   const paperStyle = {
     width: 340,
-    marginLeft: "300px",
+    marginLeft: "200px",
     marginTop: "50px",
   };
   const copyrightStyle ={

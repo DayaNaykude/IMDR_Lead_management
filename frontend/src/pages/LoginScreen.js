@@ -11,6 +11,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
+import Stack from '@mui/material/Stack';
 
 // backend imports
 import { useState, useEffect } from "react";
@@ -81,9 +82,10 @@ const LoginScreen = ({ handleChange }) => {
             </Avatar>
             <h2>Sign In</h2>
           </Grid>
-          {error && <Alert severity="error">Invalid credentials !</Alert>}
-          {loading && <Alert severity="info">Loading...</Alert>}
-
+          <Stack sx={{ width: '100%' }} spacing={2}>
+          {error &&<Alert variant="filled" severity="error">Invalid Credentials!</Alert>}
+          {loading && <Alert variant="filled" severity="info">Loading...</Alert>}
+          </Stack>
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
