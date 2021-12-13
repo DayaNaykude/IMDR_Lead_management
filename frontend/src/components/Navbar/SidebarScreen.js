@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
+import AllOutIcon from '@mui/icons-material/AllOut';
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 function Sidebar() {
@@ -97,6 +98,19 @@ function Sidebar() {
             </ListItemIcon>
             <ListItemText primary="Users List" />
           </ListItem>
+          <ListItem
+            button
+            style={{ minWidth: 300 }}
+            component={Link}
+            to="/data"
+            title="Data"
+          >
+            <ListItemIcon>
+              <AllOutIcon style={{ fill: "purple" }} fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Data" />
+          </ListItem>
+          
           <ListItem
             button
             style={{ minWidth: 300 }}

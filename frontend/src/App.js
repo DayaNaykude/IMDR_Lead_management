@@ -14,6 +14,7 @@ import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
 import TaskScreen from "./pages/TaskScreen/TaskScreen";
+import DataScreen from   "./pages/DataScreen";
 import TrashScreen from "./pages/TrashScreen";
 
 const App = () => {
@@ -55,6 +56,11 @@ const App = () => {
               exact
               path="/trash"
               component={() => <TrashScreen />}
+            />
+            <Route
+              exact
+              path="/data"
+              component={() => <DataScreen />}
             />
             <Route exact path="/Help" component={() => <HelpScreen />} />
             <Route exact path="/Settings" component={() => <SettingScreen />} />
