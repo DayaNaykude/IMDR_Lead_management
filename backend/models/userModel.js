@@ -20,6 +20,17 @@ const UserSchema = new mongoose.Schema(
         "Please provide a valid email",
       ],
     },
+    sendgridemail: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      required: [true, "Please provide email address"],
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please provide a valid email",
+      ],
+      default: "dummyemail@sendgrid.com",
+    },
     password: {
       type: String,
       required: [true, "Please add a password"],

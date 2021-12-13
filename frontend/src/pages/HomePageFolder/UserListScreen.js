@@ -74,12 +74,16 @@ export const UserListScreen = () => {
       editable: "never",
     },
     {
+      title: "SendGrid Email",
+      field: "sendgridemail",
+    },
+    {
       title: "Contact",
       field: "contact",
       editable: "never",
     },
     {
-      title: "Admin",
+      title: "isAdmin",
       field: "admin",
       lookup: {
         1: "Yes",
@@ -112,8 +116,8 @@ export const UserListScreen = () => {
     }
   }, [dispatch, history, userInfo, successDelete, successUpdate]);
 
-  const updateHandler = async (email, isAdmin) => {
-    dispatch(updateUser({ email, isAdmin }));
+  const updateHandler = async (email, sendgridemail, isAdmin) => {
+    dispatch(updateUser({ email, sendgridemail, isAdmin }));
   };
 
   const deleteHandler = async (email) => {
@@ -153,6 +157,7 @@ export const UserListScreen = () => {
                 name: user.username,
                 // id: user._id,
                 email: user.email,
+                sendgridemail: user.sendgridemail,
                 contact: user.contact ? `+91 ${user.contact}` : "NA",
                 admin: user.isAdmin ? "1" : "2",
               }))
@@ -176,7 +181,8 @@ export const UserListScreen = () => {
                   // setUpdateSuccess(false);
                   updateHandler(
                     oldRow.email,
-                    oldRow.admin === "2" ? true : false
+                    newRow.sendgridemail,
+                    newRow.admin === "1" ? true : false
                   );
 
                   setTimeout(() => resolve(), 4000);

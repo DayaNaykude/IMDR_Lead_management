@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
+var moment = require("moment");
 
 const reviewSchema = mongoose.Schema(
   {
@@ -168,6 +169,22 @@ const leadSchema = new mongoose.Schema(
     status: {
       type: String,
       default: "level 0",
+    },
+    level_1_date: {
+      type: Date,
+      default: null,
+    },
+    level_2_date: {
+      type: Date,
+      default: null,
+    },
+    level_3_date: {
+      type: Date,
+      default: null,
+    },
+    level_4_date: {
+      type: Date,
+      default: null,
     },
     source: {
       type: String,

@@ -21,16 +21,22 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
+import ListItem from "@material-ui/core/ListItem";
+import { makeStyles } from "@material-ui/core/styles";
 
 // backend Imports
 import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { useDispatch, useSelector } from "react-redux";
+import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
+
 //api calls
 import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
+
+var moment = require("moment");
 
 const boxStyle = {
   marginTop: "60px",
@@ -92,7 +98,19 @@ const inputStyle = {
 const textstyle = { margin: "8px 0", height: "fit-content" };
 const textstylesms = { margin: "8px 0", height: "fit-content" };
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  closeButton: {
+    display: "inline",
+    marginLeft: "85%",
+  },
+}));
+
 const TasksScreenUser = () => {
+  const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -203,7 +221,7 @@ const TasksScreenUser = () => {
   const sendEmailHandler = async (e) => {
     e.preventDefault();
     // const content = document.getElementById("editablemail").innerHTML;
-    dispatch(sendBulkEmails(selectedEmails, subject));
+    dispatch(sendBulkEmails(userInfo.sendgridemail, selectedEmails, subject));
   };
 
   const sendSmsHandler = async (e) => {
@@ -252,6 +270,7 @@ const TasksScreenUser = () => {
           if (data.error) {
             console.log(data.error);
           } else {
+            console.log(data);
             setData(data);
             setTableLoading(false);
           }
@@ -259,7 +278,7 @@ const TasksScreenUser = () => {
         .catch((err) => console.log(err));
     }
   };
-  
+
   const exportAllSelectedRows = () => {
     new CsvBuilder("tableData.csv")
       .setColumns(column.map((col) => col.title))
@@ -292,7 +311,12 @@ const TasksScreenUser = () => {
       align: "center",
       filtering: false,
     },
-    { title: "Created ON", field: "createdAt", searchable: false },
+    {
+      title: "Created ON",
+      field: "createdAt",
+      searchable: false,
+      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
+    },
     { title: "City", field: "city" },
     { title: "Source", field: "source", align: "left", searchable: false },
     { title: "Entrance", field: "entrance", searchable: false },
@@ -378,7 +402,7 @@ const TasksScreenUser = () => {
                   data.forEach((element) => {
                     leads.push(element.email);
                   });
-                  dispatch(readMailContent());
+                  // dispatch(readMailContent());
                   setSelectedEmails(leads);
 
                   handleOpen();
@@ -455,37 +479,22 @@ const TasksScreenUser = () => {
 
                 <form>
                   <div fullwidth="true">
-                    <h3
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        float: "left",
-                      }}
-                    >
-                      Mail Content{" "}
-                    </h3>
-                    <Button
-                      type="submit"
-                      align="right"
-                      color="primary"
-                      variant="contained"
-                      style={saveStyle}
+                    <ListItem
+                      button
+                      className={classes.closeButton}
+                      title="Close"
                       onClick={handleClose}
                     >
-                      Close
-                    </Button>
+                      <CloseIcon
+                        align="right"
+                        style={{ fill: "red", fontSize: "180%" }}
+                      />
+                    </ListItem>
                   </div>
-
-                  <TextField
-                    label="Subject"
-                    style={textstyle}
-                    required
-                    variant="outlined"
-                    placeholder="Enter Subject"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    fullWidth
-                  />
+                  <h3>
+                    Mail will be sent to selected leads.<br></br>Click the below
+                    SEND button to proceed.
+                  </h3>
 
                   <Button
                     type="submit"
