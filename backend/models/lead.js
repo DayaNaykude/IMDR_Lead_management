@@ -190,4 +190,5 @@ const leadSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+leadSchema.index({ user: 1, flag: 1 });
 module.exports = mongoose.model("Lead", leadSchema);
