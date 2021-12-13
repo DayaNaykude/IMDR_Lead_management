@@ -30,10 +30,50 @@ exports.getLead = (req, res) => {
   });
 };
 
-// get all leads
+// get all active leads
 exports.getAllLeads = (req, res) => {
-  Lead.find({ user: req.profile._id })
-    .sort([["createdAt", "desc"]])
+  Lead.find(
+    { user: req.profile._id, flag: "Active" },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      percentileGK: 1,
+      status: 1,
+      entrance: 1,
+    }
+  )
+    .sort([["updatedAt", "desc"]])
+    .exec((err, leads) => {
+      if (err || !leads) {
+        return res.status(400).json({
+          error: "No leads assigned.",
+        });
+      }
+      return res.json(leads);
+    });
+};
+
+// get all trashed leads
+exports.getAllTrashedLeads = (req, res) => {
+  Lead.find(
+    { flag: "Deactive" },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      percentileGK: 1,
+      status: 1,
+      entrance: 1,
+    }
+  )
+    .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
         return res.status(400).json({
@@ -131,23 +171,91 @@ exports.updateStatus = (req, res) => {
     createdAt: new Date(),
   });
 
-  Lead.findOneAndUpdate(
-    { email: req.body.emailId },
-    { $set: { status: req.body.status }, $push: { reviews: review } },
-    { new: true },
-    (err, lead) => {
-      if (err || !lead) {
-        console.log("in error");
-        return res.status(400).json({
-          error: "Unable to update",
-        });
-      } else {
-        return res.json({
-          message: "update lead status successfully",
-        });
+  if (req.body.status === "level 1") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_1_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
       }
-    }
-  );
+    );
+  } else if (req.body.status === "level 2") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_2_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  } else if (req.body.status === "level 3") {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_3_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  } else {
+    Lead.findOneAndUpdate(
+      { email: req.body.emailId },
+      {
+        $set: { status: req.body.status, level_4_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          console.log("in error");
+          return res.status(400).json({
+            error: "Unable to update",
+          });
+        } else {
+          return res.json({
+            message: "update lead status successfully",
+          });
+        }
+      }
+    );
+  }
 };
 
 exports.getStatus = (req, res) => {
@@ -186,14 +294,12 @@ exports.deleteLead = (req, res) => {
   });
 };
 
-//delete
+//permanent deletion
 exports.deleteManyLeads = (req, res) => {
   const jsonObj = req.body;
   var result = [];
 
   for (var i in jsonObj) result.push(jsonObj[i]);
-  console.log(result.length);
-  console.log(result);
   result.map((email) => {
     Lead.findOneAndRemove({ email: email }).exec((err, lead) => {
       if (err || !lead) {
@@ -207,5 +313,62 @@ exports.deleteManyLeads = (req, res) => {
         });
       }
     });
+  });
+};
+
+//move leads into trash
+exports.moveLeadsIntoTrash = (req, res) => {
+  const jsonObj = req.body;
+  var result = [];
+
+  for (var i in jsonObj) result.push(jsonObj[i]);
+  result.map((email) => {
+    Lead.findOneAndUpdate(
+      { email: email },
+      { $set: { flag: "Deactive" } },
+      { new: true, useFindAndModify: false },
+      (err, lead) => {
+        if (err || !Lead) {
+          console.log(err);
+          return res.status(400).json({
+            error: "Failed To Move Leads Into Trash",
+          });
+        }
+        if (lead && lead.email === result[result.length - 1]) {
+          return res.json({
+            message: "Selected leads are moved to trash successfully",
+          });
+        }
+      }
+    );
+  });
+};
+
+//Re-assign lead to its previuos user
+exports.reAssignLeadsToSameUser = (req, res) => {
+  const jsonObj = req.body;
+  var result = [];
+
+  for (var i in jsonObj) result.push(jsonObj[i]);
+  result.map((email) => {
+    Lead.findOneAndUpdate(
+      { email: email },
+      { $set: { flag: "Active" } },
+      { new: true, useFindAndModify: false },
+      (err, lead) => {
+        if (err || !Lead) {
+          console.log(err);
+          return res.status(400).json({
+            error: "Failed To Re-assign Leads",
+          });
+        }
+        if (lead && lead.email === result[result.length - 1]) {
+          return res.json({
+            message:
+              "Selected leads are Re-assigned To It's Previous User successfully",
+          });
+        }
+      }
+    );
   });
 };

@@ -8,7 +8,7 @@ const fs = require("fs");
 
 //uploading leads into db
 exports.uploadFile = (req, res) => {
-  console.log("IN UPLOAD FILE");
+  
   let data;
   var leads = [];
 
@@ -54,7 +54,7 @@ exports.uploadFile = (req, res) => {
             }
           }
           const len = uniqueLeads.length;
-          console.log(len);
+         // console.log(len);
           if (len > 0) {
             uniqueLeads.map((lead) => {
               Lead.findOne({ email: lead.email }).exec((err, f_lead) => {

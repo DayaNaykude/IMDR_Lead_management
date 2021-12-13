@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import XLSX from "xlsx";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
-
 
 // Backend Imports
 
@@ -56,7 +55,7 @@ export const ReportScreen = () => {
   const classes = useStyles();
 
   let history = useHistory();
-  
+
   const columns = [
     {
       title: "User Name",
@@ -100,7 +99,7 @@ export const ReportScreen = () => {
   // ***************** Backend stuff
 
   const dispatch = useDispatch();
-  
+
   const userReport = useSelector((state) => state.userReport);
   const { loading, error, report } = userReport;
 
@@ -108,13 +107,18 @@ export const ReportScreen = () => {
   const { userInfo } = userLogin;
 
   const downloadExcel = () => {
-    const newData = report.map((row) => {
-      delete row.tableData;
-      delete row.email;
-      delete row._id;
-      return row;
-    });
-    const workSheet = XLSX.utils.json_to_sheet(newData);
+    const tableData =
+      report &&
+      report.map((user) => ({
+        name: user.username,
+        level0: user["level 0"] ? user["level 0"] : 0,
+        level1: user["level 1"] ? user["level 1"] : 0,
+        level2: user["level 2"] ? user["level 2"] : 0,
+        level3: user["level 3"] ? user["level 3"] : 0,
+        level4: user["level 4"] ? user["level 4"] : 0,
+        totalAssigned: user.totalAssigned,
+      }));
+    const workSheet = XLSX.utils.json_to_sheet(tableData);
     const workBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
     //Buffer
@@ -172,6 +176,7 @@ export const ReportScreen = () => {
                 totalAssigned: user.totalAssigned,
               }))
             }
+            // data={tableData}
             columns={columns}
             isLoading={loading}
             options={{
@@ -186,13 +191,13 @@ export const ReportScreen = () => {
               headerStyle: { background: "#9c66e2", fontStyle: "bold" },
             }}
             actions={[
-            {
-              icon: "download",
-              tooltip: "Export to excel",
-              onClick: () => downloadExcel(),
-              isFreeAction: true,
-            },
-          ]}
+              {
+                icon: "download",
+                tooltip: "Export to excel",
+                onClick: () => downloadExcel(),
+                isFreeAction: true,
+              },
+            ]}
           />
         </Box>
       </div>
