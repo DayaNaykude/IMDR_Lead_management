@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { listUsers } from "../actions/userActions";
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-
+import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 //import { Redirect } from "react-router-dom";
@@ -72,13 +72,32 @@ const Dashboard = () => {
   const src_leadsBySource = `https://charts.mongodb.com/charts-project-0-yxocx/embed/charts?id=699b26f7-d0c5-4a0f-a158-474f676ef9fa&autoRefresh=${autoRefresh}&theme=light&attribution=false`;
   const src_leadsByCity = `https://charts.mongodb.com/charts-project-0-yxocx/embed/charts?id=74d9ff32-61ed-491c-939d-f78fea3a713a&autoRefresh=${autoRefresh}&theme=light&attribution=false`;
 
+  const data =[
+    {firstName:"Gujju", lastName:"Bhujbal", email:"gujjubhujbal@gmail.com",age:"24"},
+    {firstName:"sanika", lastName:"more", email:"sanikamore@gmail.com",age:"24"}
+  ];
+  const headers = [
+    {label:'First Name', key:'firstName'},
+    {label:'Last Name', key:'lastName'},
+    {label:'Email', key:'email'},
+    {label:'Age', key:'age'},
+  ];
+  const csvReport = {
+      filename:'Report.csv',
+      headers: headers,
+      data:data,
+  };
   return (
-    <>
+    <>  
+        <CSVLink {...csvReport}>
+
+        
        <Tooltip title="Report Download">
           <IconButton style={btnstyle}>
         <FileDownloadIcon />
       </IconButton>
     </Tooltip>
+    </CSVLink>
                   
       <h1 style={textStyle}>Dashboard</h1>
       <div>
