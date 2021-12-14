@@ -107,18 +107,7 @@ export const ReportScreen = () => {
   const { userInfo } = userLogin;
 
   const downloadExcel = () => {
-    const tableData =
-      report &&
-      report.map((user) => ({
-        name: user.username,
-        level0: user["level 0"] ? user["level 0"] : 0,
-        level1: user["level 1"] ? user["level 1"] : 0,
-        level2: user["level 2"] ? user["level 2"] : 0,
-        level3: user["level 3"] ? user["level 3"] : 0,
-        level4: user["level 4"] ? user["level 4"] : 0,
-        totalAssigned: user.totalAssigned,
-      }));
-    const workSheet = XLSX.utils.json_to_sheet(tableData);
+    const workSheet = XLSX.utils.json_to_sheet(report);
     const workBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
     //Buffer

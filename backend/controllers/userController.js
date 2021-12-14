@@ -352,7 +352,7 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
           status: "level 1",
         },
       },
-      $set: { status: "level 1" },
+      $set: { status: "level 1", level_1_date: new Date() },
     },
 
     { multi: true }
@@ -411,8 +411,33 @@ exports.sendBulkSms = asyncHandler(async (req, res, next) => {
 exports.getReport = asyncHandler(async (req, res) => {
   let usersEmails = await User.find({ isAdmin: false }, "email _id username");
   let reportData = [];
+  let temp_leadsByUsersStatus = [];
+  let temp_leadsCountByUsers = [];
 
+  // Total Leads Count
+  let totalLeadsCount = await Lead.countDocuments();
+
+  // leads Count By Level
   const levelCounts = await Lead.aggregate([
+    { $match: { flag: "Active" } },
+    {
+      $group: {
+        _id: { status: "$status" },
+        data: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        status: "$_id.status",
+        count: "$data",
+      },
+    },
+  ]);
+
+  // leadsByUsersStatus
+
+  const levelCountsByUsers = await Lead.aggregate([
+    { $match: { flag: "Active" } },
     {
       $group: {
         _id: { userId: "$user", status: "$status" },
@@ -427,7 +452,10 @@ exports.getReport = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  // leads Count By Users
   const totalAssigned = await Lead.aggregate([
+    { $match: { flag: "Active" } },
     {
       $group: {
         _id: { userId: "$user" },
@@ -442,25 +470,116 @@ exports.getReport = asyncHandler(async (req, res) => {
     },
   ]);
 
+  // leads Count By Entrance Exam
+  const entranceexamCounts = await Lead.aggregate([
+    { $match: { flag: "Active" } },
+    {
+      $group: {
+        _id: { entrance: "$entrance" },
+        data: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        entrance: "$_id.entrance",
+        count: "$data",
+      },
+    },
+  ]);
+
+  // leads Count By Source
+  const SourceCounts = await Lead.aggregate([
+    { $match: { flag: "Active" } },
+    {
+      $group: {
+        _id: { source: "$source" },
+        data: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        source: "$_id.source",
+        count: "$data",
+      },
+    },
+  ]);
+
+  // Data cleaning and formatting
+
   for (let i = 0; i < usersEmails.length; i++) {
     let tempid = usersEmails[i]._id.toString();
-    var obj = {
-      _id: tempid,
-      email: usersEmails[i].email,
+    var obj1 = {
       username: usersEmails[i].username,
     };
+    var obj2 = {
+      username: usersEmails[i].username,
+    };
+    levelCountsByUsers.forEach((data) => {
+      if (data._id == tempid) {
+        obj1[data.status] = data.count;
+      }
+    });
+
     totalAssigned.forEach((data) => {
       if (data._id == tempid) {
-        obj["totalAssigned"] = data.totalAssigned;
+        obj2["TotalAssigned"] = data.totalAssigned;
       }
     });
-    levelCounts.forEach((data) => {
-      if (data._id == tempid) {
-        obj[data.status] = data.count;
-      }
-    });
-    reportData.push(obj);
+    temp_leadsByUsersStatus.push(obj1);
+    temp_leadsCountByUsers.push(obj2);
   }
+
+  const leadsByUsersStatus =
+    temp_leadsByUsersStatus &&
+    temp_leadsByUsersStatus.map((user) => ({
+      Name: user.username,
+      Level_0: user["level 0"] ? user["level 0"] : 0,
+      Level_1: user["level 1"] ? user["level 1"] : 0,
+      Level_2: user["level 2"] ? user["level 2"] : 0,
+      Level_3: user["level 3"] ? user["level 3"] : 0,
+      Level_4: user["level 4"] ? user["level 4"] : 0,
+    }));
+
+  // Leads Assigned Count by user
+  const leadsCountByUsers =
+    temp_leadsCountByUsers &&
+    temp_leadsCountByUsers.map((user) => ({
+      Name: user.username,
+      Total_Leads_Assigned: user.TotalAssigned,
+    }));
+
+  // Leads  Count by level
+  const leadsCountByLevel =
+    levelCounts &&
+    levelCounts.map((data) => ({
+      Level: data.status,
+      Leads_Count: data.count,
+    }));
+
+  // Leads  Count by entrance exam
+  const leadsCountByEntrance =
+    entranceexamCounts &&
+    entranceexamCounts.map((data) => ({
+      Entrance_Exam: data.entrance === "" ? "None" : data.entrance,
+      Leads_Count: data.count,
+    }));
+
+  // Leads  Count by entrance exam
+  const leadsCountBySource =
+    SourceCounts &&
+    SourceCounts.map((data) => ({
+      Source: data.source === "" ? "None" : data.source,
+      Leads_Count: data.count,
+    }));
+
+  // Pushing data to final report
+
+  reportData.push({ Total_Leads_Count: totalLeadsCount });
+  reportData.push(leadsCountByUsers);
+  reportData.push(leadsByUsersStatus);
+  reportData.push(leadsCountByLevel);
+  reportData.push(leadsCountByEntrance);
+  reportData.push(leadsCountBySource);
 
   res.json(reportData);
 });
