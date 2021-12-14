@@ -164,7 +164,7 @@ const leadSchema = new mongoose.Schema(
     },
     user: {
       type: ObjectId,
-      ref: "userModel",
+      ref: "User",
     },
     status: {
       type: String,

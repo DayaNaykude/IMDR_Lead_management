@@ -19,7 +19,7 @@ export const createLead = (userId, token, lead) => {
     .catch((err) => console.log(err));
 };
 
-//get all active leads
+//get all active leads for a particular user
 export const getAllLeads = (userId, token) => {
   return fetch(`${API}/leads/${userId}`, {
     method: "GET",
@@ -49,6 +49,22 @@ export const getAllLeadsFromTrash = () => {
     })
     .catch((err) => console.log(err));
 };
+
+//get all leads for admin
+export const getAllLeadsForAdmin = () => {
+  return fetch(`${API}/admin/leads`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};
+
 
 //get a lead details
 export const getLead = (userId, token, emailId) => {

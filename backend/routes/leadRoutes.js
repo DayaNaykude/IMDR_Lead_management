@@ -15,6 +15,7 @@ const {
   getAllTrashedLeads,
   reAssignLeadsToSameUser,
   moveLeadsIntoTrash,
+  getAllLeadsForAdmin,
 } = require("../controllers/leadController");
 const { getUserById } = require("../middleware/authMiddleware");
 
@@ -27,6 +28,7 @@ router.param("userId", getUserById);
 //read
 router.post("/lead/:userId", getLead);
 router.get("/leads/:userId", getAllLeads);
+router.get("/admin/leads", getAllLeadsForAdmin);
 router.get("/trashedLeads", getAllTrashedLeads);
 router.get("/lead/:leadId/status/:userId", getStatus);
 
