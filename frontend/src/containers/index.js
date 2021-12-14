@@ -67,7 +67,7 @@ const SignInOutContainer = ({ history }) => {
      className="imagelogo"
     style={{
 
-      backgroundImage: 'url("images/Logo.png")',
+      backgroundImage: 'url("images/desSetu.jpeg")',
       
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
