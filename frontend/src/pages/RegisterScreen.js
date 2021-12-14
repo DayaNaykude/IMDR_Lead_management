@@ -13,6 +13,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
+import Stack from '@mui/material/Stack';
 // backend imports
 
 import { useDispatch, useSelector } from "react-redux";
@@ -100,9 +101,13 @@ props.setSubmitting(false);
             Please fill this form to create an account!
           </Typography>
         </Grid>
-        {message && <Alert severity="error">{message}</Alert>}
-        {error && <Alert severity="error">{error}</Alert>}
-        {loading && <Alert severity="info">Loading...</Alert>}
+
+       
+         <Stack sx={{ width: '100%' }} spacing={2}>
+          {message && <Alert variant="filled" severity="error">{message}</Alert>}
+          {error &&<Alert variant="filled" severity="error">Invalid Credentials!</Alert>}
+          {loading && <Alert variant="filled" severity="info">Loading...</Alert>}
+          </Stack>
 
         <Formik
             initialValues={initialValues}
