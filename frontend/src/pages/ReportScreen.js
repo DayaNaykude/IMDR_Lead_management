@@ -107,6 +107,7 @@ export const ReportScreen = () => {
   const { userInfo } = userLogin;
 
   const downloadExcel = () => {
+    console.log(report);
     const workSheet = XLSX.utils.json_to_sheet(report);
     const workBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workBook, workSheet, "Report");

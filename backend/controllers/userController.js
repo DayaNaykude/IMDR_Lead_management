@@ -643,7 +643,7 @@ exports.getReport = asyncHandler(async (req, res) => {
 
   // Pushing data to final report
 
-  reportData.push({ Total_Leads_Count: totalLeadsCount });
+  reportData.push([{ Total_Leads_Count: totalLeadsCount }]);
   reportData.push(leadsCountByUsers);
   reportData.push(leadsByUsersStatus);
   reportData.push(leadsCountByLevel);
