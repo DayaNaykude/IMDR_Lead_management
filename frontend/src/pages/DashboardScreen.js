@@ -6,11 +6,11 @@ import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { listUsers } from "../actions/userActions";
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 import { useDispatch, useSelector } from "react-redux";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 //import { Redirect } from "react-router-dom";
 const Dashboard = () => {
   const textStyle = {
@@ -38,12 +38,11 @@ const Dashboard = () => {
     textSize: "20px",
     width: "35%",
   };
-  const btnstyle = { 
-                    backgroundColor: "rgb(30 183 30)",
-                    color: "white", 
-                    marginLeft:"96%",
-                    marginTop:"1%"
-                  };
+  const btnstyle = {
+    backgroundColor: "rgb(30 183 30)",
+    color: "white",
+    marginLeft: "90%",
+  };
   const dispatch = useDispatch();
   let history = useHistory();
   const userList = useSelector((state) => state.userList);
@@ -74,12 +73,6 @@ const Dashboard = () => {
 
   return (
     <>
-       <Tooltip title="Report Download">
-          <IconButton style={btnstyle}>
-        <FileDownloadIcon />
-      </IconButton>
-    </Tooltip>
-                  
       <h1 style={textStyle}>Dashboard</h1>
       <div>
         <FormControl style={Style}>
@@ -104,6 +97,11 @@ const Dashboard = () => {
           </Select>
         </FormControl>
       </div>
+      <Tooltip title="Report Download">
+        <IconButton style={btnstyle}>
+          <FileDownloadIcon />
+        </IconButton>
+      </Tooltip>
       <iframe
         style={chartstyle(46, 60)}
         src={src_leads_count}

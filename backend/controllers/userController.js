@@ -7,6 +7,7 @@ const { sendEmail } = require("../utils/sendEmail");
 const crypto = require("crypto");
 const fs = require("fs");
 const { sendSms } = require("../utils/sendSms");
+const moment = require("moment");
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -414,6 +415,16 @@ exports.getReport = asyncHandler(async (req, res) => {
   let temp_leadsByUsersStatus = [];
   let temp_leadsCountByUsers = [];
 
+  let date1 = "12/01/2021"; //12 January 2021
+  let date2 = "20/01/2021"; //12 January 2021
+  let start_date = moment(date1, "DD.MM.YYYY").toISOString();
+  let end_date = moment(date2, "DD.MM.YYYY").toISOString();
+  console.log(start_date); //result is 2016-01-11T23:00:00.000Z
+  console.log(end_date); //result is 2016-01-11T23:00:00.000Z
+
+  // const start_date = '2021-09-18T21:07:42.313+00:00'
+  // const end_date = '2021-09-18T21:07:42.313+00:00'
+
   // Total Leads Count
   let totalLeadsCount = await Lead.countDocuments();
 
@@ -433,6 +444,64 @@ exports.getReport = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  // // leads Count By Level
+  // const levelCounts = await Lead.aggregate([
+  //   {
+  //     $match: {
+  //       $and: [
+  //         { flag: "Active" },
+  //         {
+  //           $or: [
+  //             {
+  //               level_4_date: {
+  //                 $gt: ISODate("Date here"),
+  //                 $lt: ISODate("Date here"),
+  //               },
+  //             },
+  //             {
+  //               level_3_date: {
+  //                 $gt: ISODate("Date here"),
+  //                 $lt: ISODate("Date here"),
+  //               },
+  //             },
+  //             {
+  //               level_2_date: {
+  //                 $gt: ISODate("Date here"),
+  //                 $lt: ISODate("Date here"),
+  //               },
+  //             },
+  //             {
+  //               level_1_date: {
+  //                 $gt: ISODate("Date here"),
+  //                 $lt: ISODate("Date here"),
+  //               },
+  //             },
+  //             {
+  //               createdAt: {
+  //                 $gt: ISODate("Date here"),
+  //                 $lt: ISODate("Date here"),
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //   },
+
+  //   {
+  //     $group: {
+  //       _id: { status: "$status" },
+  //       data: { $sum: 1 },
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       status: "$_id.status",
+  //       count: "$data",
+  //     },
+  //   },
+  // ]);
 
   // leadsByUsersStatus
 
