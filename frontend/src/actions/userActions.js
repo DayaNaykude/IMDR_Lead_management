@@ -457,7 +457,7 @@ export const sendBulkSms =
     }
   };
 
-export const getReport = () => async (dispatch, getState) => {
+export const getReport = (startDate, endDate) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_REPORT_REQUEST,
@@ -473,7 +473,11 @@ export const getReport = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/report`, config);
+    const { data } = await axios.post(
+      `/api/users/report`,
+      { startDate, endDate },
+      config
+    );
 
     dispatch({
       type: USER_REPORT_SUCCESS,
