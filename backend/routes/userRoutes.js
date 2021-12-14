@@ -19,7 +19,7 @@ router
   .put(protect, updateUserProfile);
 
 router.route("/userslist").get(protect, admin, getUsers);
-router.route("/report").get(protect, admin, getReport);
+router.route("/report").post(protect, admin, getReport);
 router
   .route("/:id")
   .delete(protect, admin, deleteUser)

@@ -410,20 +410,16 @@ exports.sendBulkSms = asyncHandler(async (req, res, next) => {
 // @route   GET /api/users/report
 // @access  Private/Admin
 exports.getReport = asyncHandler(async (req, res) => {
+  const { startDate, endDate } = req.body;
+  let start_date = moment(startDate, "YYYY.MM.DD").toISOString();
+  let end_date = moment(endDate, "YYYY.MM.DD").toISOString();
+
   let usersEmails = await User.find({ isAdmin: false }, "email _id username");
   let reportData = [];
   let temp_leadsByUsersStatus = [];
   let temp_leadsCountByUsers = [];
 
-  let date1 = "12/01/2021"; //12 January 2021
-  let date2 = "20/01/2021"; //12 January 2021
-  let start_date = moment(date1, "DD.MM.YYYY").toISOString();
-  let end_date = moment(date2, "DD.MM.YYYY").toISOString();
-  console.log(start_date); //result is 2016-01-11T23:00:00.000Z
-  console.log(end_date); //result is 2016-01-11T23:00:00.000Z
-
-  // const start_date = '2021-09-18T21:07:42.313+00:00'
-  // const end_date = '2021-09-18T21:07:42.313+00:00'
+  console.log(start_date, end_date);
 
   // Total Leads Count
   let totalLeadsCount = await Lead.countDocuments();
@@ -445,7 +441,17 @@ exports.getReport = asyncHandler(async (req, res) => {
     },
   ]);
 
-  // // leads Count By Level
+  // let leadsAtLevel1 = await Lead.countDocuments({$and: [
+  //                                             { flag: "Active" },
+  //                                             {level_1_date: {
+  //                                               $gt: ISODate(start_date),
+  //                                               $lt: ISODate(end_date),
+  //                                               }
+  //                                             }
+  //                                           ]
+  //                                         })
+
+  // // leads Count By Level in date range
   // const levelCounts = await Lead.aggregate([
   //   {
   //     $match: {
@@ -455,32 +461,32 @@ exports.getReport = asyncHandler(async (req, res) => {
   //           $or: [
   //             {
   //               level_4_date: {
-  //                 $gt: ISODate("Date here"),
-  //                 $lt: ISODate("Date here"),
+  //                 $gt: ISODate(start_date),
+  //                 $lt: ISODate(end_date),
   //               },
   //             },
   //             {
   //               level_3_date: {
-  //                 $gt: ISODate("Date here"),
-  //                 $lt: ISODate("Date here"),
+  //                 $gt: ISODate(start_date),
+  //                 $lt: ISODate(end_date),
   //               },
   //             },
   //             {
   //               level_2_date: {
-  //                 $gt: ISODate("Date here"),
-  //                 $lt: ISODate("Date here"),
+  //                 $gt: ISODate(start_date),
+  //                 $lt: ISODate(end_date),
   //               },
   //             },
   //             {
   //               level_1_date: {
-  //                 $gt: ISODate("Date here"),
-  //                 $lt: ISODate("Date here"),
+  //                 $gt: ISODate(start_date),
+  //                 $lt: ISODate(end_date),
   //               },
   //             },
   //             {
   //               createdAt: {
-  //                 $gt: ISODate("Date here"),
-  //                 $lt: ISODate("Date here"),
+  //                 $gt: ISODate(start_date),
+  //                 $lt: ISODate(end_date),
   //               },
   //             },
   //           ],

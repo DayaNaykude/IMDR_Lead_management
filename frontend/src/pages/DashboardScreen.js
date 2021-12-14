@@ -1,19 +1,17 @@
 import React from "react";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { CSVLink } from "react-csv";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-//import { Redirect } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 // Backend Imports
-import { listUsers } from "../actions/userActions";
-import { getReport } from "../actions/userActions";
+
+import { getReport, listUsers } from "../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
@@ -36,19 +34,26 @@ const Dashboard = () => {
       margin: "1%",
     };
   };
-  const Style = {
-    margin: "8px 0",
-    marginLeft: "35%",
-    textSize: "20px",
-    width: "35%",
+  const dateStyle = {
+    marginLeft: "1%",
+    marginTop: "5px",
+  };
+  const nameStyle = {
+    marginLeft: "30%",
+    color: "Green",
+  };
+  const NameStyle = {
+    marginLeft: "2%",
+    color: "Green",
   };
   const btnstyle = {
     backgroundColor: "rgb(30 183 30)",
     color: "white",
-    marginLeft: "90%",
+    marginLeft: "80%",
   };
 
-  // ***************** Backend stuff
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const dispatch = useDispatch();
   let history = useHistory();
@@ -63,12 +68,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(listUsers());
-      dispatch(getReport());
+      // dispatch(listUsers());
+      dispatch(getReport(startDate, endDate));
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, startDate, endDate]);
 
   const autoRefresh = 3000;
 
@@ -104,42 +109,57 @@ const Dashboard = () => {
   ];
   const csvReport = {
     filename: "Report.csv",
-    // headers: headers,
-    data: report && [report],
+    headers: headers,
+    data: data,
   };
   return (
     <>
-      <CSVLink {...csvReport}>
-        <Tooltip title="Report Download">
-          <IconButton style={btnstyle}>
-            <FileDownloadIcon />
-          </IconButton>
-        </Tooltip>
-      </CSVLink>
-
       <h1 style={textStyle}>Dashboard</h1>
       <div>
-        <FormControl style={Style}>
-          <InputLabel>User</InputLabel>
-          <Select
-            labelId=""
-            id=""
-            label="Users"
-            onChange={(e) => setUser(e.target.value)}
-            value={user}
-          >
-            <MenuItem value="{}">All</MenuItem>
-            {users &&
-              users.map(
-                (user) =>
-                  user.isAdmin == false && (
-                    <MenuItem value={`{"user":{"$oid":"${user._id}"}}`}>
-                      {user.username}
-                    </MenuItem>
-                  )
-              )}
-          </Select>
-        </FormControl>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          style={{ marginTop: "5%" }}
+        >
+          <h4 style={nameStyle}>From</h4>
+          <TextField
+            id="date"
+            label="Select Date"
+            type="date"
+            style={dateStyle}
+            sx={{ width: 250 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              setStartDate(e.target.value);
+            }}
+            value={startDate}
+          />
+          <h4 style={NameStyle}>To</h4>
+          <TextField
+            id="date"
+            label="Select Date"
+            type="date"
+            style={dateStyle}
+            sx={{ width: 250 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              setEndDate(e.target.value);
+            }}
+            value={endDate}
+          />
+          <CSVLink {...csvReport}>
+            <Tooltip title="Report Download">
+              <IconButton style={btnstyle}>
+                <FileDownloadIcon />
+              </IconButton>
+            </Tooltip>
+          </CSVLink>
+        </Grid>
       </div>
 
       <iframe
