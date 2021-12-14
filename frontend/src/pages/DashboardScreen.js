@@ -1,18 +1,20 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { listUsers } from "../actions/userActions";
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { CSVLink } from "react-csv";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+
+// Backend Imports
+
+import { getReport, listUsers } from "../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+
 const Dashboard = () => {
-
-
   const textStyle = {
     marginTop: "50px",
     marginLeft: "45%",
@@ -42,14 +44,17 @@ const Dashboard = () => {
   };
   const NameStyle = {
     marginLeft: "2%",
-    color: "Green",       
-  }
+    color: "Green",
+  };
   const btnstyle = {
     backgroundColor: "rgb(30 183 30)",
     color: "white",
-    marginLeft: "1000%",
-    
+    marginLeft: "80%",
   };
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const dispatch = useDispatch();
   let history = useHistory();
   const userList = useSelector((state) => state.userList);
@@ -58,13 +63,17 @@ const Dashboard = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userReport = useSelector((state) => state.userReport);
+  const { loadingReport, errorReport, report } = userReport;
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(listUsers());
+      // dispatch(listUsers());
+      dispatch(getReport(startDate, endDate));
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, startDate, endDate]);
 
   const autoRefresh = 3000;
 
@@ -79,50 +88,69 @@ const Dashboard = () => {
   const src_leadsByCity = `https://charts.mongodb.com/charts-project-0-yxocx/embed/charts?id=74d9ff32-61ed-491c-939d-f78fea3a713a&autoRefresh=${autoRefresh}&theme=light&attribution=false`;
 
   const data = [
-    { firstName: "Gujju", lastName: "Bhujbal", email: "gujjubhujbal@gmail.com", age: "24" },
-    { firstName: "sanika", lastName: "more", email: "sanikamore@gmail.com", age: "24" }
+    {
+      firstName: "Gujju",
+      lastName: "Bhujbal",
+      email: "gujjubhujbal@gmail.com",
+      age: "24",
+    },
+    {
+      firstName: "sanika",
+      lastName: "more",
+      email: "sanikamore@gmail.com",
+      age: "24",
+    },
   ];
   const headers = [
-    { label: 'First Name', key: 'firstName' },
-    { label: 'Last Name', key: 'lastName' },
-    { label: 'Email', key: 'email' },
-    { label: 'Age', key: 'age' },
+    { label: "First Name", key: "firstName" },
+    { label: "Last Name", key: "lastName" },
+    { label: "Email", key: "email" },
+    { label: "Age", key: "age" },
   ];
   const csvReport = {
-    filename: 'Report.csv',
+    filename: "Report.csv",
     headers: headers,
     data: data,
   };
   return (
     <>
-
-
       <h1 style={textStyle}>Dashboard</h1>
       <div>
-        <Grid container direction="row" alignItems="center" style={{marginTop:"5%"}}>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          style={{ marginTop: "5%" }}
+        >
           <h4 style={nameStyle}>From</h4>
           <TextField
             id="date"
             label="Select Date"
             type="date"
-            defaultValue="2021-11-24"
             style={dateStyle}
             sx={{ width: 250 }}
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={(e) => {
+              setStartDate(e.target.value);
+            }}
+            value={startDate}
           />
-           <h4 style={NameStyle}>To</h4>
+          <h4 style={NameStyle}>To</h4>
           <TextField
             id="date"
             label="Select Date"
             type="date"
-            defaultValue="2021-11-24"
             style={dateStyle}
             sx={{ width: 250 }}
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={(e) => {
+              setEndDate(e.target.value);
+            }}
+            value={endDate}
           />
           <CSVLink {...csvReport}>
             <Tooltip title="Report Download">
@@ -133,6 +161,7 @@ const Dashboard = () => {
           </CSVLink>
         </Grid>
       </div>
+
       <iframe
         style={chartstyle(46, 60)}
         src={src_leads_count}
