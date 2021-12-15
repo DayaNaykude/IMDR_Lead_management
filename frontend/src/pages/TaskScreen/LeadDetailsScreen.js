@@ -38,6 +38,7 @@ import { readMailContent } from "../../actions/mailActions";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
+import TaskScreen from "./TaskScreen";
 
 //Date formatt package
 var moment = require("moment");
@@ -224,7 +225,16 @@ const LeadDetails = () => {
   // };
 
   //import email from previous stack
-  const emailId = history.location.state.email;
+  let emailId;
+
+  if (history.location.state) {
+    emailId = history.location.state.email;
+  } else {
+    <>
+      {history.push("/login")}
+      <TaskScreen />
+    </>;
+  }
 
   // backend call get lead details
   const preload = () => {
@@ -359,12 +369,12 @@ const LeadDetails = () => {
   };
 
   useEffect(() => {
-    if (!userInfo) {
+    if (userInfo && !userInfo.isAdmin) {
+      preload();
+    } else {
       history.push("/login");
     }
-    preload();
   }, [history, userInfo, successSendBulkEmails]);
-  //
 
   return (
     <>

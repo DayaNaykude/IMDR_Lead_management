@@ -164,7 +164,7 @@ const leadSchema = new mongoose.Schema(
     },
     user: {
       type: ObjectId,
-      ref: "userModel",
+      ref: "User",
     },
     status: {
       type: String,
@@ -207,4 +207,5 @@ const leadSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+leadSchema.index({ user: 1, flag: 1 });
 module.exports = mongoose.model("Lead", leadSchema);

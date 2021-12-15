@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import { createLead } from "../../helper/leadApiCalls";
 import { isAuthenticated } from "../../helper/index";
 import { useState } from "react";
+import TaskScreen from "./TaskScreen";
 
 const paperStyle = {
   padding: 20,
@@ -58,7 +59,7 @@ const saveStyle = {
 
 const AddContact = () => {
   let history = useHistory();
-  const { _id, token } = isAuthenticated();
+  const { _id, token, isAdmin } = isAuthenticated();
 
   const [values, setValues] = useState({
     applicantName: "",
@@ -430,11 +431,20 @@ const AddContact = () => {
     );
   };
 
-  return (
-    <>
-      {successMessage()},{errorMessage()},{addContactForm()}
-    </>
-  );
+  if (isAuthenticated() && !isAdmin) {
+    return (
+      <>
+        {successMessage()},{errorMessage()},{addContactForm()}
+      </>
+    );
+  } else {
+    return (
+      <>
+        {history.push("/login")}
+        <TaskScreen />;
+      </>
+    );
+  }
 };
 
 export default AddContact;
