@@ -156,6 +156,7 @@ const Dashboard = () => {
             <Tooltip title="Report Download">
               <IconButton style={btnstyle}>
                 <FileDownloadIcon />
+                Report
               </IconButton>
             </Tooltip>
           </CSVLink>
