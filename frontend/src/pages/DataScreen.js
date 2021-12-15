@@ -159,7 +159,7 @@ const DataScreen = () => {
     { title: "Entrance", field: "entrance" },
     { title: "Percentile", field: "percentileGK" },
     { title: "Lead Status", field: "status" },
-    { title: "Users", field: "user.username" },
+    { title: "User", field: "user.username" },
   ];
   return (
     <>

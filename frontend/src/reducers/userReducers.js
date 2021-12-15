@@ -199,7 +199,7 @@ export const userSendBulkSmsReducer = (state = {}, action) => {
   }
 };
 
-export const userReportReducer = (state = { users: [] }, action) => {
+export const userReportReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_REPORT_REQUEST:
       return { loading: true };

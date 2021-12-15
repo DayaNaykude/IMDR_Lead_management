@@ -29,6 +29,7 @@
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/utils": "^4.11.2",
     "@mui/icons-material": "^5.0.0",
+    "@mui/lab": "^5.0.0-alpha.59",
     "@mui/material": "^5.0.1",
     "@sendgrid/mail": "^7.4.7",
     "@supercharge/promise-pool": "^1.8.0",

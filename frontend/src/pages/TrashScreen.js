@@ -260,6 +260,7 @@ const TrashScreen = () => {
     { title: "Entrance", field: "entrance" },
     { title: "Percentile", field: "percentileGK" },
     { title: "Lead Status", field: "status" },
+    { title: "User", field: "user.username" },
   ];
   return (
     <>

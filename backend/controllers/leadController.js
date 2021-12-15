@@ -73,7 +73,7 @@ exports.getAllLeadsForAdmin = (req, res) => {
       entrance: 1,
     }
   )
-  .populate("user", "username")
+    .populate("user", "username")
     .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
@@ -101,6 +101,7 @@ exports.getAllTrashedLeads = (req, res) => {
       entrance: 1,
     }
   )
+    .populate("user", "username")
     .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {

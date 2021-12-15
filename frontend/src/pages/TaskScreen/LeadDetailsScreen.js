@@ -28,6 +28,9 @@ import Box from "@material-ui/core/Box";
 
 import { updateLead, updateStatus } from "../../helper/leadApiCalls";
 import Modal from "@mui/material/Modal";
+import CloseIcon from "@material-ui/icons/Close";
+import ListItem from "@material-ui/core/ListItem";
+import { makeStyles } from "@material-ui/core/styles";
 
 // backend Imports
 import { sendBulkEmails } from "../../actions/userActions";
@@ -134,7 +137,19 @@ const textAreaStyle = {
   height: "100px",
 };
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  closeButton: {
+    display: "inline",
+    marginLeft: "85%",
+  },
+}));
+
 const LeadDetails = () => {
+  const classes = useStyles();
+
   const [applicantName, setApplicantName] = React.useState("");
   const [dateOfBirth, setDateOfBirth] = React.useState("");
   const [gender, setGender] = React.useState("");
@@ -719,6 +734,7 @@ const LeadDetails = () => {
           </form>
         </Paper>
       </Grid>
+
       <div>
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
@@ -728,18 +744,18 @@ const LeadDetails = () => {
               </Alert>
             )}
             {/* {loadingMailUpdate && (
-              <Alert severity="info">Updating mail content...</Alert>
-            )} */}
-            {/* {loadingMailRead && (
-              <Alert severity="info">Loading mail content...</Alert>
-            )} */}
-            {errorSendBulkEmails && (
-              <Alert severity="error">{errorSendBulkEmails}</Alert>
-            )}
-            {/* {errorMailRead && <Alert severity="error">{errorMailRead}</Alert>} */}
-            {/* {errorMailUpdate && (
-              <Alert severity="error">{errorMailUpdate}</Alert>
-            )} */}
+                  <Alert severity="info">Updating mail content...</Alert>
+                )}
+                {loadingMailRead && (
+                  <Alert severity="info">Loading mail content...</Alert>
+                )}
+                {error && <Alert severity="error">{error}</Alert>}
+                {errorMailRead && (
+                  <Alert severity="error">{errorMailRead}</Alert>
+                )}
+                {errorMailUpdate && (
+                  <Alert severity="error">{errorMailUpdate}</Alert>
+                )} */}
             {statusSendBulkEmails && (
               <Alert severity="success">{statusSendBulkEmails.data}</Alert>
             )}
@@ -749,37 +765,22 @@ const LeadDetails = () => {
 
             <form>
               <div fullwidth="true">
-                <h3
-                  style={{
-                    display: "inline-block",
-                    textAlign: "center",
-                    float: "left",
-                  }}
-                >
-                  Select Mail Template{" "}
-                </h3>
-                <Button
-                  type="submit"
-                  align="right"
-                  color="primary"
-                  variant="contained"
-                  style={saveStyle}
+                <ListItem
+                  button
+                  className={classes.closeButton}
+                  title="Close"
                   onClick={handleClose}
                 >
-                  Close
-                </Button>
+                  <CloseIcon
+                    align="right"
+                    style={{ fill: "red", fontSize: "180%" }}
+                  />
+                </ListItem>
               </div>
-
-              <TextField
-                label="Subject"
-                style={textstyle}
-                required
-                variant="outlined"
-                placeholder="Enter Subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                fullWidth
-              />
+              <h4>
+                Mail will be sent to {applicantName}.<br></br>Click the below
+                SEND button to proceed.
+              </h4>
 
               <Button
                 type="submit"
