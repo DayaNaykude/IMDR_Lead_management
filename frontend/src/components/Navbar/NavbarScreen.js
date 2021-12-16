@@ -47,11 +47,11 @@ const Navbar = () => {
     closeButton: {
       display: "block",
       textAlign: "end",
-      // height: 100,
-      // backgroundImage: 'url("images/Logo.png")',
+       height: 100,
+       backgroundImage: 'url("images/Logo.png")',
 
-      // backgroundSize: "cover",
-      // backgroundRepeat: "no-repeat",
+       backgroundSize: "cover",
+       backgroundRepeat: "no-repeat",
       backgroundColor: "white",
     },
     about: {
@@ -87,7 +87,7 @@ const Navbar = () => {
       onKeyDown={toggleSidebar(false)}
     >
       <ListItem button className={classes.closeButton} title="Close">
-        <CloseIcon align="right" style={{ fill: "red", fontSize: "180%" }} />
+        {/* <CloseIcon align="right" style={{ fill: "red", fontSize: "180%" }} /> */}
       </ListItem>
       <Divider />
       <List>
