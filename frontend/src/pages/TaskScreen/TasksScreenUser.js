@@ -32,10 +32,10 @@ import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
-
 //api calls
 import { getAllLeads, moveIntoTrash } from "../../helper/leadApiCalls";
 
+//date formator
 var moment = require("moment");
 
 const boxStyle = {
@@ -382,7 +382,7 @@ const TasksScreenUser = () => {
                 },
                 isFreeAction: true,
               },
-              
+
               {
                 icon: "download",
                 tooltip: "Export to excel",
