@@ -270,7 +270,6 @@ const TasksScreenUser = () => {
           if (data.error) {
             console.log(data.error);
           } else {
-            console.log(data);
             setData(data);
             setTableLoading(false);
           }

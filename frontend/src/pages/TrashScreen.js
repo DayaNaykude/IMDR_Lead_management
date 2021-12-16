@@ -178,19 +178,17 @@ const TrashScreen = () => {
 
   //loading leads
   const preload = () => {
-    if (userInfo) {
-      getAllLeadsFromTrash(userInfo._id, userInfo.token)
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-          } else {
-            console.log(data)
-            setData(data);
-            setTableLoading(false);
-          }
-        })
-        .catch((err) => console.log(err));
-    }
+    getAllLeadsFromTrash(userInfo._id, userInfo.token)
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          console.log(data);
+          setData(data);
+          setTableLoading(false);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   //re-assigning
@@ -236,10 +234,11 @@ const TrashScreen = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
-    if (!userInfo) {
+    if (userInfo && userInfo.isAdmin) {
+      preload();
+    } else {
       history.push("/login");
     }
-    preload();
   }, [history, userInfo]);
 
   const column = [
@@ -261,6 +260,7 @@ const TrashScreen = () => {
     { title: "Entrance", field: "entrance" },
     { title: "Percentile", field: "percentileGK" },
     { title: "Lead Status", field: "status" },
+    { title: "User", field: "user.username" },
   ];
   return (
     <>

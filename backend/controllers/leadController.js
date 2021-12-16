@@ -30,7 +30,7 @@ exports.getLead = (req, res) => {
   });
 };
 
-// get all active leads
+// get all active leads for a particular user
 exports.getAllLeads = (req, res) => {
   Lead.find(
     { user: req.profile._id, flag: "Active" },
@@ -57,6 +57,34 @@ exports.getAllLeads = (req, res) => {
     });
 };
 
+// get all active leads for an admin
+exports.getAllLeadsForAdmin = (req, res) => {
+  Lead.find(
+    { flag: "Active" },
+    {
+      applicantName: 1,
+      email: 1,
+      mobile: 1,
+      createdAt: 1,
+      city: 1,
+      source: 1,
+      percentileGK: 1,
+      status: 1,
+      entrance: 1,
+    }
+  )
+    .populate("user", "username")
+    .sort([["updatedAt", "desc"]])
+    .exec((err, leads) => {
+      if (err || !leads) {
+        return res.status(400).json({
+          error: "No leads FOUND",
+        });
+      }
+      return res.json(leads);
+    });
+};
+
 // get all trashed leads
 exports.getAllTrashedLeads = (req, res) => {
   Lead.find(
@@ -73,6 +101,7 @@ exports.getAllTrashedLeads = (req, res) => {
       entrance: 1,
     }
   )
+    .populate("user", "username")
     .sort([["updatedAt", "desc"]])
     .exec((err, leads) => {
       if (err || !leads) {
