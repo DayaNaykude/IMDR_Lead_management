@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
-var moment = require("moment");
 
 const reviewSchema = mongoose.Schema(
   {
@@ -24,25 +23,21 @@ const leadSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     dateOfBirth: {
       type: String,
       required: true,
     },
-
     email: {
       type: String,
       trim: true,
       required: true,
       unique: true,
     },
-
     mobile: {
       type: String,
       maxlength: 32,
       trim: true,
     },
-
     countryName: {
       type: String,
       maxlength: 32,
@@ -54,7 +49,6 @@ const leadSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-
     category: {
       type: String,
       maxlength: 32,
@@ -65,23 +59,19 @@ const leadSchema = new mongoose.Schema(
       maxlength: 32,
       trim: true,
     },
-
     physcialDisablity: {
       type: String,
       maxlength: 32,
       trim: true,
     },
-
     addressLine1: {
       type: String,
       trim: true,
     },
-
     addressLine2: {
       type: String,
       trim: true,
     },
-
     addressLine3: {
       type: String,
       trim: true,
@@ -106,17 +96,14 @@ const leadSchema = new mongoose.Schema(
       type: Number,
       trim: true,
     },
-
     percentageVALR: {
       type: Number,
       trim: true,
     },
-
     percentileVALR: {
       type: Number,
       trim: true,
     },
-
     percentageDM: {
       type: Number,
       trim: true,
@@ -157,7 +144,6 @@ const leadSchema = new mongoose.Schema(
       type: Number,
       trim: true,
     },
-
     rankWithoutGK: {
       type: Number,
       trim: true,

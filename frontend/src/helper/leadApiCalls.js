@@ -2,7 +2,7 @@ import { API } from "../backend.js";
 
 //lead calls
 
-// create a lead
+// create a new lead manually
 export const createLead = (userId, token, lead) => {
   return fetch(`${API}/lead/create/${userId}`, {
     method: "POST",
@@ -65,11 +65,8 @@ export const getAllLeadsForAdmin = () => {
     .catch((err) => console.log(err));
 };
 
-
-//get a lead details
+//get lead details
 export const getLead = (userId, token, emailId) => {
-  console.log(API,emailId);
-
   return fetch(`${API}/lead/${userId}`, {
     method: "POST",
     headers: {
@@ -87,8 +84,6 @@ export const getLead = (userId, token, emailId) => {
 
 // update lead
 export const updateLead = (userId, token, updateInfo) => {
-  console.log(API);
-
   return fetch(`${API}/lead/update/${userId}`, {
     method: "PUT",
     headers: {
@@ -104,7 +99,7 @@ export const updateLead = (userId, token, updateInfo) => {
     .catch((err) => console.log(err));
 };
 
-//delete leads
+//delete leads permanently
 export const deleteLeads = (userId, token, leads) => {
   return fetch(`${API}deleteLeads/${userId}`, {
     method: "DELETE",
@@ -121,7 +116,7 @@ export const deleteLeads = (userId, token, leads) => {
     .catch((err) => console.log(err));
 };
 
-//move into trash
+//move leads into trash
 export const moveIntoTrash = (userId, token, leads) => {
   return fetch(`${API}/lead/moveIntoTrash/${userId}`, {
     method: "PUT",
@@ -138,7 +133,7 @@ export const moveIntoTrash = (userId, token, leads) => {
     .catch((err) => console.log(err));
 };
 
-//reAssign lead
+//reAssign leads to their respective users
 export const reAssignLeads = (userId, token, leads) => {
   return fetch(`${API}/lead/reAssign/${userId}`, {
     method: "PUT",
@@ -157,8 +152,6 @@ export const reAssignLeads = (userId, token, leads) => {
 
 //update lead status
 export const updateStatus = (userId, token, updateInfo) => {
-  console.log(API);
-
   return fetch(`${API}/lead/updateStatus/${userId}`, {
     method: "PUT",
     headers: {
