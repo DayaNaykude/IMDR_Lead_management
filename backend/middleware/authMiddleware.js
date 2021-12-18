@@ -36,6 +36,7 @@ const admin = (req, res, next) => {
   }
 };
 
+//param extractor
 const getUserById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
     if (err || !user) {
