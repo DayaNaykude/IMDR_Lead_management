@@ -108,15 +108,9 @@ export const ReportScreen = () => {
 
   const downloadExcel = () => {
     console.log(report);
+    const workSheet = XLSX.utils.json_to_sheet(report);
     const workBook = XLSX.utils.book_new();
-    report.forEach((table) => {
-      XLSX.utils.book_append_sheet(
-        workBook,
-        XLSX.utils.json_to_sheet(table),
-        "Report"
-      );
-    });
-    // const workSheet = XLSX.utils.json_to_sheet(report);
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
     //Buffer
     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
     //Binary
@@ -162,7 +156,7 @@ export const ReportScreen = () => {
             className={classes.tableStyle}
             data={
               report &&
-              report.map((user) => ({
+              report["reportData"]["leadsByUsersStatus"].map((user) => ({
                 name: user.username,
                 level0: user["level 0"] ? user["level 0"] : 0,
                 level1: user["level 1"] ? user["level 1"] : 0,

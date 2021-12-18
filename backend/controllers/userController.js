@@ -419,6 +419,11 @@ exports.getReport = asyncHandler(async (req, res) => {
   let temp_leadsByUsersStatus = [];
   let temp_leadsCountByUsers = [];
 
+  let leadsAtLevel4 = [];
+  let leadsAtLevel3 = [];
+  let leadsAtLevel2 = [];
+  let leadsAtLevel1 = [];
+
   console.log(start_date, end_date);
 
   // Total Leads Count
@@ -441,15 +446,89 @@ exports.getReport = asyncHandler(async (req, res) => {
     },
   ]);
 
-  // let leadsAtLevel1 = await Lead.countDocuments({$and: [
-  //                                             { flag: "Active" },
-  //                                             {level_1_date: {
-  //                                               $gt: ISODate(start_date),
-  //                                               $lt: ISODate(end_date),
-  //                                               }
-  //                                             }
-  //                                           ]
-  //                                         })
+  let temp_leadsAtLevel4 = await Lead.find(
+    {
+      $and: [
+        { flag: "Active" },
+        {
+          level_4_date: {
+            $gt: start_date,
+            $lt: end_date,
+          },
+        },
+      ],
+    },
+    { _id: 1 }
+  );
+
+  temp_leadsAtLevel4.forEach((element) => {
+    leadsAtLevel4.push(element._id);
+  });
+
+  let query = {
+    $and: [
+      { flag: "Active" },
+      {
+        level_3_date: {
+          $gt: start_date,
+          $lt: end_date,
+        },
+      },
+      { _id: { $nin: leadsAtLevel4 } },
+    ],
+  };
+
+  let temp_leadsAtLevel3 = await Lead.find(
+    {
+      $and: [
+        { flag: "Active" },
+        {
+          level_3_date: {
+            $gt: start_date,
+            $lt: end_date,
+          },
+        },
+        { _id: { $nin: leadsAtLevel4 } },
+      ],
+    },
+    { _id: 1, user: 1 }
+  );
+
+  let temp1_leadsAtLevel3 = await Lead.aggregate([
+    {
+      $match: query,
+    },
+    // {
+    //   $group: {
+    //     _id: { userId: "$user" },
+    //     data: { $sum: 1 },
+    //   },
+    // },
+    // {
+    //   $lookup: {
+    //     from: "users",
+    //     localField: "_id.userId",
+    //     foreignField: "_id",
+    //     as: "User",
+    //   },
+    // },
+    // {
+    //   $project: {
+    //     _id: 0,
+    //     User: { $first: "$User.username" },
+    //     status: "Level 3",
+    //     count: "$data",
+    //   },
+    // },
+  ]);
+
+  console.log(temp_leadsAtLevel3);
+
+  temp_leadsAtLevel3.forEach((element) => {
+    leadsAtLevel3.push(element._id);
+  });
+  // console.log(leadsAtLevel3);
+  console.log(temp1_leadsAtLevel3);
 
   // // leads Count By Level in date range
   // const levelCounts = await Lead.aggregate([
@@ -522,6 +601,33 @@ exports.getReport = asyncHandler(async (req, res) => {
     {
       $project: {
         _id: "$_id.userId",
+        status: "$_id.status",
+        count: "$data",
+      },
+    },
+  ]);
+
+  const levelCountsByUsersnew = await Lead.aggregate([
+    { $match: { flag: "Active" } },
+    {
+      $group: {
+        _id: { userId: "$user", status: "$status" },
+        data: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "_id.userId",
+        foreignField: "_id",
+        as: "User",
+      },
+    },
+
+    {
+      $project: {
+        _id: 0,
+        User: { $first: "$User.username" },
         status: "$_id.status",
         count: "$data",
       },
@@ -649,12 +755,12 @@ exports.getReport = asyncHandler(async (req, res) => {
 
   // Pushing data to final report
 
-  reportData.push([{ Total_Leads_Count: totalLeadsCount }]);
-  reportData.push(leadsCountByUsers);
-  reportData.push(leadsByUsersStatus);
-  reportData.push(leadsCountByLevel);
-  reportData.push(leadsCountByEntrance);
-  reportData.push(leadsCountBySource);
+  reportData.push({ Total_Leads_Count: totalLeadsCount });
+  reportData.push({ leadsCountByUsers });
+  reportData.push({ leadsByUsersStatus });
+  reportData.push({ leadsCountByLevel });
+  reportData.push({ leadsCountByEntrance });
+  reportData.push({ leadsCountBySource });
 
-  res.json(reportData);
+  res.json({ reportData });
 });
