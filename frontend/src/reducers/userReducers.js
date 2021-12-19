@@ -37,10 +37,6 @@ import {
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
-  USER_REPORT_REQUEST,
-  USER_REPORT_SUCCESS,
-  USER_REPORT_FAIL,
-  USER_REPORT_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -194,21 +190,6 @@ export const userSendBulkSmsReducer = (state = {}, action) => {
       return { loading: false, success: true, status: action.payload };
     case USER_SEND_SMS_FAIL:
       return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
-
-export const userReportReducer = (state = {}, action) => {
-  switch (action.type) {
-    case USER_REPORT_REQUEST:
-      return { loading: true };
-    case USER_REPORT_SUCCESS:
-      return { loading: false, report: action.payload };
-    case USER_REPORT_FAIL:
-      return { loading: false, error: action.payload };
-    case USER_REPORT_RESET:
-      return { users: [] };
     default:
       return state;
   }
