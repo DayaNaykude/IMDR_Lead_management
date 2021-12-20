@@ -54,9 +54,21 @@ const btnstyle = {
  marginTop:"-3%",
 };
 
-export const ReportScreen = () => {
+export const ReportScreen: React.FC= ({list}) =>{
+  const [downloadLink , setDownloadLink] = useState('')
+  const makeTextFile = () =>{
+    //const data = new Blob([list.join('\n')], {type:'text/plain'})
+    const data = new Blob([   generateReport], {type:'text/plain'})
+    if (downloadLink !=='') window.URL.revokeObjectURL(downloadLink)
+    setDownloadLink(window.URL.createObjectURL(data))
+  }
+  useEffect(() => {
+    makeTextFile()
+  },[list])
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  
 
   const dispatch = useDispatch();
   let history = useHistory();
@@ -79,7 +91,7 @@ export const ReportScreen = () => {
        delete row.tableData;
        return row;
      });
-     const workSheet = XLSX.utils.json_to_sheet(newData);
+      const workSheet = XLSX.utils.json_to_sheet(newData);
      const workBook = XLSX.utils.book_new();
      XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
      //Buffer
@@ -98,13 +110,14 @@ export const ReportScreen = () => {
       )
       .exportFile();
   };
-
+ 
   const downloadReport = () => {
     dispatch(
       generateReport(
         moment(startDate).format("DD.MM.YYYY"),
         moment(endDate).format("DD.MM.YYYY")
       )
+
     );
 
     // console.log(report);
@@ -172,7 +185,13 @@ export const ReportScreen = () => {
       marginLeft:"95%",
     },
   }));
-
+  /*  handleButtonClick = () => {
+    this.form.reset() // resets "username" field to "admin"
+  } */
+const resetInputField = () => {
+    setStartDate("");
+    setEndDate("");
+  };
   const classes = useStyles();
 
   useEffect(() => {
@@ -217,7 +236,7 @@ export const ReportScreen = () => {
               color="primary"
               variant="contained"
               className={classes.Style}
-         
+              onClick={resetInputField}
             >
               Reset
             </Button>
@@ -262,13 +281,18 @@ export const ReportScreen = () => {
             }}
             value={endDate}
           />
-
-          <Tooltip title="Report Download">
-            <IconButton style={btnstyle} onClick={downloadReport}>
+          <a
+          download='report.txt'
+          href={downloadLink}
+            >
+              Report Download
+            </a>
+         {/*  <Tooltip title="Report Download">
+            <IconButton style={btnstyle} onClick={downloadLink}>
               <FileDownloadIcon />
               Report
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </Grid>
       </div>
      

@@ -31,6 +31,7 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/lab": "^5.0.0-alpha.59",
     "@mui/material": "^5.0.1",
+    "@react-pdf/renderer": "^2.0.21",
     "@sendgrid/mail": "^7.4.7",
     "@supercharge/promise-pool": "^1.8.0",
     "bcryptjs": "^2.4.3",
@@ -68,6 +69,7 @@
     "npm": "^6.13.0",
     "react-country-region-selector": "^3.3.0",
     "react-csv": "^2.0.3",
+    "react-pdf": "^5.6.0",
     "twilio": "^3.71.1",
     "uuid": "^3.3.3",
     "xlsx": "^0.17.4"
