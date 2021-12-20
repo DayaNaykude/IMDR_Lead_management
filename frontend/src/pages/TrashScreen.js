@@ -5,7 +5,6 @@ import {
   Grid,
   TablePagination,
   Typography,
-  TextField,
 } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
@@ -41,40 +40,8 @@ const boxStyle = {
   marginLeft: "20px",
   marginRight: "20px",
 };
-const style = {
-  position: "absolute",
-  top: "40%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "40%",
-  height: "max-content",
-  marginTop: "60px",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-const saveStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  display: "inline-block",
-  fontSize: "15px",
-  padding: "5px",
-  float: "right",
-  marginTop: "0%",
-  width: "fit-content",
-};
 
-const sendStyle = {
-  marginLeft: "45%",
-  marginTop: "5%",
-};
-const textareaStyle = {
-  // width: "95%",
-  height: "70%",
-  padding: "2%",
-  border: "2px solid orange",
-};
+
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
@@ -87,7 +54,7 @@ const textStyle = {
   color: "red",
 };
 
-const textstyle = { margin: "8px 0", height: "fit-content" };
+
 
 const TrashScreen = () => {
   const [open, setOpen] = useState(false);

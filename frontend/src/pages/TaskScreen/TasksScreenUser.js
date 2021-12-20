@@ -5,7 +5,7 @@ import {
   Grid,
   TablePagination,
   Typography,
-  TextField,
+
 } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
@@ -56,26 +56,9 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const saveStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  display: "inline-block",
-  fontSize: "15px",
-  padding: "5px",
-  float: "right",
-  marginTop: "0%",
-  width: "fit-content",
-};
-
 const sendStyle = {
   marginLeft: "45%",
   marginTop: "5%",
-};
-const textareaStyle = {
-  // width: "95%",
-  height: "70%",
-  padding: "2%",
-  border: "2px solid orange",
 };
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
@@ -88,15 +71,6 @@ const textStyle = {
   marginLeft: "42%",
   color: "red",
 };
-
-const inputStyle = {
-  marginLeft: "30px",
-  marginTop: "5%",
-  display: "inline-block",
-};
-
-const textstyle = { margin: "8px 0", height: "fit-content" };
-const textstylesms = { margin: "8px 0", height: "fit-content" };
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -116,10 +90,10 @@ const TasksScreenUser = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+/* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
-  const handleCloseSms = () => setOpenSms(false);
+  const handleCloseSms = () => setOpenSms(false); */
 
   const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);

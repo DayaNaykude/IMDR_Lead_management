@@ -5,20 +5,16 @@ import {
   Grid,
   TablePagination,
   Typography,
-  TextField,
 } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
 import XLSX from "xlsx";
 
 // backend Imports
 import { useDispatch, useSelector } from "react-redux";
-import { Alert } from "@mui/material";
-import { isAuthenticated } from "../helper";
+
 
 //api calls
 import { getAllLeadsForAdmin } from "../helper/leadApiCalls";
@@ -31,53 +27,13 @@ const boxStyle = {
   marginLeft: "20px",
   marginRight: "20px",
 };
-const style = {
-  position: "absolute",
-  top: "40%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "40%",
-  height: "max-content",
-  marginTop: "60px",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-const saveStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  display: "inline-block",
-  fontSize: "15px",
-  padding: "5px",
-  float: "right",
-  marginTop: "0%",
-  width: "fit-content",
-};
 
-const sendStyle = {
-  marginLeft: "45%",
-  marginTop: "5%",
-};
-const textareaStyle = {
-  // width: "95%",
-  height: "70%",
-  padding: "2%",
-  border: "2px solid orange",
-};
-const btnstyle = {
-  backgroundColor: "rgb(30 183 30)",
-  color: "white",
-  height: "30px",
-  fontSize: "20px",
-};
 const textStyle = {
   marginTop: "50px",
   marginLeft: "45%",
   color: "red",
 };
 
-const textstyle = { margin: "8px 0", height: "fit-content" };
 
 const DataScreen = () => {
   let history = useHistory();
