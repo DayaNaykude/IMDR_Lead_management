@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 const mailRoutes = require("./routes/mailRoutes");
 const leadRoutes = require("./routes/leadRoutes");
 const csvImportRoutes = require("./routes/csvImportRoutes");
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/report", reportRoutes);
 app.use("/api/mails", mailRoutes);
 app.use("/api", leadRoutes);
 app.use("/api", csvImportRoutes);

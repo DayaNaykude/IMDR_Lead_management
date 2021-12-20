@@ -36,11 +36,8 @@ import {
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
-  USER_REPORT_REQUEST,
-  USER_REPORT_SUCCESS,
-  USER_REPORT_FAIL,
-  USER_REPORT_RESET,
 } from "../constants/userConstants";
+import { REPORT_DATA_RESET } from "../constants/reportConstants";
 import axios from "axios";
 
 export const login = (email, password) => async (dispatch) => {
@@ -85,7 +82,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_LIST_RESET });
-  dispatch({ type: USER_REPORT_RESET });
+  dispatch({ type: REPORT_DATA_RESET });
   document.location.href = "/login";
 };
 
@@ -456,44 +453,3 @@ export const sendBulkSms =
       });
     }
   };
-
-export const getReport = (startDate, endDate) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: USER_REPORT_REQUEST,
-    });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(
-      `/api/users/report`,
-      { startDate, endDate },
-      config
-    );
-
-    dispatch({
-      type: USER_REPORT_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
-    }
-    dispatch({
-      type: USER_REPORT_FAIL,
-      payload: message,
-    });
-  }
-};

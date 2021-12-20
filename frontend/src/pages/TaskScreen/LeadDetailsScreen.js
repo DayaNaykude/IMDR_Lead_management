@@ -21,16 +21,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import EmailIcon from "@mui/icons-material/Email";
 import TextsmsIcon from "@mui/icons-material/Textsms";
-import { getLead } from "../../helper/leadApiCalls";
-
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Box from "@material-ui/core/Box";
-
-import { updateLead, updateStatus } from "../../helper/leadApiCalls";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@material-ui/icons/Close";
 import ListItem from "@material-ui/core/ListItem";
 import { makeStyles } from "@material-ui/core/styles";
+import TaskScreen from "./TaskScreen";
 
 // backend Imports
 import { sendBulkEmails } from "../../actions/userActions";
@@ -38,9 +35,11 @@ import { readMailContent } from "../../actions/mailActions";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
-import TaskScreen from "./TaskScreen";
 
-//Date formatt package
+//api calls
+import { getLead, updateLead, updateStatus } from "../../helper/leadApiCalls";
+
+//Date format package
 var moment = require("moment");
 
 const paperStyle = {
@@ -236,7 +235,6 @@ const LeadDetails = () => {
     </>;
   }
 
-  // backend call get lead details
   const preload = () => {
     getLead(userInfo._id, userInfo.token, { emailId })
       .then((data) => {
@@ -244,9 +242,7 @@ const LeadDetails = () => {
           setLoadingmsg(false);
           setError(true);
           setSuccess(false);
-          console.log(data.error);
         } else {
-          console.log(data);
           setApplicantName(data.applicantName);
           setDateOfBirth(data.dateOfBirth);
           setGender(data.gender ? data.gender.toLowerCase() : "");

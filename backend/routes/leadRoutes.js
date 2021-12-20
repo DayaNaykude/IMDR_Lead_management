@@ -10,12 +10,11 @@ const {
   createLead,
   updateLead,
   updateStatus,
-  getStatus,
   deleteManyLeads,
   getAllTrashedLeads,
+  getAllLeadsForAdmin,
   reAssignLeadsToSameUser,
   moveLeadsIntoTrash,
-  getAllLeadsForAdmin,
 } = require("../controllers/leadController");
 const { getUserById } = require("../middleware/authMiddleware");
 
@@ -26,11 +25,9 @@ router.param("userId", getUserById);
 //actual routes
 
 //read
-router.post("/lead/:userId", getLead);
 router.get("/leads/:userId", getAllLeads);
 router.get("/admin/leads", getAllLeadsForAdmin);
 router.get("/trashedLeads", getAllTrashedLeads);
-router.get("/lead/:leadId/status/:userId", getStatus);
 
 //create
 router.post(
@@ -66,16 +63,19 @@ router.post(
   createLead
 );
 
+//view details
+router.post("/lead/:userId", getLead);
+
 //update lead
 router.put("/lead/update/:userId", updateLead);
 
-//update status
+//update lead status
 router.put("/lead/updateStatus/:userId", updateStatus);
 
-//move into trash
+//move leads into trash
 router.put("/lead/moveIntoTrash/:userId", moveLeadsIntoTrash);
 
-//reAssign leads
+//reAssign leads to their respective users
 router.put("/lead/reAssign/:userId", reAssignLeadsToSameUser);
 
 //permanent delete

@@ -14,7 +14,11 @@ import XLSX from "xlsx";
 
 // backend Imports
 import { useDispatch, useSelector } from "react-redux";
+<<<<<<< HEAD
 
+=======
+import { Alert } from "@mui/material";
+>>>>>>> 82faccf3051bce969a857df3db0f8fb53f2e2143
 
 //api calls
 import { getAllLeadsForAdmin } from "../helper/leadApiCalls";
@@ -41,9 +45,6 @@ const DataScreen = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-  const [values, setValues] = useState({
-    error: "",
-  });
 
   const dispatch = useDispatch();
   const [tableLoading, setTableLoading] = useState(true);
