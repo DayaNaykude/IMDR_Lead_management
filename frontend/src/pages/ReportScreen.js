@@ -1,11 +1,6 @@
 import React from "react";
-<<<<<<< HEAD
-import { useEffect } from "react";
-import XLSX from "xlsx";
-=======
 import { useEffect, useState } from "react";
 
->>>>>>> 82faccf3051bce969a857df3db0f8fb53f2e2143
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
@@ -39,15 +34,10 @@ const backStyle = {
   marginRight: "",
   backgroundColor: "#4ab5da",
 };
-const boxStyle = {
-  marginTop: "50px",
-  marginLeft: "20px",
-  marginRight: "20px",
-};
 
 const dateStyle = {
   marginLeft: "1%",
-  marginTop: "5px",
+  marginTop: "1%",
 };
 const nameStyle = {
   marginLeft: "30%",
@@ -61,6 +51,7 @@ const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
   marginLeft: "80%",
+ marginTop:"-3%",
 };
 
 export const ReportScreen = () => {
@@ -83,21 +74,21 @@ export const ReportScreen = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
 
-  // const downloadExcel = () => {
-  //   const newData = reportData.map((row) => {
-  //     delete row.tableData;
-  //     return row;
-  //   });
-  //   const workSheet = XLSX.utils.json_to_sheet(newData);
-  //   const workBook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
-  //   //Buffer
-  //   let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-  //   //Binary
-  //   XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-  //   //Download
-  //   XLSX.writeFile(workBook, "TrashData.xlsx");
-  // };
+   const downloadExcel = () => {
+     const newData = reportData.map((row) => {
+       delete row.tableData;
+       return row;
+     });
+     const workSheet = XLSX.utils.json_to_sheet(newData);
+     const workBook = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
+     //Buffer
+     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+     //Binary
+     XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+     //Download
+     XLSX.writeFile(workBook, "TrashData.xlsx");
+   };
 
   const exportAllSelectedRows = () => {
     new CsvBuilder("report.csv")
@@ -170,6 +161,16 @@ export const ReportScreen = () => {
       width: "200px",
       height: "100px",
     },
+    Style : {
+      backgroundColor: "#26d6ca",
+      color: "white",
+      fontSize: "15px",
+      padding: "5px",
+      
+      marginTop: "1%",
+      width: "fit-content",
+      marginLeft:"95%",
+    },
   }));
 
   const classes = useStyles();
@@ -210,7 +211,17 @@ export const ReportScreen = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-
+      <Tooltip title="Reset Dates">
+           <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.Style}
+         
+            >
+              Reset
+            </Button>
+          </Tooltip>
       <div>
         {errorReport && <Alert severity="error">{errorReport}</Alert>}
         {loadingReport && <Alert severity="info">Generating Report...</Alert>}
@@ -220,6 +231,7 @@ export const ReportScreen = () => {
           alignItems="center"
           style={{ marginTop: "5%" }}
         >
+           
           <h4 style={nameStyle}>From</h4>
           <TextField
             id="date"
@@ -259,67 +271,7 @@ export const ReportScreen = () => {
           </Tooltip>
         </Grid>
       </div>
-      {/* 
-      <div>
-        <Box style={boxStyle}>
-          <MaterialTable
-            title=""
-            data={reportData && reportData.datefilterleads}
-            onSelectionChange={(rows) => setSelectedRows(rows)}
-            columns={column}
-            isLoading={tableLoading}
-            editable={{}}
-            options={{
-              filtering: true,
-              search: true,
-              toolbar: true,
-              searchFieldVariant: "outlined",
-              searchFieldAlignment: "left",
-              pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
-              paginationType: "stepped",
-              actionsColumnIndex: -1,
-              rowStyle: (data, index) =>
-                index % 2 === 0 ? { background: "#f5f5f5" } : null,
-              headerStyle: { background: "#9c66e2", fontStyle: "bold" },
-              selection: true,
-            }}
-            actions={[
-              {
-                icon: "download",
-                tooltip: "Export to excel",
-                onClick: () => downloadExcel(),
-                isFreeAction: true,
-              },
-
-              {
-                icon: () => <SaveAltIcon />,
-                tooltip: "Export all selected rows",
-                onClick: () => exportAllSelectedRows(),
-              },
-            ]}
-            components={{
-              Pagination: (props) => (
-                <div>
-                  <Grid
-                    container
-                    style={{ padding: 15, background: "rgb(232 226 226)" }}
-                  >
-                    <Grid sm={1} item>
-                      <Typography variant="subtitle2">Total</Typography>
-                    </Grid>
-                    <Grid sm={1} item align="center">
-                      <Typography variant="subtitle2">
-                        Number of rows:{props.count}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <TablePagination {...props} />
-                </div>
-              ),
-            }}
-          />
-        </Box>
-      </div> */}
+     
     </>
   );
 };
