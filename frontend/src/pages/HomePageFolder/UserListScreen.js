@@ -16,6 +16,12 @@ import { listUsers, deleteUser, updateUser } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 
+const textStyle = {
+  marginTop: "50px",
+  marginLeft: "45%",
+  color: "red",
+};
+
 const backStyle = {
   width: "10vh",
   padding: "10px",
@@ -126,25 +132,7 @@ export const UserListScreen = () => {
 
   return (
     <>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            style={backStyle}
-            onClick={() => {
-              history.push("/");
-            }}
-          >
-            Back
-          </Button>
-          <Typography variant="h6" className={classes.title}>
-            Users List
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
+      <h1 style={textStyle}>Users List</h1>
       <div>
         {error && <Alert severity="error">{error}</Alert>}
         {loading && <Alert severity="info">Loading...</Alert>}

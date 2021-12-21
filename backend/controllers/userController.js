@@ -98,18 +98,23 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     try {
       const mailstatus = true;
-      // const mailstatus = await sendEmail({
-      //   from: "admissions2022@imdr.edu",
-      //   to: user.email,
+      // const { results, errors } = await PromisePool.withConcurrency(20)
+      //   .for([email])
+      //   .process(async (mailid, index) => {
+      //     const mailstatus = await sendEmail({
+      //       from: "admissions2022@imdr.edu",
+      //       to: user.email,
 
-      //   template: "resetpass",
-      //   data: {
-      //     username: user.username,
-      //     resetpassURL: resetUrl,
-      //     subject: "Password Reset Request IMDR LMS",
-      //   },
+      //       template: "resetpass",
+      //       data: {
+      //         username: user.username,
+      //         resetpassURL: resetUrl,
+      //         subject: "Password Reset Request IMDR LMS",
+      //       },
+      //     });
       // });
-      console.log(resetPassMail);
+      console.log(mailstatus);
+
       if (mailstatus) {
         res.status(200);
         res.json({ success: true, data: "Email Sent" });
@@ -298,7 +303,7 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
         try {
-          // const mailstatus = true;
+          const mailstatus = true;
 
           // const mailstatus = await sendEmail({
           //   from: usersendgridemail,

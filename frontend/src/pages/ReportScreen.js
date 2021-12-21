@@ -54,7 +54,6 @@ const btnstyle = {
   marginTop: "-3%",
 };
 
-
 export const ReportScreen: React.FC = () => {
   const [downloadLink, setDownloadLink] = useState("");
 
@@ -78,10 +77,8 @@ export const ReportScreen: React.FC = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
 
-
   const downloadReport = async (list) => {
     await dispatch(
-
       generateReport(
         moment(startDate).format("DD-MM-YYYY"),
         moment(endDate).format("DD-MM-YYYY")
@@ -137,6 +134,11 @@ export const ReportScreen: React.FC = () => {
     { title: "User", field: "user.username" },
   ];
 
+  const textStyle = {
+    marginTop: "50px",
+    marginLeft: "45%",
+    color: "red",
+  };
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -158,14 +160,10 @@ export const ReportScreen: React.FC = () => {
       height: "100px",
     },
     Style: {
-      backgroundColor: "#26d6ca",
+      backgroundColor: "rgb(30 183 30)",
       color: "white",
-      fontSize: "15px",
-      padding: "5px",
-
-      marginTop: "1%",
-      width: "fit-content",
-      marginLeft: "95%",
+      marginLeft: "73%",
+      marginTop: "-3%",
     },
   }));
 
@@ -186,35 +184,8 @@ export const ReportScreen: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            style={backStyle}
-            onClick={() => {
-              history.push("/");
-            }}
-          >
-            Back
-          </Button>
-          <Typography variant="h6" className={classes.title}>
-            Report Generation
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Tooltip title="Reset Dates">
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          className={classes.Style}
-          onClick={resetInputField}
-        >
-          Reset
-        </Button>
-      </Tooltip>
+      <h1 style={textStyle}>Report Generation</h1>
+
       <div>
         {errorReport && <Alert severity="error">{errorReport}</Alert>}
         {loadingReport && <Alert severity="info">Generating Report...</Alert>}
@@ -254,7 +225,17 @@ export const ReportScreen: React.FC = () => {
             }}
             value={endDate}
           />
-
+          <Tooltip title="Reset Dates">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.Style}
+              onClick={resetInputField}
+            >
+              Reset
+            </Button>
+          </Tooltip>
           <Tooltip title="Report Download">
             <IconButton style={btnstyle} onClick={downloadReport}>
               <FileDownloadIcon />
