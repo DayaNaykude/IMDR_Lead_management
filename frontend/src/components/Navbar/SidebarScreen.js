@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
-import AllOutIcon from '@mui/icons-material/AllOut';
+import AllOutIcon from "@mui/icons-material/AllOut";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 function Sidebar() {
@@ -72,20 +72,20 @@ function Sidebar() {
         <ListItemText primary="Tasks" />
       </ListItem>
 
+      <ListItem
+        button
+        style={{ minWidth: 300 }}
+        component={Link}
+        to="/Dashboard"
+        title="Dashboard"
+      >
+        <ListItemIcon>
+          <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
       {userInfo && userInfo.isAdmin && (
         <>
-          <ListItem
-            button
-            style={{ minWidth: 300 }}
-            component={Link}
-            to="/Dashboard"
-            title="Dashboard"
-          >
-            <ListItemIcon>
-              <DashboardIcon style={{ fill: "purple" }} fontSize="large" />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
           <ListItem
             button
             style={{ minWidth: 300 }}
@@ -110,7 +110,7 @@ function Sidebar() {
             </ListItemIcon>
             <ListItemText primary="Data" />
           </ListItem>
-          
+
           <ListItem
             button
             style={{ minWidth: 300 }}
