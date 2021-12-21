@@ -19,6 +19,7 @@ exports.getReport = asyncHandler(async (req, res) => {
   let datefilterleads = [];
 
   console.log(startDate, endDate);
+  console.log(start_date, end_date);
   try {
     // Total Leads Count
     let totalLeadsCount = await Lead.countDocuments();
@@ -120,25 +121,25 @@ exports.getReport = asyncHandler(async (req, res) => {
         datefilterleads.push(element._id);
       });
 
-      let temp_leadsAtLevel0 = await Lead.find(
-        {
-          $and: [
-            { flag: "Active" },
-            {
-              createdAt: {
-                $gt: start_date,
-                $lt: end_date,
-              },
-            },
-            { _id: { $nin: datefilterleads } },
-          ],
-        },
-        { _id: 1 }
-      );
+      //   let temp_leadsAtLevel0 = await Lead.find(
+      //     {
+      //       $and: [
+      //         { flag: "Active" },
+      //         {
+      //           createdAt: {
+      //             $gt: start_date,
+      //             $lt: end_date,
+      //           },
+      //         },
+      //         { _id: { $nin: datefilterleads } },
+      //       ],
+      //     },
+      //     { _id: 1 }
+      //   );
 
-      temp_leadsAtLevel0.forEach((element) => {
-        datefilterleads.push(element._id);
-      });
+      //   temp_leadsAtLevel0.forEach((element) => {
+      //     datefilterleads.push(element._id);
+      //   });
     }
     const levelCountsByUsersDate = await Lead.aggregate([
       {
