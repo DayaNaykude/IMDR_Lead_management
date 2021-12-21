@@ -63,20 +63,7 @@ const SignInOutContainer = ({ history }) => {
         height: "100vh",
       }}
     > 
-      <div
-     className="imagelogo"
-    style={{
-
-      backgroundImage: 'url("images/desSetu.jpeg")',
-      
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
-      backgroundColor: "white",
-      
-    }}
-        >
-      </div>
-   
+     
       <Grid>
         <Paper style={paperStyle}>
           <Tabs

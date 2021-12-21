@@ -58,7 +58,7 @@ export const ReportScreen: React.FC= ({list}) =>{
   const [downloadLink , setDownloadLink] = useState('')
   const makeTextFile = () =>{
     //const data = new Blob([list.join('\n')], {type:'text/plain'})
-    const data = new Blob([   generateReport], {type:'text/plain'})
+    const data = new Blob([reportData], {type:'text/plain'})
     if (downloadLink !=='') window.URL.revokeObjectURL(downloadLink)
     setDownloadLink(window.URL.createObjectURL(data))
   }
@@ -86,30 +86,30 @@ export const ReportScreen: React.FC= ({list}) =>{
 
   const [tableLoading, setTableLoading] = useState(true);
 
-   const downloadExcel = () => {
-     const newData = reportData.map((row) => {
-       delete row.tableData;
-       return row;
-     });
-      const workSheet = XLSX.utils.json_to_sheet(newData);
-     const workBook = XLSX.utils.book_new();
-     XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
-     //Buffer
-     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-     //Binary
-     XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-     //Download
-     XLSX.writeFile(workBook, "TrashData.xlsx");
-   };
+  //  const downloadExcel = () => {
+  //    const newData = reportData.map((row) => {
+  //      delete row.tableData;
+  //      return row;
+  //    });
+  //     const workSheet = XLSX.utils.json_to_sheet(newData);
+  //    const workBook = XLSX.utils.book_new();
+  //    XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
+  //    //Buffer
+  //    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+  //    //Binary
+  //    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+  //    //Download
+  //    XLSX.writeFile(workBook, "TrashData.xlsx");
+  //  };
 
-  const exportAllSelectedRows = () => {
-    new CsvBuilder("report.csv")
-      .setColumns(column.map((col) => col.title))
-      .addRows(
-        selectedRows.map((rowData) => column.map((col) => rowData[col.field]))
-      )
-      .exportFile();
-  };
+  // const exportAllSelectedRows = () => {
+  //   new CsvBuilder("report.csv")
+  //     .setColumns(column.map((col) => col.title))
+  //     .addRows(
+  //       selectedRows.map((rowData) => column.map((col) => rowData[col.field]))
+  //     )
+  //     .exportFile();
+  // };
  
   const downloadReport = () => {
     dispatch(
