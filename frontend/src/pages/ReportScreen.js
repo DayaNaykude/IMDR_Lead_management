@@ -51,24 +51,13 @@ const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
   marginLeft: "80%",
- marginTop:"-3%",
+  marginTop: "-3%",
 };
 
-export const ReportScreen: React.FC= ({list}) =>{
-  const [downloadLink , setDownloadLink] = useState('')
-  const makeTextFile = () =>{
-    //const data = new Blob([list.join('\n')], {type:'text/plain'})
-    const data = new Blob([   generateReport], {type:'text/plain'})
-    if (downloadLink !=='') window.URL.revokeObjectURL(downloadLink)
-    setDownloadLink(window.URL.createObjectURL(data))
-  }
-  useEffect(() => {
-    makeTextFile()
-  },[list])
-
+export const ReportScreen: React.FC = () => {
+  const [downloadLink, setDownloadLink] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  
 
   const dispatch = useDispatch();
   let history = useHistory();
@@ -83,24 +72,9 @@ export const ReportScreen: React.FC= ({list}) =>{
   const { loadingReportData, errorReportData, reportData } = reportGetData;
 
   // const [data, setData] = useState([]);
+  const [reportClick, setReportClick] = useState(false);
 
   const [tableLoading, setTableLoading] = useState(true);
-
-   const downloadExcel = () => {
-     const newData = reportData.map((row) => {
-       delete row.tableData;
-       return row;
-     });
-      const workSheet = XLSX.utils.json_to_sheet(newData);
-     const workBook = XLSX.utils.book_new();
-     XLSX.utils.book_append_sheet(workBook, workSheet, "Trash Data");
-     //Buffer
-     let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-     //Binary
-     XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
-     //Download
-     XLSX.writeFile(workBook, "TrashData.xlsx");
-   };
 
   const exportAllSelectedRows = () => {
     new CsvBuilder("report.csv")
@@ -110,27 +84,41 @@ export const ReportScreen: React.FC= ({list}) =>{
       )
       .exportFile();
   };
- 
-  const downloadReport = () => {
-    dispatch(
-      generateReport(
-        moment(startDate).format("DD.MM.YYYY"),
-        moment(endDate).format("DD.MM.YYYY")
-      )
 
+  const downloadReport = async (list) => {
+    await dispatch(
+      generateReport(
+        moment(startDate).format("DD-MM-YYYY"),
+        moment(endDate).format("DD-MM-YYYY")
+      )
     );
 
-    // console.log(report);
-    // setReportclick(true);
-    // Prajakta implement the logic of downloadling report here
-    // You have to download report.reportData
+    const makeTextFile = (name) => {
+      const a = document.createElement("a");
+      const type = name.split(".").pop();
+      a.href = URL.createObjectURL(
+        new Blob([JSON.stringify(report.reportData)], {
+          type: `text/${type === "txt" ? "plain" : type}`,
+        })
+      );
+      a.download = name;
+      a.click();
+    };
+    // Look into this.
+    // if (report) {
+    //   makeTextFile("report.txt", report);
+    // } else {
+    report && setTimeout(makeTextFile("report.txt"), 3000); // try again in 300 milliseconds
+    // }
+    // report && makeTextFile("report.txt");
+
     console.log(report && report.reportData);
+    setReportClick(true);
 
     // dispatch(getReportData(report && report.datefilterleads));
     // setTableLoading(false);
   };
   const [selectedRows, setSelectedRows] = useState([]);
-  // const [reportclick, setReportclick] = useState(false);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -174,21 +162,19 @@ export const ReportScreen: React.FC= ({list}) =>{
       width: "200px",
       height: "100px",
     },
-    Style : {
+    Style: {
       backgroundColor: "#26d6ca",
       color: "white",
       fontSize: "15px",
       padding: "5px",
-      
+
       marginTop: "1%",
       width: "fit-content",
-      marginLeft:"95%",
+      marginLeft: "95%",
     },
   }));
-  /*  handleButtonClick = () => {
-    this.form.reset() // resets "username" field to "admin"
-  } */
-const resetInputField = () => {
+
+  const resetInputField = () => {
     setStartDate("");
     setEndDate("");
   };
@@ -196,19 +182,12 @@ const resetInputField = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      setTableLoading(false);
-      // dispatch(
-      //   generateReport(
-      //     moment(startDate).format("DD.MM.YYYY"),
-      //     moment(endDate).format("DD.MM.YYYY")
-      //   )
-      // );
-
+      setReportClick(false);
       // dispatch(getDateFilteredLeadsForAdmin(report[1]))
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, reportClick]);
 
   return (
     <>
@@ -231,16 +210,16 @@ const resetInputField = () => {
         </Toolbar>
       </AppBar>
       <Tooltip title="Reset Dates">
-           <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              className={classes.Style}
-              onClick={resetInputField}
-            >
-              Reset
-            </Button>
-          </Tooltip>
+        <Button
+          type="submit"
+          color="primary"
+          variant="contained"
+          className={classes.Style}
+          onClick={resetInputField}
+        >
+          Reset
+        </Button>
+      </Tooltip>
       <div>
         {errorReport && <Alert severity="error">{errorReport}</Alert>}
         {loadingReport && <Alert severity="info">Generating Report...</Alert>}
@@ -250,7 +229,6 @@ const resetInputField = () => {
           alignItems="center"
           style={{ marginTop: "5%" }}
         >
-           
           <h4 style={nameStyle}>From</h4>
           <TextField
             id="date"
@@ -281,21 +259,15 @@ const resetInputField = () => {
             }}
             value={endDate}
           />
-          <a
-          download='report.txt'
-          href={downloadLink}
-            >
-              Report Download
-            </a>
-         {/*  <Tooltip title="Report Download">
-            <IconButton style={btnstyle} onClick={downloadLink}>
+
+          <Tooltip title="Report Download">
+            <IconButton style={btnstyle} onClick={downloadReport}>
               <FileDownloadIcon />
               Report
             </IconButton>
-          </Tooltip> */}
+          </Tooltip>
         </Grid>
       </div>
-     
     </>
   );
 };
