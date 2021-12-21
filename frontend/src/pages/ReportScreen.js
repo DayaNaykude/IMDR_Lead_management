@@ -54,8 +54,10 @@ const btnstyle = {
   marginTop: "-3%",
 };
 
+
 export const ReportScreen: React.FC = () => {
   const [downloadLink, setDownloadLink] = useState("");
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -76,17 +78,10 @@ export const ReportScreen: React.FC = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
 
-  const exportAllSelectedRows = () => {
-    new CsvBuilder("report.csv")
-      .setColumns(column.map((col) => col.title))
-      .addRows(
-        selectedRows.map((rowData) => column.map((col) => rowData[col.field]))
-      )
-      .exportFile();
-  };
 
   const downloadReport = async (list) => {
     await dispatch(
+
       generateReport(
         moment(startDate).format("DD-MM-YYYY"),
         moment(endDate).format("DD-MM-YYYY")
