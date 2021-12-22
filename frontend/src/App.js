@@ -14,7 +14,7 @@ import UserProfileScreen from "./pages/HomePageFolder/UserProfileScreen";
 import AddContact from "./pages/TaskScreen/AddContactScreen";
 import LeadDetails from "./pages/TaskScreen/LeadDetailsScreen";
 import TaskScreen from "./pages/TaskScreen/TaskScreen";
-import DataScreen from   "./pages/DataScreen";
+import DataScreen from "./pages/DataScreen";
 import TrashScreen from "./pages/TrashScreen";
 
 const App = () => {
@@ -34,8 +34,6 @@ const App = () => {
             path="/resetpassword/:resetToken"
             component={() => <ResetPasswordScreen />}
           />
-          <Route exact path="/users" component={() => <UserListScreen />} />
-          <Route exact path="/report" component={() => <ReportScreen />} />
           <Route
             exact
             path="/profile"
@@ -52,16 +50,10 @@ const App = () => {
               path="/Dashboard"
               component={() => <DashboardScreen />}
             />
-             <Route
-              exact
-              path="/trash"
-              component={() => <TrashScreen />}
-            />
-            <Route
-              exact
-              path="/data"
-              component={() => <DataScreen />}
-            />
+            <Route exact path="/users" component={() => <UserListScreen />} />
+            <Route exact path="/report" component={() => <ReportScreen />} />
+            <Route exact path="/trash" component={() => <TrashScreen />} />
+            <Route exact path="/data" component={() => <DataScreen />} />
             <Route exact path="/Help" component={() => <HelpScreen />} />
             <Route exact path="/Settings" component={() => <SettingScreen />} />
           </div>

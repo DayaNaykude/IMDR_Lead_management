@@ -54,6 +54,7 @@ const UserProfileScreen = () => {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [sendgridEmail, setSendgridEmail] = useState("");
   const [contact, setContact] = useState("");
   const [bio, setBio] = useState("");
   const [password, setPassword] = useState("");
@@ -82,6 +83,7 @@ const UserProfileScreen = () => {
       } else {
         setUsername(user.username);
         setEmail(user.email);
+        setSendgridEmail(user.sendgridemail);
         setContact(user.contact);
         setBio(user.bio);
       }
@@ -170,6 +172,17 @@ const UserProfileScreen = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="SendGrid Email"
+            variant="outlined"
+            placeholder="Enter Email"
+            type="email"
+            style={textstyle}
+            fullWidth
+            disabled="disabled"
+            required
+            value={sendgridEmail}
           />
           <TextField
             label="Phone Number"
