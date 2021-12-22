@@ -63,7 +63,19 @@ const SignInOutContainer = ({ history }) => {
         height: "100vh",
       }}
     > 
-     
+     <div
+     className="imagelogo"
+    style={{
+
+      backgroundImage: 'url("images/Logo.png")',
+
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      backgroundColor: "white",
+
+    }}>
+    </div>
+   
       <Grid>
         <Paper style={paperStyle}>
           <Tabs
@@ -97,8 +109,9 @@ const SignInOutContainer = ({ history }) => {
         </AppBar>
 
       </Grid>
+       </div>
       
-    </div>
+
   );
 };
 

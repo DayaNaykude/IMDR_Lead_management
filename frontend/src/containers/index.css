@@ -12,12 +12,13 @@
     display:flex;
 
 }
+
 .imagelogo{
     position:fixed;
-    Width:18%;
-    Height:23%;
-    opacity: 0.9;
-    margin-left: 82%;
+    Width:17%;
+    Height:12%;
+    opacity: 0.8;
+    margin-left: 84%;
     margin-top: 0%;
     
 }
