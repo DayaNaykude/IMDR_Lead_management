@@ -673,7 +673,7 @@ const LeadDetails = () => {
             </Grid>
             <hr />
             <h3 style={headerStyle}>Write a Lead Review</h3>
-            <Typography style={{ margin: "8px", color: "red" }}>
+            <Typography style={{ margin: "8px", color: "green" }}>
               Select Status
             </Typography>
 
@@ -694,7 +694,7 @@ const LeadDetails = () => {
               </Select>
             </FormControl>
 
-            <Typography style={{ margin: "8px", color: "red" }}>
+            <Typography style={{ margin: "8px", color: "green" }}>
               Comment
             </Typography>
             <TextareaAutosize
