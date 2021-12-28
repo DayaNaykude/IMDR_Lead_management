@@ -15,7 +15,7 @@ const ForgotPasswordScreen = () => {
   const paperstyle = {
     padding: 50,
     height: "60%",
-    width: "20%",
+    width: "30%",
     margin: "40px auto",
   };
 

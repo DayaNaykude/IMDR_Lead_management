@@ -42,6 +42,7 @@ exports.getAllLeads = (req, res) => {
       percentileGK: 1,
       status: 1,
       entrance: 1,
+      reviews: 1,
     }
   )
     .sort([["updatedAt", "desc"]])
