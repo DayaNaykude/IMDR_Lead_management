@@ -2,6 +2,9 @@ import React from "react";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
 import { Grid, TablePagination, Typography } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import InputLabel from "@mui/material/InputLabel";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
@@ -18,8 +21,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import ListItem from "@material-ui/core/ListItem";
+import AddCommentIcon from "@material-ui/icons/AddComment";
 import { makeStyles } from "@material-ui/core/styles";
-
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 // backend Imports
 import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
 import { readMailContent, updateMailContent } from "../../actions/mailActions";
@@ -38,6 +45,22 @@ const boxStyle = {
   marginLeft: "20px",
   marginRight: "20px",
 };
+const textAreaStyle = {
+  marginLeft: "1.5%",
+  marginTop: "0%",
+  width: "80%",
+  height: "100px",
+};
+const submitStyle = {
+  backgroundColor: "#26d6ca",
+  color: "white",
+  fontSize: "20px",
+  padding: "5px 5px 5px 5px",
+  marginLeft: "2%",
+  marginTop: "0%",
+  width: "15%",
+};
+const headerStyle = { marginTop: "2px" };
 const style = {
   position: "absolute",
   top: "40%",
@@ -89,6 +112,11 @@ const TasksScreenUser = () => {
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
   const handleCloseSms = () => setOpenSms(false); */
+  //Status
+  const [status, setStatus] = React.useState("");
+  const handleChange = (event) => {
+    setStatus(event.target.value);
+  };
 
   const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);
@@ -319,6 +347,15 @@ const TasksScreenUser = () => {
             }}
             actions={[
               {
+                icon: () => (
+                  <IconButton Color="Dark" onClick={handleOpen}>
+                    <AddCommentIcon />
+                  </IconButton>
+                ),
+                tooltip: "Change Status",
+                position: "row",
+              },
+              {
                 icon: "edit",
                 tooltip: "edit details",
                 position: "row",
@@ -470,6 +507,85 @@ const TasksScreenUser = () => {
                     SEND
                   </Button>
                 </form>
+              </Box>
+            </Modal>
+          </div>
+          <div>
+            <Modal open={open} onClose={handleClose}>
+              <Box sx={style}>
+                <ListItem
+                  button
+                  className={classes.closeButton}
+                  title="Close"
+                  onClick={handleClose}
+                >
+                  <CloseIcon
+                    align="right"
+                    style={{ fill: "red", fontSize: "180%" }}
+                  />
+                </ListItem>
+                <h3 style={headerStyle}>Write a Lead Review</h3>
+                {/*  <Typography style={{ margin: "8px", color: "red" }}>
+              Select Status
+            </Typography> */}
+
+                <AppBar
+                  position="static"
+                  color="primary"
+                  style={{ marginTop: 20 }}
+                >
+                  <Toolbar>
+                    <Typography
+                      variant="body1"
+                      color="inherit"
+                      style={{ marginLeft: "44%" }}
+                    >
+                      Lead Status
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
+                <hr />
+                <Typography style={{ margin: "8px", color: "green" }}>
+                  Select Status
+                </Typography>
+
+                <FormControl style={{ margin: "8px", width: "50%" }}>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    labelId=""
+                    id=""
+                    defaultValue={status}
+                    label="Status"
+                    onChange={handleChange}
+                  >
+                    <em>Select status</em>
+                    <MenuItem value=""></MenuItem>
+                    <MenuItem value={"Level 1"}>Level 1</MenuItem>
+                    <MenuItem value={"Level 2"}>Level 2</MenuItem>
+                    <MenuItem value={"Level 3"}>Level 3</MenuItem>
+                    <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <Typography style={{ margin: "8px", color: "green" }}>
+                  Comment
+                </Typography>
+                <TextareaAutosize
+                  defaultValue="Write comment here"
+                  style={textAreaStyle}
+                />
+
+                <br />
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={sendStyle}
+                >
+                  ADD
+                </Button>
+                <hr />
+                <h3 style={headerStyle}> Reviews</h3>
               </Box>
             </Modal>
           </div>
