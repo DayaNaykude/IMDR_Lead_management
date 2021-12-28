@@ -404,3 +404,188 @@ exports.sendBulkSms = asyncHandler(async (req, res, next) => {
     data: `Sms sent`,
   });
 });
+
+exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
+  const { usersendgridemail, emails, subject } = req.body;
+
+  let failedMails = [];
+
+  let counter = 0;
+  let length = emails.length;
+
+  // const asyncRes = await Promise.all(
+
+  const { results, errors } = await PromisePool.withConcurrency(20)
+    .for(emails)
+    .process(async (mailid, index) => {
+      // emails.map(async (mailid) => {
+      const lead = await Lead.findOne({ email: mailid });
+      if (lead) {
+        try {
+          // const mailstatus = true;
+
+          const mailstatus = await sendEmail({
+            from: usersendgridemail,
+            to: lead.email,
+
+            // html: firstMail,
+            template: "firstmail",
+            data: {
+              applicantName: lead.applicantName,
+              subject: subject,
+            },
+          });
+          console.log(subject);
+
+          console.log(mailstatus);
+          if (mailstatus) {
+            // if (lead.status == "level 0") {
+            //   lead.status = "level 1";
+            // }
+            // const review = {
+            //   status: lead.status,
+            //   comment: `Mail with subject ${subject} sent`,
+            // };
+
+            // lead.reviews.push(review);
+            ++counter;
+
+            // await lead.save();
+          } else {
+            failedMails.push(mailid);
+          }
+        } catch (err) {
+          console.log(err);
+          failedMails.push(mailid);
+        }
+      } else {
+        failedMails.push(mailid);
+      }
+    });
+
+  let successMails = emails.filter((x) => failedMails.indexOf(x) == -1);
+  await Lead.updateMany(
+    { email: { $in: successMails } },
+    {
+      $push: {
+        reviews: {
+          comment: `Mail with subject ${subject} sent`,
+          status: "level 1",
+        },
+      },
+      $set: { status: "level 1", level_1_date: new Date() },
+    },
+
+    { multi: true }
+  );
+
+  console.log("results: ", results);
+
+  res.status(200);
+  res.send({
+    failed: failedMails,
+    data: `${counter} /${length} Emails sent`,
+  });
+});
+
+//update status and review
+exports.leadAddReview = asyncHandler(async (req, res, next) => {
+  const { email, status, comment } = req.body;
+  let review = [];
+
+  review.push({
+    status: status,
+    comment: comment,
+    createdAt: new Date(),
+  });
+
+  if (status === "level 1") {
+    Lead.findOneAndUpdate(
+      { email: email },
+      {
+        $set: { status: status, level_1_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          res.status(400);
+          res.send({
+            error: "Unable To Update!",
+          });
+        } else {
+          res.status(200);
+          res.send({
+            message: "Lead Status Updated Successfully.",
+          });
+        }
+      }
+    );
+  } else if (status === "level 2") {
+    Lead.findOneAndUpdate(
+      { email: email },
+      {
+        $set: { status: status, level_2_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          res.status(400);
+          res.send({
+            error: "Unable To Update!",
+          });
+        } else {
+          res.status(200);
+          res.send({
+            message: "Lead Status Updated Successfully.",
+          });
+        }
+      }
+    );
+  } else if (status === "level 3") {
+    Lead.findOneAndUpdate(
+      { email: email },
+      {
+        $set: { status: status, level_3_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          res.status(400);
+          res.send({
+            error: "Unable To Update!",
+          });
+        } else {
+          res.status(200);
+          res.send({
+            message: "Lead Status Updated Successfully.",
+          });
+        }
+      }
+    );
+  } else {
+    Lead.findOneAndUpdate(
+      { email: email },
+      {
+        $set: { status: status, level_4_date: new Date() },
+        $push: { reviews: review },
+      },
+      { new: true },
+      (err, lead) => {
+        if (err || !lead) {
+          res.status(400);
+          res.send({
+            error: "Unable To Update!",
+          });
+        } else {
+          res.status(200);
+          res.send({
+            message: "Lead Status Updated Successfully.",
+          });
+        }
+      }
+    );
+  }
+});

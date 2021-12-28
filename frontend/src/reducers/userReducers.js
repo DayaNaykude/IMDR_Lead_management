@@ -37,6 +37,9 @@ import {
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
+  LEAD_ADD_REVIEW_REQUEST,
+  LEAD_ADD_REVIEW_SUCCESS,
+  LEAD_ADD_REVIEW_FAIL,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -189,6 +192,19 @@ export const userSendBulkSmsReducer = (state = {}, action) => {
     case USER_SEND_SMS_SUCCESS:
       return { loading: false, success: true, status: action.payload };
     case USER_SEND_SMS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const leadAddReviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LEAD_ADD_REVIEW_REQUEST:
+      return { loading: true };
+    case LEAD_ADD_REVIEW_SUCCESS:
+      return { loading: false, success: true, status: action.payload };
+    case LEAD_ADD_REVIEW_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

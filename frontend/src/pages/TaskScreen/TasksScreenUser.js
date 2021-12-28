@@ -1,7 +1,12 @@
 import React from "react";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
-import { Grid, TablePagination, Typography } from "@material-ui/core";
+import {
+  Grid,
+  TablePagination,
+  Typography,
+  TextField,
+} from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
@@ -28,8 +33,13 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 // backend Imports
-import { sendBulkEmails, sendBulkSms } from "../../actions/userActions";
-import { readMailContent, updateMailContent } from "../../actions/mailActions";
+import {
+  sendBulkEmails,
+  sendBulkSms,
+  addReview,
+} from "../../actions/userActions";
+// import leadAddReview from "../../actions/userActions";
+// import { readMailContent, updateMailContent } from "../../actions/mailActions";
 import { createDispatchHook, useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
@@ -103,20 +113,32 @@ const useStyles = makeStyles((theme) => ({
 const TasksScreenUser = () => {
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
+  const [openMail, setOpenMail] = useState(false);
+  const handleOpenMail = () => setOpenMail(true);
+  const handleCloseMail = () => {
+    setOpenMail(false);
+    window.location.reload(false);
+  };
+  const [openReview, setOpenReview] = useState(false);
+  const handleOpenReview = () => {
+    setOpenReview(true);
+  };
+  const handleCloseReview = () => {
+    setOpenReview(false);
+    window.location.reload(false);
   };
   /* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
   const handleCloseSms = () => setOpenSms(false); */
   //Status
-  const [status, setStatus] = React.useState("");
-  const handleChange = (event) => {
-    setStatus(event.target.value);
-  };
+  const [leadname, setLeadname] = useState("");
+  const [status, setStatus] = useState("");
+  const [currentStatus, setCurrentStatus] = useState("");
+  const [comment, setComment] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
+  const [lastReview, setLastReview] = useState("");
+  const [reviewLeadEmail, setReviewLeadEmail] = useState("");
 
   const [flag, setFlag] = useState(false);
   const showDeleteWindow = () => setFlag(true);
@@ -174,9 +196,9 @@ const TasksScreenUser = () => {
 
   const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
   const {
-    loading,
+    loading: loadingSendBulkEmails,
     success: successSendBulkEmails,
-    error,
+    error: errorSendBulkEmails,
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
@@ -188,20 +210,28 @@ const TasksScreenUser = () => {
     status: statusSendBulkSms,
   } = userSendBulkSms;
 
-  const mailReadContent = useSelector((state) => state.mailReadContent);
-  const {
-    loading: loadingMailRead,
-    error: errorMailRead,
-    mailContent,
-  } = mailReadContent;
+  // const mailReadContent = useSelector((state) => state.mailReadContent);
+  // const {
+  //   loading: loadingMailRead,
+  //   error: errorMailRead,
+  //   mailContent,
+  // } = mailReadContent;
 
-  const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
+  // const mailUpdateContent = useSelector((state) => state.mailUpdateContent);
+  // const {
+  //   loading: loadingMailUpdate,
+  //   success: successMailUpdate,
+  //   error: errorMailUpdate,
+  //   status: statusMailUpdate,
+  // } = mailUpdateContent;
+
+  const leadAddReview = useSelector((state) => state.leadAddReview);
   const {
-    loading: loadingMailUpdate,
-    success: successMailUpdate,
-    error: errorMailUpdate,
-    status: statusMailUpdate,
-  } = mailUpdateContent;
+    loading: loadingLeadAddReview,
+    success: successLeadAddReview,
+    error: errorLeadAddReview,
+    status: statusLeadAddReview,
+  } = leadAddReview;
 
   const [selectedEmails, setSelectedEmails] = useState(null);
   const [selectedNumbers, setSelectedNumbers] = useState(null);
@@ -226,12 +256,23 @@ const TasksScreenUser = () => {
     dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
   };
 
-  const updateMailContentHandler = async (e) => {
+  // const updateMailContentHandler = async (e) => {
+  //   e.preventDefault();
+  //   const content = document.getElementById("editablemail").innerHTML;
+  //   console.log(content.toString());
+  //   dispatch(updateMailContent(content));
+  // };
+
+  // backend call for update status
+  const addReviewHandler = async (e) => {
     e.preventDefault();
-    const content = document.getElementById("editablemail").innerHTML;
-    console.log(content.toString());
-    dispatch(updateMailContent(content));
+    await dispatch(addReview(reviewLeadEmail, status, comment));
+    setCreatedAt(new Date());
+    setCurrentStatus(status);
+
+    // console.log(reviewLeadEmail, status, comment);
   };
+
   const downloadExcel = () => {
     const newData = data.map((row) => {
       delete row.tableData;
@@ -292,10 +333,13 @@ const TasksScreenUser = () => {
     preload();
   }, [
     history,
+    dispatch,
     userInfo,
     successSendBulkEmails,
     statusSendBulkEmails,
     successSendBulkSms,
+    successLeadAddReview,
+    statusLeadAddReview,
   ]);
 
   const column = [
@@ -318,6 +362,7 @@ const TasksScreenUser = () => {
     { title: "Entrance", field: "entrance", searchable: false },
     { title: "Percentile", field: "percentileGK", searchable: false },
     { title: "Lead Status", field: "status", searchable: false },
+    { title: "Reviews", field: "reviews", hidden: true },
   ];
   return (
     <>
@@ -348,12 +393,28 @@ const TasksScreenUser = () => {
             actions={[
               {
                 icon: () => (
-                  <IconButton Color="Dark" onClick={handleOpen}>
+                  <IconButton Color="Dark" onClick={handleOpenReview}>
                     <AddCommentIcon />
                   </IconButton>
                 ),
-                tooltip: "Change Status",
+                tooltip: "Add review",
                 position: "row",
+                onClick: (event, rowData) => {
+                  setReviewLeadEmail(rowData.email);
+                  setLastReview(rowData.reviews[rowData.reviews.length - 1]);
+                  setCurrentStatus(rowData.status);
+                  setLeadname(rowData.applicantName);
+
+                  if (lastReview) {
+                    setStatus(lastReview.status);
+                    setComment(lastReview.comment);
+                    setCreatedAt(
+                      moment(lastReview.createdAt).format(
+                        "DD-MM-YYYY,h:mm:ss a"
+                      )
+                    );
+                  }
+                },
               },
               {
                 icon: "edit",
@@ -406,7 +467,7 @@ const TasksScreenUser = () => {
                   // dispatch(readMailContent());
                   setSelectedEmails(leads);
 
-                  handleOpen();
+                  handleOpenMail();
                 },
                 isFreeAction: false,
               },
@@ -451,31 +512,20 @@ const TasksScreenUser = () => {
             }}
           />
           <div>
-            <Modal open={open} onClose={handleClose}>
+            <Modal open={openMail} onClose={handleCloseMail}>
               <Box sx={style}>
-                {loading && (
+                {loadingSendBulkEmails && (
                   <Alert severity="info">
                     Sending Emails.. It may take few minutes..
                   </Alert>
                 )}
-                {loadingMailUpdate && (
-                  <Alert severity="info">Updating mail content...</Alert>
+
+                {errorSendBulkEmails && (
+                  <Alert severity="error">{errorSendBulkEmails}</Alert>
                 )}
-                {loadingMailRead && (
-                  <Alert severity="info">Loading mail content...</Alert>
-                )}
-                {error && <Alert severity="error">{error}</Alert>}
-                {errorMailRead && (
-                  <Alert severity="error">{errorMailRead}</Alert>
-                )}
-                {errorMailUpdate && (
-                  <Alert severity="error">{errorMailUpdate}</Alert>
-                )}
+
                 {statusSendBulkEmails && (
                   <Alert severity="success">{statusSendBulkEmails.data}</Alert>
-                )}
-                {statusMailUpdate && (
-                  <Alert severity="success">{statusMailUpdate.status}</Alert>
                 )}
 
                 <form>
@@ -484,7 +534,7 @@ const TasksScreenUser = () => {
                       button
                       className={classes.closeButton}
                       title="Close"
-                      onClick={handleClose}
+                      onClick={handleCloseMail}
                     >
                       <CloseIcon
                         align="right"
@@ -511,54 +561,45 @@ const TasksScreenUser = () => {
             </Modal>
           </div>
           <div>
-            <Modal open={open} onClose={handleClose}>
+            <Modal open={openReview} onClose={handleCloseReview}>
               <Box sx={style}>
                 <ListItem
                   button
                   className={classes.closeButton}
                   title="Close"
-                  onClick={handleClose}
+                  onClick={handleCloseReview}
                 >
                   <CloseIcon
                     align="right"
                     style={{ fill: "red", fontSize: "180%" }}
                   />
                 </ListItem>
-                <h3 style={headerStyle}>Write a Lead Review</h3>
-                {/*  <Typography style={{ margin: "8px", color: "red" }}>
-              Select Status
-            </Typography> */}
-
-                <AppBar
-                  position="static"
-                  color="primary"
-                  style={{ marginTop: 20 }}
-                >
-                  <Toolbar>
-                    <Typography
-                      variant="body1"
-                      color="inherit"
-                      style={{ marginLeft: "44%" }}
-                    >
-                      Lead Status
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
+                <h3 style={headerStyle}>
+                  Write a Review for: <h5>{leadname}</h5>
+                </h3>
                 <hr />
-                <Typography style={{ margin: "8px", color: "green" }}>
-                  Select Status
-                </Typography>
+                {loadingLeadAddReview && (
+                  <Alert severity="info">Loading lead details...</Alert>
+                )}
+
+                {errorLeadAddReview && (
+                  <Alert severity="error">{errorLeadAddReview}</Alert>
+                )}
+
+                {statusLeadAddReview && (
+                  <Alert severity="success" dismissible>
+                    {statusLeadAddReview.message}
+                  </Alert>
+                )}
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
-                  <InputLabel>Status</InputLabel>
+                  <InputLabel>Select Status</InputLabel>
                   <Select
                     labelId=""
                     id=""
-                    defaultValue={status}
-                    label="Status"
-                    onChange={handleChange}
+                    label="Select Status"
+                    onChange={(e) => setStatus(e.target.value)}
                   >
-                    <em>Select status</em>
                     <MenuItem value=""></MenuItem>
                     <MenuItem value={"Level 1"}>Level 1</MenuItem>
                     <MenuItem value={"Level 2"}>Level 2</MenuItem>
@@ -571,8 +612,9 @@ const TasksScreenUser = () => {
                   Comment
                 </Typography>
                 <TextareaAutosize
-                  defaultValue="Write comment here"
+                  placeholder="Write comment here"
                   style={textAreaStyle}
+                  onChange={(e) => setComment(e.target.value)}
                 />
 
                 <br />
@@ -581,11 +623,50 @@ const TasksScreenUser = () => {
                   color="primary"
                   variant="contained"
                   style={sendStyle}
+                  onClick={addReviewHandler}
                 >
                   ADD
                 </Button>
                 <hr />
-                <h3 style={headerStyle}> Reviews</h3>
+                <h5>Current Status: {currentStatus}</h5>
+                <h3 style={headerStyle}> Recent Review</h3>
+
+                {/* {lastReview ? (
+                  <p className="alert alert-primary">
+                    <b> Status:-</b>
+                    {lastReview.status} <b>Comment:-</b>
+                    {lastReview.comment} <b>Date:-</b>
+                    {lastReview.createdAt
+                      ? moment(lastReview.createdAt).format(
+                          "DD-MM-YYYY,h:mm:ss a"
+                        )
+                      : }
+                  </p>
+                ) : (
+                  <p>No Any Reviews</p>
+                )} */}
+
+                {successLeadAddReview ? (
+                  <p className="alert alert-primary">
+                    <b> Status:-</b>
+                    {status} <b>Comment:-</b>
+                    {comment} <b>Date:-</b>
+                    {moment(createdAt).format("DD-MM-YYYY,h:mm:ss a")}
+                  </p>
+                ) : lastReview ? (
+                  <p className="alert alert-primary">
+                    <b> Status:-</b>
+                    {lastReview.status} <b>Comment:-</b>
+                    {lastReview.comment} <b>Date:-</b>
+                    {lastReview.createdAt
+                      ? moment(lastReview.createdAt).format(
+                          "DD-MM-YYYY,h:mm:ss a"
+                        )
+                      : ""}
+                  </p>
+                ) : (
+                  <p>No Any Reviews</p>
+                )}
               </Box>
             </Modal>
           </div>

@@ -13,6 +13,7 @@ import {
   userUpdateReducer,
   userSendBulkEmailsReducer,
   userSendBulkSmsReducer,
+  leadAddReviewReducer,
 } from "./reducers/userReducers";
 
 import {
@@ -37,6 +38,7 @@ const reducer = combineReducers({
   userUpdate: userUpdateReducer,
   userSendBulkEmails: userSendBulkEmailsReducer,
   userSendBulkSms: userSendBulkSmsReducer,
+  leadAddReview: leadAddReviewReducer,
 
   reportGenerate: reportGenerateReducer,
   reportGetData: reportGetDataReducer,

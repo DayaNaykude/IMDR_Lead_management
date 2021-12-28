@@ -10,6 +10,7 @@ const {
   updateUserProfile,
   sendBulkEmails,
   sendBulkSms,
+  leadAddReview,
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router
 router.route("/:email").delete(protect, admin, deleteUser);
 router.route("/sendbulkemails").post(protect, sendBulkEmails);
 router.route("/sendbulksms").post(protect, sendBulkSms);
+router.route("/leadaddreview").post(protect, leadAddReview);
 
 module.exports = router;
