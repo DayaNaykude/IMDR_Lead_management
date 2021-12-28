@@ -1,12 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
-import {
-  Grid,
-  TablePagination,
-  Typography,
-
-} from "@material-ui/core";
+import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
@@ -90,7 +85,7 @@ const TasksScreenUser = () => {
   const handleClose = () => {
     setOpen(false);
   };
-/* 
+  /* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
   const handleCloseSms = () => setOpenSms(false); */
@@ -423,7 +418,7 @@ const TasksScreenUser = () => {
               <Box sx={style}>
                 {loading && (
                   <Alert severity="info">
-                    Sending Emails.. It make few minutes..
+                    Sending Emails.. It may take few minutes..
                   </Alert>
                 )}
                 {loadingMailUpdate && (

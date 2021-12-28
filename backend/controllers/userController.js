@@ -85,7 +85,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     if (!user) {
       res.status(404);
-      throw new Error("Email could not be sent");
+      throw new Error("Invalid User! Email could not be sent");
     }
 
     // Reset Token Gen and add to database hashed (private) version of token
@@ -96,35 +96,33 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     // Create reset url to email to provided email
     const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
+    let mailstatus = true;
     try {
-      const mailstatus = true;
-      // const { results, errors } = await PromisePool.withConcurrency(20)
-      //   .for([email])
-      //   .process(async (mailid, index) => {
-      //     const mailstatus = await sendEmail({
-      //       from: "admissions2022@imdr.edu",
-      //       to: user.email,
+      const { results, errors } = await PromisePool.withConcurrency(20)
+        .for([email])
+        .process(async (mailid, index) => {
+          mailstatus = await sendEmail({
+            from: "admissions2022@imdr.edu",
+            to: user.email,
 
-      //       template: "resetpass",
-      //       data: {
-      //         username: user.username,
-      //         resetpassURL: resetUrl,
-      //         subject: "Password Reset Request IMDR LMS",
-      //       },
-      //     });
-      // });
+            template: "resetpass",
+            data: {
+              username: user.username,
+              resetpassURL: resetUrl,
+              subject: "Password Reset Request IMDR LMS",
+            },
+          });
+        });
       console.log(mailstatus);
 
       if (mailstatus) {
         res.status(200);
         res.json({ success: true, data: "Email Sent" });
-      } else {
-        throw new Error("Email could not be sent");
       }
     } catch (err) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
-
+      console.log(err);
       await user.save();
       res.status(500);
       throw new Error("Email could not be sent");
@@ -303,20 +301,20 @@ exports.sendBulkEmails = asyncHandler(async (req, res, next) => {
       const lead = await Lead.findOne({ email: mailid });
       if (lead) {
         try {
-          const mailstatus = true;
+          // const mailstatus = true;
 
-          // const mailstatus = await sendEmail({
-          //   from: usersendgridemail,
-          //   to: lead.email,
+          const mailstatus = await sendEmail({
+            from: usersendgridemail,
+            to: lead.email,
 
-          //   // html: firstMail,
-          //   template: "firstmail",
-          //   data: {
-          //     applicantName: lead.applicantName,
-          //     subject: subject,
-          //   },
-          // });
-          // console.log(subject);
+            // html: firstMail,
+            template: "firstmail",
+            data: {
+              applicantName: lead.applicantName,
+              subject: subject,
+            },
+          });
+          console.log(subject);
 
           console.log(mailstatus);
           if (mailstatus) {
