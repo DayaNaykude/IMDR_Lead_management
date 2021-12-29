@@ -36,6 +36,9 @@ import {
   USER_SEND_SMS_REQUEST,
   USER_SEND_SMS_SUCCESS,
   USER_SEND_SMS_FAIL,
+  LEAD_ADD_REVIEW_REQUEST,
+  LEAD_ADD_REVIEW_SUCCESS,
+  LEAD_ADD_REVIEW_FAIL,
 } from "../constants/userConstants";
 import { REPORT_DATA_RESET } from "../constants/reportConstants";
 import axios from "axios";
@@ -446,6 +449,45 @@ export const sendBulkSms =
     } catch (error) {
       dispatch({
         type: USER_SEND_SMS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const addReview =
+  (email, status, comment) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: LEAD_ADD_REVIEW_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        "/api/users/leadaddreview",
+        { email, status, comment },
+        config
+      );
+
+      dispatch({
+        type: LEAD_ADD_REVIEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: LEAD_ADD_REVIEW_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
