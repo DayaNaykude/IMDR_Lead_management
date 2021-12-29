@@ -631,7 +631,7 @@ toast.configure();
                 
              
                 {statusLeadAddReview && (
-                  toast.success({successLeadAddReview}, { autoClose:2000})
+                  toast.success("Leads Status Added Successfully", { autoClose:2000})
 
                )}
              
