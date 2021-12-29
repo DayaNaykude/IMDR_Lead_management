@@ -87,7 +87,8 @@ export const ReportScreen: React.FC = () => {
 
     const makeTextFile = (name) => {
       const a = document.createElement("a");
-      const type = name.split(".").pop();
+      const type = name.split(",").pop();
+
       a.href = URL.createObjectURL(
         new Blob([JSON.stringify(report.reportData)], {
           type: `text/${type === "txt" ? "plain" : type}`,

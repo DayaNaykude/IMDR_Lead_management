@@ -70,6 +70,7 @@
     "react-country-region-selector": "^3.3.0",
     "react-csv": "^2.0.3",
     "react-pdf": "^5.6.0",
+    "react-toastify": "^8.1.0",
     "twilio": "^3.71.1",
     "uuid": "^3.3.3",
     "xlsx": "^0.17.4"

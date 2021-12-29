@@ -7,6 +7,9 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+
+
+import {toast} from 'react-toastify';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
@@ -32,6 +35,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
+import { DataGrid } from '@material-ui/data-grid';
+import 'react-toastify/dist/ReactToastify.css';
 // backend Imports
 import {
   sendBulkEmails,
@@ -70,6 +75,12 @@ const submitStyle = {
   marginTop: "0%",
   width: "15%",
 };
+const btnStyle ={
+  backgroundColor:"blue",
+  color: "white",
+  height: "36px",
+  fontSize: "20px",
+}
 const headerStyle = { marginTop: "2px" };
 const style = {
   position: "absolute",
@@ -110,6 +121,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const TasksScreenUser = () => {
   const classes = useStyles();
 
@@ -127,6 +139,7 @@ const TasksScreenUser = () => {
     setOpenReview(false);
     window.location.reload(false);
   };
+  
   /* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
@@ -191,7 +204,7 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-
+  const [percente,setPercente] = useState(0);
   const dispatch = useDispatch();
 
   const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
@@ -364,11 +377,20 @@ const TasksScreenUser = () => {
     { title: "Lead Status", field: "status", searchable: false },
     { title: "Reviews", field: "reviews", hidden: true },
   ];
+  const filterFunction = (percentage) => {
+  
+  console.log("data",data);
+  console.log("percentage",percentage);
+    setData(data.filter(per => per.percentileGK>=percentage))
+ 
+  }
+toast.configure();
   return (
     <>
       <div>
         <h1 style={textStyle}>Lead Management</h1>
         <Box style={boxStyle}>
+        
           <MaterialTable
             title=""
             data={data}
@@ -390,6 +412,7 @@ const TasksScreenUser = () => {
               headerStyle: { background: "#9c66e2", fontStyle: "bold" },
               selection: true,
             }}
+            
             actions={[
               {
                 icon: () => (
@@ -435,7 +458,27 @@ const TasksScreenUser = () => {
                   );
                 },
               },
+              
+              {
 
+               icon: () => 
+               
+               <TextField
+                  placeholder="Enter Percentile"
+                 
+
+                  onChange={(e) => setPercente(e.target.value)}
+                />,
+
+              isFreeAction: true,
+              },
+              {
+                icon: () => 
+               <button style={btnStyle} onClick={(e) => filterFunction(percente)}>Filter For Percentile</button>,
+              tooltip : "Press button for apply filter ",
+              isFreeAction: true,
+              },
+              
               {
                 icon: () => <button style={btnstyle}>Add Contact</button>,
                 tooltip: "Add Contact",
@@ -583,14 +626,15 @@ const TasksScreenUser = () => {
                 )}
 
                 {errorLeadAddReview && (
-                  <Alert severity="error">{errorLeadAddReview}</Alert>
+                  <Alert severity="error" >{errorLeadAddReview}</Alert>
                 )}
-
+                
+             
                 {statusLeadAddReview && (
-                  <Alert severity="success" dismissible>
-                    {statusLeadAddReview.message}
-                  </Alert>
-                )}
+                  toast.success({successLeadAddReview}, { autoClose:2000})
+
+               )}
+             
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
