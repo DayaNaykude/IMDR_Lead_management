@@ -55,6 +55,7 @@
     "jsonwebtoken": "^8.5.1",
     "jspdf": "^2.4.0",
     "jspdf-autotable": "^3.5.23",
+    "jw-paginate": "^1.0.4",
     "lodash": "^4.17.15",
     "mailgun-js": "^0.22.0",
     "material-table": "^1.69.3",

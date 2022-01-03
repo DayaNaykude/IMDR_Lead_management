@@ -8,8 +8,7 @@ import {
   TextField,
 } from "@material-ui/core";
 
-
-import {toast} from 'react-toastify';
+import { toast, useToastContainer } from "react-toastify";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,7 +16,7 @@ import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -35,8 +34,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-import { DataGrid } from '@material-ui/data-grid';
-import 'react-toastify/dist/ReactToastify.css';
+import { DataGrid } from "@material-ui/data-grid";
+import "react-toastify/dist/ReactToastify.css";
 // backend Imports
 import {
   sendBulkEmails,
@@ -75,12 +74,12 @@ const submitStyle = {
   marginTop: "0%",
   width: "15%",
 };
-const btnStyle ={
-  backgroundColor:"blue",
+const btnStyle = {
+  backgroundColor: "blue",
   color: "white",
   height: "36px",
   fontSize: "20px",
-}
+};
 const headerStyle = { marginTop: "2px" };
 const style = {
   position: "absolute",
@@ -121,7 +120,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const TasksScreenUser = () => {
   const classes = useStyles();
 
@@ -139,7 +137,7 @@ const TasksScreenUser = () => {
     setOpenReview(false);
     window.location.reload(false);
   };
-  
+
   /* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
@@ -204,7 +202,9 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-  const [percente,setPercente] = useState(0);
+  const [pager, setPager] = useState({});
+
+  const [percente, setPercente] = useState(0);
   const dispatch = useDispatch();
 
   const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
@@ -313,19 +313,22 @@ const TasksScreenUser = () => {
     XLSX.writeFile(workBook, "LeadsData.xlsx");
   };
 
+  let location = useLocation();
   //loading leads
-  const preload = () => {
+  const preload = (page) => {
     if (userInfo) {
-      getAllLeads(userInfo._id, userInfo.token)
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-          } else {
-            setData(data);
-            setTableLoading(false);
-          }
-        })
-        .catch((err) => console.log(err));
+      if (page !== pager.currentPage)
+        getAllLeads(userInfo._id, userInfo.token, page)
+          .then((data) => {
+            if (data.error) {
+              console.log(data.error);
+            } else {
+              setData(data.leads);
+              setPager(data.pager);
+              setTableLoading(false);
+            }
+          })
+          .catch((err) => console.log(err));
     }
   };
 
@@ -343,10 +346,14 @@ const TasksScreenUser = () => {
     if (!userInfo) {
       history.push("/login");
     }
-    preload();
+    const params = new URLSearchParams(location.search);
+    const page = parseInt(params.get("page")) || 1;
+
+    preload(page);
   }, [
     history,
     dispatch,
+    preload,
     userInfo,
     successSendBulkEmails,
     statusSendBulkEmails,
@@ -378,19 +385,16 @@ const TasksScreenUser = () => {
     { title: "Reviews", field: "reviews", hidden: true },
   ];
   const filterFunction = (percentage) => {
-  
-  console.log("data",data);
-  console.log("percentage",percentage);
-    setData(data.filter(per => per.percentileGK>=percentage))
- 
-  }
-toast.configure();
+    console.log("data", data);
+    console.log("percentage", percentage);
+    setData(data.filter((per) => per.percentileGK >= percentage));
+  };
+  toast.configure();
   return (
     <>
       <div>
         <h1 style={textStyle}>Lead Management</h1>
         <Box style={boxStyle}>
-        
           <MaterialTable
             title=""
             data={data}
@@ -404,7 +408,7 @@ toast.configure();
               toolbar: true,
               searchFieldVariant: "outlined",
               searchFieldAlignment: "left",
-              pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
+              pageSizeOptions: [5, 10],
               paginationType: "stepped",
               actionsColumnIndex: -1,
               rowStyle: (data, index) =>
@@ -412,7 +416,6 @@ toast.configure();
               headerStyle: { background: "#9c66e2", fontStyle: "bold" },
               selection: true,
             }}
-            
             actions={[
               {
                 icon: () => (
@@ -458,27 +461,30 @@ toast.configure();
                   );
                 },
               },
-              
+
               {
+                icon: () => (
+                  <TextField
+                    placeholder="Enter Percentile"
+                    onChange={(e) => setPercente(e.target.value)}
+                  />
+                ),
 
-               icon: () => 
-               
-               <TextField
-                  placeholder="Enter Percentile"
-                 
-
-                  onChange={(e) => setPercente(e.target.value)}
-                />,
-
-              isFreeAction: true,
+                isFreeAction: true,
               },
               {
-                icon: () => 
-               <button style={btnStyle} onClick={(e) => filterFunction(percente)}>Filter For Percentile</button>,
-              tooltip : "Press button for apply filter ",
-              isFreeAction: true,
+                icon: () => (
+                  <button
+                    style={btnStyle}
+                    onClick={(e) => filterFunction(percente)}
+                  >
+                    Filter For Percentile
+                  </button>
+                ),
+                tooltip: "Press button for apply filter ",
+                isFreeAction: true,
               },
-              
+
               {
                 icon: () => <button style={btnstyle}>Add Contact</button>,
                 tooltip: "Add Contact",
@@ -554,6 +560,72 @@ toast.configure();
               ),
             }}
           />
+          <div className="card-footer pb-0 pt-3 d-flex justify-content-center">
+            {pager.pages && pager.pages.length && (
+              <ul className="pagination">
+                <li
+                  className={`page-item first-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link to={{ search: `?page=1` }} className="page-link">
+                    First
+                  </Link>
+                </li>
+                <li
+                  className={`page-item previous-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage - 1}` }}
+                    className="page-link"
+                  >
+                    Previous
+                  </Link>
+                </li>
+                {pager.pages.map((page) => (
+                  <li
+                    key={page}
+                    className={`page-item number-item ${
+                      pager.currentPage === page ? "active" : ""
+                    }`}
+                  >
+                    <Link
+                      to={{ search: `?page=${page}` }}
+                      className="page-link"
+                    >
+                      {page}
+                    </Link>
+                  </li>
+                ))}
+                <li
+                  className={`page-item next-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage + 1}` }}
+                    className="page-link"
+                  >
+                    Next
+                  </Link>
+                </li>
+                <li
+                  className={`page-item last-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.totalPages}` }}
+                    className="page-link"
+                  >
+                    Last
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </div>
           <div>
             <Modal open={openMail} onClose={handleCloseMail}>
               <Box sx={style}>
@@ -626,15 +698,13 @@ toast.configure();
                 )}
 
                 {errorLeadAddReview && (
-                  <Alert severity="error" >{errorLeadAddReview}</Alert>
+                  <Alert severity="error">{errorLeadAddReview}</Alert>
                 )}
-                
-             
-                {statusLeadAddReview && (
-                  toast.success("Leads Status Added Successfully", { autoClose:2000})
 
-               )}
-             
+                {statusLeadAddReview &&
+                  toast.success("Leads Status Added Successfully", {
+                    autoClose: 2000,
+                  })}
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
