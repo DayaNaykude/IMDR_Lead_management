@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 
 import {
@@ -9,11 +9,11 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-import { Formik, Form, Field, ErrorMessage } from "formik"; 
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import { useHistory, Link } from "react-router-dom";
 import * as Yup from "yup";
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 // backend imports
 
 import { useDispatch, useSelector } from "react-redux";
@@ -34,8 +34,6 @@ const RegisterScreen = ({ handleChange }) => {
   const btnstyle = { marginTop: "40px" };
   const linkStyle = { marginTop: "50px" };
   let history = useHistory();
-
-  
 
   // ************* Backend Stuff
 
@@ -71,24 +69,27 @@ const RegisterScreen = ({ handleChange }) => {
     }
   };
   const initialValues = {
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    
-}
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
 
-const validationSchema = Yup.object().shape({
-username: Yup.string().required("Please Provide name "),
-email: Yup.string().email("Enter valid email").required("Required"),
-password: Yup.string().min(6, "Password minimum length should be 8").required("Required"),
-confirmPassword: Yup.string().oneOf([Yup.ref('password')], "Password not matched").required("Required"),
-})
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("Please Provide name "),
+    email: Yup.string().email("Enter valid email").required("Required"),
+    password: Yup.string()
+      .min(6, "Password minimum length should be 8")
+      .required("Required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Password not matched")
+      .required("Required"),
+  });
 
-const onSubmit = (values, props) => {
-console.log(values);
-props.setSubmitting(false);
-}
+  const onSubmit = (values, props) => {
+    console.log(values);
+    props.setSubmitting(false);
+  };
   return (
     <Grid>
       <Paper elevation={20} style={paperStyle}>
@@ -102,19 +103,29 @@ props.setSubmitting(false);
           </Typography>
         </Grid>
 
-       
-         <Stack sx={{ width: '100%' }} spacing={2}>
-          {message && <Alert variant="filled" severity="error">{message}</Alert>}
-          {error &&<Alert variant="filled" severity="error">Invalid Credentials!</Alert>}
-          {loading && <Alert variant="filled" severity="info">Loading...</Alert>}
-          </Stack>
+        <Stack sx={{ width: "100%" }} spacing={2}>
+          {message && (
+            <Alert variant="filled" severity="error">
+              {message}
+            </Alert>
+          )}
+          {error && (
+            <Alert variant="filled" severity="error">
+              Invalid Credentials!
+            </Alert>
+          )}
+          {loading && (
+            <Alert variant="filled" severity="info">
+              Loading...
+            </Alert>
+          )}
+        </Stack>
 
         <Formik
-            initialValues={initialValues}
-            onSubmit={onSubmit}
-            validationSchema={validationSchema}
-          >
-
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          validationSchema={validationSchema}
+        >
           {(props) => (
             <Form onSubmit={registerHandler}>
               <Field
@@ -127,9 +138,9 @@ props.setSubmitting(false);
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                helperText={<ErrorMessage name="username"/>}
+                helperText={<ErrorMessage name="username" />}
               />
-              
+
               <Field
                 as={TextField}
                 label="Email"
@@ -154,7 +165,7 @@ props.setSubmitting(false);
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                helperText={<ErrorMessage name="password" />} 
+                helperText={<ErrorMessage name="password" />}
               />
               <Field
                 as={TextField}
@@ -167,7 +178,7 @@ props.setSubmitting(false);
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                helperText={<ErrorMessage name="confirmPassword" />} 
+                helperText={<ErrorMessage name="confirmPassword" />}
               />
 
               <Button
@@ -177,20 +188,19 @@ props.setSubmitting(false);
                 style={btnstyle}
                 disabled={props.isSubmitting}
                 fullWidth
-                onClick={registerHandler}
+                // onClick={registerHandler}
               >
                 Sign Up
               </Button>
-              </Form>
+            </Form>
           )}
         </Formik>
-                  <Typography style={linkStyle}>
-                    Already have an account ?{" "}
-                    <Link to="/login" onClick={() => handleChange("event", 0)}>
-                      Sign In
-                    </Link>
-                  </Typography>
-       
+        <Typography style={linkStyle}>
+          Already have an account ?{" "}
+          <Link to="/login" onClick={() => handleChange("event", 0)}>
+            Sign In
+          </Link>
+        </Typography>
       </Paper>
     </Grid>
   );

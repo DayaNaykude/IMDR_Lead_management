@@ -8,10 +8,9 @@ import {
   TextField,
 } from "@material-ui/core";
 
-
-import {toast} from 'react-toastify';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+import { toast } from "react-toastify";
+// import AppBar from "@material-ui/core/AppBar";
+// import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
@@ -35,17 +34,17 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-import { DataGrid } from '@material-ui/data-grid';
-import 'react-toastify/dist/ReactToastify.css';
+// import { DataGrid } from "@material-ui/data-grid";
+import "react-toastify/dist/ReactToastify.css";
 // backend Imports
 import {
   sendBulkEmails,
-  sendBulkSms,
+  // sendBulkSms,
   addReview,
 } from "../../actions/userActions";
 // import leadAddReview from "../../actions/userActions";
 // import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { createDispatchHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
@@ -66,21 +65,13 @@ const textAreaStyle = {
   width: "80%",
   height: "100px",
 };
-const submitStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  fontSize: "20px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "2%",
-  marginTop: "0%",
-  width: "15%",
-};
-const btnStyle ={
-  backgroundColor:"blue",
+
+const btnStyle = {
+  backgroundColor: "blue",
   color: "white",
   height: "36px",
   fontSize: "20px",
-}
+};
 const headerStyle = { marginTop: "2px" };
 const style = {
   position: "absolute",
@@ -121,7 +112,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const TasksScreenUser = () => {
   const classes = useStyles();
 
@@ -129,7 +119,7 @@ const TasksScreenUser = () => {
   const handleOpenMail = () => setOpenMail(true);
   const handleCloseMail = () => {
     setOpenMail(false);
-    window.location.reload(false);
+    // window.location.reload(false);
   };
   const [openReview, setOpenReview] = useState(false);
   const handleOpenReview = () => {
@@ -137,9 +127,10 @@ const TasksScreenUser = () => {
   };
   const handleCloseReview = () => {
     setOpenReview(false);
-    window.location.reload(false);
+
+    // window.location.reload(false);
   };
-  
+
   /* 
   const [openSms, setOpenSms] = useState(false);
   const handleOpenSms = () => setOpenSms(true);
@@ -204,7 +195,7 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
-  const [percente,setPercente] = useState(0);
+  const [percente, setPercente] = useState(0);
   const dispatch = useDispatch();
 
   const userSendBulkEmails = useSelector((state) => state.userSendBulkEmails);
@@ -215,13 +206,13 @@ const TasksScreenUser = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
-  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
-  const {
-    loading: loadingSms,
-    success: successSendBulkSms,
-    error: errorSms,
-    status: statusSendBulkSms,
-  } = userSendBulkSms;
+  // const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
+  // const {
+  //   loading: loadingSms,
+  //   success: successSendBulkSms,
+  //   error: errorSms,
+  //   status: statusSendBulkSms,
+  // } = userSendBulkSms;
 
   // const mailReadContent = useSelector((state) => state.mailReadContent);
   // const {
@@ -239,7 +230,7 @@ const TasksScreenUser = () => {
   // } = mailUpdateContent;
 
   const leadAddReview = useSelector((state) => state.leadAddReview);
-  const {
+  let {
     loading: loadingLeadAddReview,
     success: successLeadAddReview,
     error: errorLeadAddReview,
@@ -252,10 +243,10 @@ const TasksScreenUser = () => {
     "Craft Your Career with the First B-School of Pune"
   );
 
-  const [message, setMessage] = useState(
-    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
-    `
-  );
+  // const [message, setMessage] = useState(
+  //   `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
+  //   `
+  // );
   const [tableLoading, setTableLoading] = useState(true);
 
   const sendEmailHandler = async (e) => {
@@ -264,10 +255,10 @@ const TasksScreenUser = () => {
     dispatch(sendBulkEmails(userInfo.sendgridemail, selectedEmails, subject));
   };
 
-  const sendSmsHandler = async (e) => {
-    e.preventDefault();
-    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
-  };
+  // const sendSmsHandler = async (e) => {
+  //   e.preventDefault();
+  //   dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
+  // };
 
   // const updateMailContentHandler = async (e) => {
   //   e.preventDefault();
@@ -350,7 +341,7 @@ const TasksScreenUser = () => {
     userInfo,
     successSendBulkEmails,
     statusSendBulkEmails,
-    successSendBulkSms,
+    // successSendBulkSms,
     successLeadAddReview,
     statusLeadAddReview,
   ]);
@@ -378,19 +369,16 @@ const TasksScreenUser = () => {
     { title: "Reviews", field: "reviews", hidden: true },
   ];
   const filterFunction = (percentage) => {
-  
-  console.log("data",data);
-  console.log("percentage",percentage);
-    setData(data.filter(per => per.percentileGK>=percentage))
- 
-  }
-toast.configure();
+    console.log("data", data);
+    console.log("percentage", percentage);
+    setData(data.filter((per) => per.percentileGK >= percentage));
+  };
+  toast.configure();
   return (
     <>
       <div>
         <h1 style={textStyle}>Lead Management</h1>
         <Box style={boxStyle}>
-        
           <MaterialTable
             title=""
             data={data}
@@ -412,7 +400,6 @@ toast.configure();
               headerStyle: { background: "#9c66e2", fontStyle: "bold" },
               selection: true,
             }}
-            
             actions={[
               {
                 icon: () => (
@@ -458,27 +445,30 @@ toast.configure();
                   );
                 },
               },
-              
+
               {
+                icon: () => (
+                  <TextField
+                    placeholder="Enter Percentile"
+                    onChange={(e) => setPercente(e.target.value)}
+                  />
+                ),
 
-               icon: () => 
-               
-               <TextField
-                  placeholder="Enter Percentile"
-                 
-
-                  onChange={(e) => setPercente(e.target.value)}
-                />,
-
-              isFreeAction: true,
+                isFreeAction: true,
               },
               {
-                icon: () => 
-               <button style={btnStyle} onClick={(e) => filterFunction(percente)}>Filter For Percentile</button>,
-              tooltip : "Press button for apply filter ",
-              isFreeAction: true,
+                icon: () => (
+                  <button
+                    style={btnStyle}
+                    onClick={(e) => filterFunction(percente)}
+                  >
+                    Filter For Percentile
+                  </button>
+                ),
+                tooltip: "Press button for apply filter ",
+                isFreeAction: true,
               },
-              
+
               {
                 icon: () => <button style={btnstyle}>Add Contact</button>,
                 tooltip: "Add Contact",
@@ -626,15 +616,13 @@ toast.configure();
                 )}
 
                 {errorLeadAddReview && (
-                  <Alert severity="error" >{errorLeadAddReview}</Alert>
+                  <Alert severity="error">{errorLeadAddReview}</Alert>
                 )}
-                
-             
-                {statusLeadAddReview && (
-                  toast.success("Leads Status Added Successfully", { autoClose:2000})
 
-               )}
-             
+                {statusLeadAddReview &&
+                  toast.success("Leads Status Updated Successfully", {
+                    autoClose: 2000,
+                  })}
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
@@ -645,10 +633,10 @@ toast.configure();
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <MenuItem value=""></MenuItem>
-                    <MenuItem value={"Level 1"}>Level 1</MenuItem>
-                    <MenuItem value={"Level 2"}>Level 2</MenuItem>
-                    <MenuItem value={"Level 3"}>Level 3</MenuItem>
-                    <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                    <MenuItem value={"level 1"}>Level 1</MenuItem>
+                    <MenuItem value={"level 2"}>Level 2</MenuItem>
+                    <MenuItem value={"level 3"}>Level 3</MenuItem>
+                    <MenuItem value={"level 4"}>Level 4</MenuItem>
                   </Select>
                 </FormControl>
 
