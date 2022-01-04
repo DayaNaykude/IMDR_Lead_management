@@ -41,7 +41,7 @@ const Dashboard = () => {
         title="src_leads_count"
       ></iframe>
       <iframe
-        style={chartstyle(46, 60)}
+        style={chartstyle(94, 70)}
         src={src_leadsByUsers}
         title="src_leadsByUsers"
       ></iframe>

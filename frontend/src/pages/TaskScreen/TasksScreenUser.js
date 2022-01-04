@@ -8,9 +8,9 @@ import {
   TextField,
 } from "@material-ui/core";
 
-import { toast, useToastContainer } from "react-toastify";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+import { toast } from "react-toastify";
+// import AppBar from "@material-ui/core/AppBar";
+// import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
@@ -34,17 +34,17 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-import { DataGrid } from "@material-ui/data-grid";
+// import { DataGrid } from "@material-ui/data-grid";
 import "react-toastify/dist/ReactToastify.css";
 // backend Imports
 import {
   sendBulkEmails,
-  sendBulkSms,
+  // sendBulkSms,
   addReview,
 } from "../../actions/userActions";
 // import leadAddReview from "../../actions/userActions";
 // import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { createDispatchHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
@@ -64,15 +64,6 @@ const textAreaStyle = {
   marginTop: "0%",
   width: "80%",
   height: "100px",
-};
-const submitStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  fontSize: "20px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "2%",
-  marginTop: "0%",
-  width: "15%",
 };
 const btnStyle = {
   backgroundColor: "blue",
@@ -127,7 +118,7 @@ const TasksScreenUser = () => {
   const handleOpenMail = () => setOpenMail(true);
   const handleCloseMail = () => {
     setOpenMail(false);
-    window.location.reload(false);
+    // window.location.reload(false);
   };
   const [openReview, setOpenReview] = useState(false);
   const handleOpenReview = () => {
@@ -135,7 +126,8 @@ const TasksScreenUser = () => {
   };
   const handleCloseReview = () => {
     setOpenReview(false);
-    window.location.reload(false);
+
+    // window.location.reload(false);
   };
 
   /* 
@@ -215,13 +207,13 @@ const TasksScreenUser = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
-  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
-  const {
-    loading: loadingSms,
-    success: successSendBulkSms,
-    error: errorSms,
-    status: statusSendBulkSms,
-  } = userSendBulkSms;
+  // const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
+  // const {
+  //   loading: loadingSms,
+  //   success: successSendBulkSms,
+  //   error: errorSms,
+  //   status: statusSendBulkSms,
+  // } = userSendBulkSms;
 
   // const mailReadContent = useSelector((state) => state.mailReadContent);
   // const {
@@ -239,7 +231,7 @@ const TasksScreenUser = () => {
   // } = mailUpdateContent;
 
   const leadAddReview = useSelector((state) => state.leadAddReview);
-  const {
+  let {
     loading: loadingLeadAddReview,
     success: successLeadAddReview,
     error: errorLeadAddReview,
@@ -252,10 +244,10 @@ const TasksScreenUser = () => {
     "Craft Your Career with the First B-School of Pune"
   );
 
-  const [message, setMessage] = useState(
-    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
-    `
-  );
+  // const [message, setMessage] = useState(
+  //   `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
+  //   `
+  // );
   const [tableLoading, setTableLoading] = useState(true);
 
   const sendEmailHandler = async (e) => {
@@ -264,10 +256,10 @@ const TasksScreenUser = () => {
     dispatch(sendBulkEmails(userInfo.sendgridemail, selectedEmails, subject));
   };
 
-  const sendSmsHandler = async (e) => {
-    e.preventDefault();
-    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
-  };
+  // const sendSmsHandler = async (e) => {
+  //   e.preventDefault();
+  //   dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
+  // };
 
   // const updateMailContentHandler = async (e) => {
   //   e.preventDefault();
@@ -357,7 +349,7 @@ const TasksScreenUser = () => {
     userInfo,
     successSendBulkEmails,
     statusSendBulkEmails,
-    successSendBulkSms,
+    // successSendBulkSms,
     successLeadAddReview,
     statusLeadAddReview,
   ]);
@@ -702,7 +694,7 @@ const TasksScreenUser = () => {
                 )}
 
                 {statusLeadAddReview &&
-                  toast.success("Leads Status Added Successfully", {
+                  toast.success("Leads Status Updated Successfully", {
                     autoClose: 2000,
                   })}
 
@@ -715,10 +707,10 @@ const TasksScreenUser = () => {
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <MenuItem value=""></MenuItem>
-                    <MenuItem value={"Level 1"}>Level 1</MenuItem>
-                    <MenuItem value={"Level 2"}>Level 2</MenuItem>
-                    <MenuItem value={"Level 3"}>Level 3</MenuItem>
-                    <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                    <MenuItem value={"level 1"}>Level 1</MenuItem>
+                    <MenuItem value={"level 2"}>Level 2</MenuItem>
+                    <MenuItem value={"level 3"}>Level 3</MenuItem>
+                    <MenuItem value={"level 4"}>Level 4</MenuItem>
                   </Select>
                 </FormControl>
 
