@@ -618,22 +618,10 @@ const TasksScreenUser = () => {
                 {errorLeadAddReview && (
                   <Alert severity="error">{errorLeadAddReview}</Alert>
                 )}
-<<<<<<< HEAD
-                
-             
-                {statusLeadAddReview && (
-                  <Alert severity="success" dismissible>
-                    {statusLeadAddReview.message}
-                  </Alert>
-                )}
-
-=======
 
                 {statusLeadAddReview &&
-                  toast.success("Leads Status Updated Successfully", {
-                    autoClose: 2000,
+                  <Alert severity="error">{successLeadAddReview}</Alert>
                   })}
->>>>>>> 24dc1701e41e317e462cc65b829625459e4b3db6
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>

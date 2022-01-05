@@ -20,6 +20,7 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import XLSX from "xlsx";
 import { Alert } from "@mui/material";
 
+
 // Backend Imports
 
 import { generateReport, getReportData } from "../actions/reportActions";
@@ -27,13 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //api calls
 
-const backStyle = {
-  width: "10vh",
-  padding: "10px",
-  margin: "10px",
-  marginRight: "",
-  backgroundColor: "#4ab5da",
-};
+
 
 const dateStyle = {
   marginLeft: "1%",
@@ -47,12 +42,7 @@ const NameStyle = {
   marginLeft: "2%",
   color: "Green",
 };
-const btnstyle = {
-  backgroundColor: "rgb(30 183 30)",
-  color: "white",
-  marginLeft: "80%",
-  marginTop: "-3%",
-};
+
 
 export const ReportScreen: React.FC = () => {
   const [downloadLink, setDownloadLink] = useState("");
@@ -63,12 +53,50 @@ export const ReportScreen: React.FC = () => {
 
   const dispatch = useDispatch();
   let history = useHistory();
-
+ const columns = [
+    {
+      title: "User Name",
+      field: "name",
+      defaultSort: "asc",
+      editable: "never",
+    },
+    {
+      title: "Level 0",
+      field: "level0",
+      editable: "never",
+    },
+    {
+      title: "Level 1",
+      field: "level1",
+      editable: "never",
+    },
+    {
+      title: "Level 2",
+      field: "level2",
+      editable: "never",
+    },
+    {
+      title: "Level 3",
+      field: "level3",
+      editable: "never",
+    },
+    {
+      title: "Level 4",
+      field: "level4",
+      editable: "never",
+    },
+    {
+      title: "Total Assigned",
+      field: "totalAssigned",
+      editable: "never",
+    },
+  ];
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const reportGenerate = useSelector((state) => state.reportGenerate);
   const { loading: loadingReport, error: errorReport, report } = reportGenerate;
+  
 
   const textStyle = {
     marginTop: "50px",
@@ -108,7 +136,31 @@ export const ReportScreen: React.FC = () => {
       marginTop: "-3%",
     },
   }));
-
+  const boxStyle = {
+  marginTop: "50px",
+  marginLeft: "20px",
+  marginRight: "20px",
+};
+   const downloadExcel = () => {
+    console.log(report);
+    const workSheet = XLSX.utils.json_to_sheet(report);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
+    report.forEach((table) => {
+      XLSX.utils.book_append_sheet(
+        workBook,
+        XLSX.utils.json_to_sheet(table),
+        "Report"
+      );
+    });
+    // const workSheet = XLSX.utils.json_to_sheet(report);
+    //Buffer
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+    //Binary
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+    //Download
+    XLSX.writeFile(workBook, "Report.xlsx");
+  };
   const resetInputField = () => {
     setStartDate("");
     setEndDate("");
@@ -209,6 +261,46 @@ export const ReportScreen: React.FC = () => {
             </Button>
           </Tooltip>
         </Grid>
+         <Box style={boxStyle}>
+          <MaterialTable
+            className={classes.tableStyle}
+            data={
+              report &&
+              report.map((user) => ({
+                name: user.username,
+                level0: user["level 0"] ? user["level 0"] : 0,
+                level1: user["level 1"] ? user["level 1"] : 0,
+                level2: user["level 2"] ? user["level 2"] : 0,
+                level3: user["level 3"] ? user["level 3"] : 0,
+                level4: user["level 4"] ? user["level 4"] : 0,
+                totalAssigned: user.totalAssigned,
+              }))
+            }
+            // data={tableData}
+            columns={columns}
+        /*     isLoading={loading} */
+            options={{
+              paging: false,
+              sorting: true,
+              search: false,
+              showTitle: false,
+              toolbar: true,
+              actionsColumnIndex: -1,
+              rowStyle: (data, index) =>
+                index % 2 === 0 ? { background: "#f5f5f5" } : null,
+              headerStyle: { background: "#9c66e2", fontStyle: "bold" },
+            }}
+            actions={[
+              {
+                icon: "download",
+                tooltip: "Export to excel",
+                onClick: () => downloadExcel(),
+                isFreeAction: true,
+              },
+            ]}
+          />
+        </Box>
+     
       </div>
     </>
   );
