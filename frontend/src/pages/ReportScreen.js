@@ -20,15 +20,12 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import XLSX from "xlsx";
 import { Alert } from "@mui/material";
 
-
 // Backend Imports
 
 import { generateReport, getReportData } from "../actions/reportActions";
 import { useDispatch, useSelector } from "react-redux";
 
 //api calls
-
-
 
 const dateStyle = {
   marginLeft: "1%",
@@ -43,7 +40,6 @@ const NameStyle = {
   color: "Green",
 };
 
-
 export const ReportScreen: React.FC = () => {
   const [downloadLink, setDownloadLink] = useState("");
 
@@ -53,16 +49,11 @@ export const ReportScreen: React.FC = () => {
 
   const dispatch = useDispatch();
   let history = useHistory();
- const columns = [
+  const columns = [
     {
       title: "User Name",
       field: "name",
       defaultSort: "asc",
-      editable: "never",
-    },
-    {
-      title: "Level 0",
-      field: "level0",
       editable: "never",
     },
     {
@@ -96,7 +87,6 @@ export const ReportScreen: React.FC = () => {
 
   const reportGenerate = useSelector((state) => state.reportGenerate);
   const { loading: loadingReport, error: errorReport, report } = reportGenerate;
-  
 
   const textStyle = {
     marginTop: "50px",
@@ -137,11 +127,12 @@ export const ReportScreen: React.FC = () => {
     },
   }));
   const boxStyle = {
-  marginTop: "50px",
-  marginLeft: "20px",
-  marginRight: "20px",
-};
-   const downloadExcel = () => {
+    marginTop: "50px",
+    marginBottom: "100px",
+    marginLeft: "20px",
+    marginRight: "20px",
+  };
+  const downloadExcel = () => {
     console.log(report);
     const workSheet = XLSX.utils.json_to_sheet(report);
     const workBook = XLSX.utils.book_new();
@@ -261,24 +252,23 @@ export const ReportScreen: React.FC = () => {
             </Button>
           </Tooltip>
         </Grid>
-         <Box style={boxStyle}>
+        <Box style={boxStyle}>
           <MaterialTable
             className={classes.tableStyle}
             data={
               report &&
-              report.map((user) => ({
-                name: user.username,
-                level0: user["level 0"] ? user["level 0"] : 0,
-                level1: user["level 1"] ? user["level 1"] : 0,
-                level2: user["level 2"] ? user["level 2"] : 0,
-                level3: user["level 3"] ? user["level 3"] : 0,
-                level4: user["level 4"] ? user["level 4"] : 0,
-                totalAssigned: user.totalAssigned,
+              report.reportData[0].map((user) => ({
+                name: user.User_Name,
+                level1: user["Level_1"] ? user["Level_1"] : 0,
+                level2: user["Level_2"] ? user["Level_2"] : 0,
+                level3: user["Level_3"] ? user["Level_3"] : 0,
+                level4: user["Level_4"] ? user["Level_4"] : 0,
+                totalAssigned: user.Total_Leads_Assigned,
               }))
             }
             // data={tableData}
             columns={columns}
-        /*     isLoading={loading} */
+            isLoading={loadingReport}
             options={{
               paging: false,
               sorting: true,
@@ -300,7 +290,6 @@ export const ReportScreen: React.FC = () => {
             ]}
           />
         </Box>
-     
       </div>
     </>
   );
