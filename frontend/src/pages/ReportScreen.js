@@ -59,6 +59,7 @@ export const ReportScreen: React.FC = () => {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [tableLoading, setTableLoading] = useState(true);
 
   const dispatch = useDispatch();
   let history = useHistory();
@@ -68,72 +69,6 @@ export const ReportScreen: React.FC = () => {
 
   const reportGenerate = useSelector((state) => state.reportGenerate);
   const { loading: loadingReport, error: errorReport, report } = reportGenerate;
-
-  const reportGetData = useSelector((state) => state.reportGetData);
-  const { loadingReportData, errorReportData, reportData } = reportGetData;
-
-  // const [data, setData] = useState([]);
-  const [reportClick, setReportClick] = useState(false);
-
-  const [tableLoading, setTableLoading] = useState(true);
-
-  const downloadReport = async (list) => {
-    await dispatch(
-      generateReport(
-        moment(startDate).format("DD-MM-YYYY"),
-        moment(endDate).format("DD-MM-YYYY")
-      )
-    );
-
-    const makeTextFile = (name) => {
-      const a = document.createElement("a");
-      const type = name.split(",").pop();
-
-      a.href = URL.createObjectURL(
-        new Blob([JSON.stringify(report.reportData)], {
-          type: `text/${type === "txt" ? "plain" : type}`,
-        })
-      );
-      a.download = name;
-      a.click();
-    };
-    // Look into this.
-    // if (report) {
-    //   makeTextFile("report.txt", report);
-    // } else {
-    report && setTimeout(makeTextFile("report.txt"), 3000); // try again in 300 milliseconds
-    // }
-    // report && makeTextFile("report.txt");
-
-    console.log(report && report.reportData);
-    setReportClick(true);
-
-    // dispatch(getReportData(report && report.datefilterleads));
-    // setTableLoading(false);
-  };
-  const [selectedRows, setSelectedRows] = useState([]);
-
-  const column = [
-    { title: "Name", field: "applicantName", filtering: false },
-    { title: "Email ID", field: "email", align: "center", filtering: false },
-    {
-      title: "Contact Number",
-      field: "mobile",
-      align: "center",
-      filtering: false,
-    },
-    {
-      title: "Created ON",
-      field: "createdAt",
-      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
-    },
-    { title: "City", field: "city" },
-    { title: "Source", field: "source", align: "left" },
-    { title: "Entrance", field: "entrance" },
-    { title: "Percentile", field: "percentileGK" },
-    { title: "Lead Status", field: "status" },
-    { title: "User", field: "user.username" },
-  ];
 
   const textStyle = {
     marginTop: "50px",
@@ -160,7 +95,13 @@ export const ReportScreen: React.FC = () => {
       width: "200px",
       height: "100px",
     },
-    Style: {
+    resetBtnStyle: {
+      backgroundColor: "rgb(30 183 30)",
+      color: "white",
+      marginLeft: "80%",
+      marginTop: "-3%",
+    },
+    applyBtnStyle: {
       backgroundColor: "rgb(30 183 30)",
       color: "white",
       marginLeft: "73%",
@@ -171,17 +112,36 @@ export const ReportScreen: React.FC = () => {
   const resetInputField = () => {
     setStartDate("");
     setEndDate("");
+    dispatch(
+      generateReport(
+        moment("").format("DD-MM-YYYY"),
+        moment("").format("DD-MM-YYYY")
+      )
+    );
   };
+  const applyReportHandler = () => {
+    dispatch(
+      generateReport(
+        moment(startDate).format("DD-MM-YYYY"),
+        moment(endDate).format("DD-MM-YYYY")
+      )
+    );
+  };
+
   const classes = useStyles();
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      setReportClick(false);
-      // dispatch(getDateFilteredLeadsForAdmin(report[1]))
+      dispatch(
+        generateReport(
+          moment(startDate).format("DD-MM-YYYY"),
+          moment(endDate).format("DD-MM-YYYY")
+        )
+      );
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo, reportClick]);
+  }, [history, dispatch, userInfo]);
 
   return (
     <>
@@ -189,7 +149,7 @@ export const ReportScreen: React.FC = () => {
 
       <div>
         {errorReport && <Alert severity="error">{errorReport}</Alert>}
-        {loadingReport && <Alert severity="info">Generating Report...</Alert>}
+        {loadingReport && <Alert severity="info">Loading Report...</Alert>}
         <Grid
           container
           direction="row"
@@ -221,27 +181,32 @@ export const ReportScreen: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            value={endDate}
             onChange={(e) => {
               setEndDate(e.target.value);
             }}
-            value={endDate}
           />
+          <Tooltip title="Generate Report">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.applyBtnStyle}
+              onClick={applyReportHandler}
+            >
+              Generate
+            </Button>
+          </Tooltip>
           <Tooltip title="Reset Dates">
             <Button
               type="submit"
               color="primary"
               variant="contained"
-              className={classes.Style}
+              className={classes.resetBtnStyle}
               onClick={resetInputField}
             >
               Reset
             </Button>
-          </Tooltip>
-          <Tooltip title="Report Download">
-            <IconButton style={btnstyle} onClick={downloadReport}>
-              <FileDownloadIcon />
-              Report
-            </IconButton>
           </Tooltip>
         </Grid>
       </div>
