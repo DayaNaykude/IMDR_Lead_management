@@ -631,10 +631,11 @@ toast.configure();
                 
              
                 {statusLeadAddReview && (
-                  toast.success("Leads Status Added Successfully", { autoClose:2000})
+                  <Alert severity="success" dismissible>
+                    {statusLeadAddReview.message}
+                  </Alert>
+                )}
 
-               )}
-             
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
