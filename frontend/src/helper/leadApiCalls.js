@@ -20,8 +20,8 @@ export const createLead = (userId, token, lead) => {
 };
 
 //get all active leads for a particular user
-export const getAllLeads = (userId, token) => {
-  return fetch(`${API}/leads/${userId}`, {
+export const getAllLeads = (userId, token, page) => {
+  return fetch(`${API}/leads/${userId}?page=${page}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -36,8 +36,8 @@ export const getAllLeads = (userId, token) => {
 };
 
 //get all leads from trash
-export const getAllLeadsFromTrash = () => {
-  return fetch(`${API}/trashedLeads`, {
+export const getAllLeadsFromTrash = (page) => {
+  return fetch(`${API}/trashedLeads?page=${page}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -51,8 +51,8 @@ export const getAllLeadsFromTrash = () => {
 };
 
 //get all leads for admin
-export const getAllLeadsForAdmin = () => {
-  return fetch(`${API}/admin/leads`, {
+export const getAllLeadsForAdmin = (page) => {
+  return fetch(`${API}/admin/leads?page=${page}`, {
     method: "GET",
     headers: {
       Accept: "application/json",

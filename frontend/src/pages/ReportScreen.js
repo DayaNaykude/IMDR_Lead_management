@@ -27,14 +27,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 //api calls
 
-const backStyle = {
-  width: "10vh",
-  padding: "10px",
-  margin: "10px",
-  marginRight: "",
-  backgroundColor: "#4ab5da",
-};
-
 const dateStyle = {
   marginLeft: "1%",
   marginTop: "1%",
@@ -47,93 +39,54 @@ const NameStyle = {
   marginLeft: "2%",
   color: "Green",
 };
-const btnstyle = {
-  backgroundColor: "rgb(30 183 30)",
-  color: "white",
-  marginLeft: "80%",
-  marginTop: "-3%",
-};
 
 export const ReportScreen: React.FC = () => {
   const [downloadLink, setDownloadLink] = useState("");
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [tableLoading, setTableLoading] = useState(true);
 
   const dispatch = useDispatch();
   let history = useHistory();
-
+  const columns = [
+    {
+      title: "User Name",
+      field: "name",
+      defaultSort: "asc",
+      editable: "never",
+    },
+    {
+      title: "Level 1",
+      field: "level1",
+      editable: "never",
+    },
+    {
+      title: "Level 2",
+      field: "level2",
+      editable: "never",
+    },
+    {
+      title: "Level 3",
+      field: "level3",
+      editable: "never",
+    },
+    {
+      title: "Level 4",
+      field: "level4",
+      editable: "never",
+    },
+    {
+      title: "Total Assigned",
+      field: "totalAssigned",
+      editable: "never",
+    },
+  ];
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const reportGenerate = useSelector((state) => state.reportGenerate);
   const { loading: loadingReport, error: errorReport, report } = reportGenerate;
-
-  const reportGetData = useSelector((state) => state.reportGetData);
-  const { loadingReportData, errorReportData, reportData } = reportGetData;
-
-  // const [data, setData] = useState([]);
-  const [reportClick, setReportClick] = useState(false);
-
-  const [tableLoading, setTableLoading] = useState(true);
-
-  const downloadReport = async (list) => {
-    await dispatch(
-      generateReport(
-        moment(startDate).format("DD-MM-YYYY"),
-        moment(endDate).format("DD-MM-YYYY")
-      )
-    );
-
-    const makeTextFile = (name) => {
-      const a = document.createElement("a");
-      const type = name.split(",").pop();
-
-      a.href = URL.createObjectURL(
-        new Blob([JSON.stringify(report.reportData)], {
-          type: `text/${type === "txt" ? "plain" : type}`,
-        })
-      );
-      a.download = name;
-      a.click();
-    };
-    // Look into this.
-    // if (report) {
-    //   makeTextFile("report.txt", report);
-    // } else {
-    report && setTimeout(makeTextFile("report.txt"), 3000); // try again in 300 milliseconds
-    // }
-    // report && makeTextFile("report.txt");
-
-    console.log(report && report.reportData);
-    setReportClick(true);
-
-    // dispatch(getReportData(report && report.datefilterleads));
-    // setTableLoading(false);
-  };
-  const [selectedRows, setSelectedRows] = useState([]);
-
-  const column = [
-    { title: "Name", field: "applicantName", filtering: false },
-    { title: "Email ID", field: "email", align: "center", filtering: false },
-    {
-      title: "Contact Number",
-      field: "mobile",
-      align: "center",
-      filtering: false,
-    },
-    {
-      title: "Created ON",
-      field: "createdAt",
-      render: (rowData) => moment(rowData.createdAt).format("DD-MM-YYYY"),
-    },
-    { title: "City", field: "city" },
-    { title: "Source", field: "source", align: "left" },
-    { title: "Entrance", field: "entrance" },
-    { title: "Percentile", field: "percentileGK" },
-    { title: "Lead Status", field: "status" },
-    { title: "User", field: "user.username" },
-  ];
 
   const textStyle = {
     marginTop: "50px",
@@ -160,28 +113,78 @@ export const ReportScreen: React.FC = () => {
       width: "200px",
       height: "100px",
     },
-    Style: {
+    resetBtnStyle: {
+      backgroundColor: "rgb(30 183 30)",
+      color: "white",
+      marginLeft: "80%",
+      marginTop: "-3%",
+    },
+    applyBtnStyle: {
       backgroundColor: "rgb(30 183 30)",
       color: "white",
       marginLeft: "73%",
       marginTop: "-3%",
     },
   }));
-
+  const boxStyle = {
+    marginTop: "50px",
+    marginBottom: "100px",
+    marginLeft: "20px",
+    marginRight: "20px",
+  };
+  const downloadExcel = () => {
+    console.log(report);
+    const workSheet = XLSX.utils.json_to_sheet(report);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "Report");
+    report.forEach((table) => {
+      XLSX.utils.book_append_sheet(
+        workBook,
+        XLSX.utils.json_to_sheet(table),
+        "Report"
+      );
+    });
+    // const workSheet = XLSX.utils.json_to_sheet(report);
+    //Buffer
+    let buf = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+    //Binary
+    XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+    //Download
+    XLSX.writeFile(workBook, "Report.xlsx");
+  };
   const resetInputField = () => {
     setStartDate("");
     setEndDate("");
+    dispatch(
+      generateReport(
+        moment("").format("DD-MM-YYYY"),
+        moment("").format("DD-MM-YYYY")
+      )
+    );
   };
+  const applyReportHandler = () => {
+    dispatch(
+      generateReport(
+        moment(startDate).format("DD-MM-YYYY"),
+        moment(endDate).format("DD-MM-YYYY")
+      )
+    );
+  };
+
   const classes = useStyles();
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      setReportClick(false);
-      // dispatch(getDateFilteredLeadsForAdmin(report[1]))
+      dispatch(
+        generateReport(
+          moment(startDate).format("DD-MM-YYYY"),
+          moment(endDate).format("DD-MM-YYYY")
+        )
+      );
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo, reportClick]);
+  }, [history, dispatch, userInfo]);
 
   return (
     <>
@@ -189,7 +192,7 @@ export const ReportScreen: React.FC = () => {
 
       <div>
         {errorReport && <Alert severity="error">{errorReport}</Alert>}
-        {loadingReport && <Alert severity="info">Generating Report...</Alert>}
+        {loadingReport && <Alert severity="info">Loading Report...</Alert>}
         <Grid
           container
           direction="row"
@@ -221,29 +224,72 @@ export const ReportScreen: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            value={endDate}
             onChange={(e) => {
               setEndDate(e.target.value);
             }}
-            value={endDate}
           />
+          <Tooltip title="Generate Report">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              className={classes.applyBtnStyle}
+              onClick={applyReportHandler}
+            >
+              Generate
+            </Button>
+          </Tooltip>
           <Tooltip title="Reset Dates">
             <Button
               type="submit"
               color="primary"
               variant="contained"
-              className={classes.Style}
+              className={classes.resetBtnStyle}
               onClick={resetInputField}
             >
               Reset
             </Button>
           </Tooltip>
-          <Tooltip title="Report Download">
-            <IconButton style={btnstyle} onClick={downloadReport}>
-              <FileDownloadIcon />
-              Report
-            </IconButton>
-          </Tooltip>
         </Grid>
+        <Box style={boxStyle}>
+          <MaterialTable
+            className={classes.tableStyle}
+            data={
+              report &&
+              report.reportData[0].map((user) => ({
+                name: user.User_Name,
+                level1: user["Level_1"] ? user["Level_1"] : 0,
+                level2: user["Level_2"] ? user["Level_2"] : 0,
+                level3: user["Level_3"] ? user["Level_3"] : 0,
+                level4: user["Level_4"] ? user["Level_4"] : 0,
+                totalAssigned: user.Total_Leads_Assigned,
+              }))
+            }
+            // data={tableData}
+            columns={columns}
+            isLoading={loadingReport}
+            options={{
+              paging: false,
+              sorting: true,
+              search: false,
+              showTitle: false,
+              toolbar: true,
+              actionsColumnIndex: -1,
+              rowStyle: (data, index) =>
+                index % 2 === 0 ? { background: "#f5f5f5" } : null,
+              headerStyle: { background: "#9c66e2", fontStyle: "bold" },
+            }}
+            actions={[
+              {
+                icon: "download",
+                tooltip: "Export to excel",
+                onClick: () => downloadExcel(),
+                isFreeAction: true,
+              },
+            ]}
+          />
+        </Box>
       </div>
     </>
   );

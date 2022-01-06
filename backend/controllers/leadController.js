@@ -1,7 +1,9 @@
 const Lead = require("../models/lead");
 const { validationResult } = require("express-validator");
+const paginate = require("jw-paginate");
 
 //parameter extractor for a lead
+
 exports.getLeadById = (req, res, next, id) => {
   Lead.findById(id).exec((err, lead) => {
     if (err || !lead) {
@@ -14,6 +16,17 @@ exports.getLeadById = (req, res, next, id) => {
   });
 };
 
+exports.getLeadById = (req, res, next, id) => {
+  Lead.findById(id).exec((err, lead) => {
+    if (err || !lead) {
+      return res.status(400).json({
+        error: "No Lead Found.",
+      });
+    }
+    req.lead = lead;
+    next();
+  });
+};
 //get lead details
 exports.getLead = (req, res) => {
   const { emailId } = req.body;
@@ -30,6 +43,9 @@ exports.getLead = (req, res) => {
 
 // get all active leads for a particular user
 exports.getAllLeads = (req, res) => {
+  const resultsperPage = 100;
+  let page = parseInt(req.query.page) >= 1 ? parseInt(req.query.page) : 1;
+  page = page - 1;
   Lead.find(
     { user: req.profile._id, flag: "Active" },
     {
@@ -46,13 +62,23 @@ exports.getAllLeads = (req, res) => {
     }
   )
     .sort([["updatedAt", "desc"]])
+    .skip(resultsperPage * page)
+    .limit(resultsperPage)
     .exec((err, leads) => {
       if (err || !leads) {
         return res.status(400).json({
           error: "No Leads Assigned.",
         });
+      } else {
+        Lead.countDocuments(
+          { user: req.profile._id, flag: "Active" },
+          (err, count) => {
+            const pageSize = 100;
+            const pager = paginate(count, page + 1, pageSize);
+            return res.json({ pager, leads });
+          }
+        );
       }
-      return res.json(leads);
     });
 };
 
@@ -227,6 +253,9 @@ exports.deleteManyLeads = (req, res) => {
 
 // get all trashed leads
 exports.getAllTrashedLeads = (req, res) => {
+  const resultsperPage = 10;
+  let page = parseInt(req.query.page) >= 1 ? parseInt(req.query.page) : 1;
+  page = page - 1;
   Lead.find(
     { flag: "Deactive" },
     {
@@ -243,18 +272,29 @@ exports.getAllTrashedLeads = (req, res) => {
   )
     .populate("user", "username")
     .sort([["updatedAt", "desc"]])
+    .limit(resultsperPage)
+    .skip(resultsperPage * page)
     .exec((err, leads) => {
       if (err || !leads) {
+        console.log(err);
         return res.status(400).json({
           error: "No Leads Present In Trash.",
         });
+      } else {
+        Lead.countDocuments({ flag: "Deactive" }, (err, count) => {
+          const pageSize = 10;
+          const pager = paginate(count, page + 1, pageSize);
+          return res.json({ pager, leads });
+        });
       }
-      return res.json(leads);
     });
 };
 
 // get all active leads for an admin
 exports.getAllLeadsForAdmin = (req, res) => {
+  const resultsperPage = 100;
+  let page = parseInt(req.query.page) >= 1 ? parseInt(req.query.page) : 1;
+  page = page - 1;
   Lead.find(
     { flag: "Active" },
     {
@@ -270,14 +310,22 @@ exports.getAllLeadsForAdmin = (req, res) => {
     }
   )
     .populate("user", "username")
-    .sort([["updatedAt", "desc"]])
+    
+    .limit(resultsperPage)
+    .skip(resultsperPage * page)
     .exec((err, leads) => {
       if (err || !leads) {
+        //console.log(err);
         return res.status(400).json({
           error: "No Leads Found.",
         });
+      } else {
+        Lead.countDocuments({ flag: "Active" }, (err, count) => {
+          const pageSize = 100;
+          const pager = paginate(count, page + 1, pageSize);
+          return res.json({ pager, leads });
+        });
       }
-      return res.json(leads);
     });
 };
 

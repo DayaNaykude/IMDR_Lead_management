@@ -9,14 +9,14 @@ import {
 } from "@material-ui/core";
 
 import { toast } from "react-toastify";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+// import AppBar from "@material-ui/core/AppBar";
+// import Toolbar from "@material-ui/core/Toolbar";
 import InputLabel from "@mui/material/InputLabel";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -34,17 +34,17 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-import { DataGrid } from "@material-ui/data-grid";
+// import { DataGrid } from "@material-ui/data-grid";
 import "react-toastify/dist/ReactToastify.css";
 // backend Imports
 import {
   sendBulkEmails,
-  sendBulkSms,
+  // sendBulkSms,
   addReview,
 } from "../../actions/userActions";
 // import leadAddReview from "../../actions/userActions";
 // import { readMailContent, updateMailContent } from "../../actions/mailActions";
-import { createDispatchHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import { isAuthenticated } from "../../helper";
 
@@ -64,15 +64,6 @@ const textAreaStyle = {
   marginTop: "0%",
   width: "80%",
   height: "100px",
-};
-const submitStyle = {
-  backgroundColor: "#26d6ca",
-  color: "white",
-  fontSize: "20px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "2%",
-  marginTop: "0%",
-  width: "15%",
 };
 const btnStyle = {
   backgroundColor: "blue",
@@ -127,7 +118,7 @@ const TasksScreenUser = () => {
   const handleOpenMail = () => setOpenMail(true);
   const handleCloseMail = () => {
     setOpenMail(false);
-    window.location.reload(false);
+    // window.location.reload(false);
   };
   const [openReview, setOpenReview] = useState(false);
   const handleOpenReview = () => {
@@ -135,7 +126,8 @@ const TasksScreenUser = () => {
   };
   const handleCloseReview = () => {
     setOpenReview(false);
-    window.location.reload(false);
+
+    // window.location.reload(false);
   };
 
   /* 
@@ -202,6 +194,8 @@ const TasksScreenUser = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
+  const [pager, setPager] = useState({});
+
   const [percente, setPercente] = useState(0);
   const dispatch = useDispatch();
 
@@ -213,13 +207,13 @@ const TasksScreenUser = () => {
     status: statusSendBulkEmails,
   } = userSendBulkEmails;
 
-  const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
-  const {
-    loading: loadingSms,
-    success: successSendBulkSms,
-    error: errorSms,
-    status: statusSendBulkSms,
-  } = userSendBulkSms;
+  // const userSendBulkSms = useSelector((state) => state.userSendBulkSms);
+  // const {
+  //   loading: loadingSms,
+  //   success: successSendBulkSms,
+  //   error: errorSms,
+  //   status: statusSendBulkSms,
+  // } = userSendBulkSms;
 
   // const mailReadContent = useSelector((state) => state.mailReadContent);
   // const {
@@ -237,7 +231,7 @@ const TasksScreenUser = () => {
   // } = mailUpdateContent;
 
   const leadAddReview = useSelector((state) => state.leadAddReview);
-  const {
+  let {
     loading: loadingLeadAddReview,
     success: successLeadAddReview,
     error: errorLeadAddReview,
@@ -250,10 +244,10 @@ const TasksScreenUser = () => {
     "Craft Your Career with the First B-School of Pune"
   );
 
-  const [message, setMessage] = useState(
-    `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
-    `
-  );
+  // const [message, setMessage] = useState(
+  //   `Craft Your Career with the First B-School of Pune.\nPGDM with embedded 6 month Industry Internship.\nApply Now https://forms.eduqfix.com/deccanes/add
+  //   `
+  // );
   const [tableLoading, setTableLoading] = useState(true);
 
   const sendEmailHandler = async (e) => {
@@ -262,10 +256,10 @@ const TasksScreenUser = () => {
     dispatch(sendBulkEmails(userInfo.sendgridemail, selectedEmails, subject));
   };
 
-  const sendSmsHandler = async (e) => {
-    e.preventDefault();
-    dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
-  };
+  // const sendSmsHandler = async (e) => {
+  //   e.preventDefault();
+  //   dispatch(sendBulkSms(selectedEmails, selectedNumbers, message));
+  // };
 
   // const updateMailContentHandler = async (e) => {
   //   e.preventDefault();
@@ -311,19 +305,22 @@ const TasksScreenUser = () => {
     XLSX.writeFile(workBook, "LeadsData.xlsx");
   };
 
+  let location = useLocation();
   //loading leads
-  const preload = () => {
+  const preload = (page) => {
     if (userInfo) {
-      getAllLeads(userInfo._id, userInfo.token)
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-          } else {
-            setData(data);
-            setTableLoading(false);
-          }
-        })
-        .catch((err) => console.log(err));
+      if (page !== pager.currentPage)
+        getAllLeads(userInfo._id, userInfo.token, page)
+          .then((data) => {
+            if (data.error) {
+              console.log(data.error);
+            } else {
+              setData(data.leads);
+              setPager(data.pager);
+              setTableLoading(false);
+            }
+          })
+          .catch((err) => console.log(err));
     }
   };
 
@@ -341,14 +338,18 @@ const TasksScreenUser = () => {
     if (!userInfo) {
       history.push("/login");
     }
-    preload();
+    const params = new URLSearchParams(location.search);
+    const page = parseInt(params.get("page")) || 1;
+
+    preload(page);
   }, [
     history,
     dispatch,
+    preload,
     userInfo,
     successSendBulkEmails,
     statusSendBulkEmails,
-    successSendBulkSms,
+    // successSendBulkSms,
     successLeadAddReview,
     statusLeadAddReview,
   ]);
@@ -399,7 +400,7 @@ const TasksScreenUser = () => {
               toolbar: true,
               searchFieldVariant: "outlined",
               searchFieldAlignment: "left",
-              pageSizeOptions: [5, 15, 20, 25, 30, 50, 100],
+              pageSizeOptions: [5, 10],
               paginationType: "stepped",
               actionsColumnIndex: -1,
               rowStyle: (data, index) =>
@@ -551,6 +552,72 @@ const TasksScreenUser = () => {
               ),
             }}
           />
+          <div className="card-footer pb-0 pt-3 d-flex justify-content-center">
+            {pager.pages && pager.pages.length && (
+              <ul className="pagination">
+                <li
+                  className={`page-item first-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link to={{ search: `?page=1` }} className="page-link">
+                    First
+                  </Link>
+                </li>
+                <li
+                  className={`page-item previous-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage - 1}` }}
+                    className="page-link"
+                  >
+                    Previous
+                  </Link>
+                </li>
+                {pager.pages.map((page) => (
+                  <li
+                    key={page}
+                    className={`page-item number-item ${
+                      pager.currentPage === page ? "active" : ""
+                    }`}
+                  >
+                    <Link
+                      to={{ search: `?page=${page}` }}
+                      className="page-link"
+                    >
+                      {page}
+                    </Link>
+                  </li>
+                ))}
+                <li
+                  className={`page-item next-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage + 1}` }}
+                    className="page-link"
+                  >
+                    Next
+                  </Link>
+                </li>
+                <li
+                  className={`page-item last-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.totalPages}` }}
+                    className="page-link"
+                  >
+                    Last
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </div>
           <div>
             <Modal open={openMail} onClose={handleCloseMail}>
               <Box sx={style}>
@@ -627,9 +694,8 @@ const TasksScreenUser = () => {
                 )}
 
                 {statusLeadAddReview &&
-                  toast.success("Leads Status Added Successfully", {
-                    autoClose: 2000,
-                  })}
+                  <Alert severity="error">{successLeadAddReview}</Alert>
+                  }
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
@@ -640,10 +706,10 @@ const TasksScreenUser = () => {
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <MenuItem value=""></MenuItem>
-                    <MenuItem value={"Level 1"}>Level 1</MenuItem>
-                    <MenuItem value={"Level 2"}>Level 2</MenuItem>
-                    <MenuItem value={"Level 3"}>Level 3</MenuItem>
-                    <MenuItem value={"Level 4"}>Level 4</MenuItem>
+                    <MenuItem value={"level 1"}>Level 1</MenuItem>
+                    <MenuItem value={"level 2"}>Level 2</MenuItem>
+                    <MenuItem value={"level 3"}>Level 3</MenuItem>
+                    <MenuItem value={"level 4"}>Level 4</MenuItem>
                   </Select>
                 </FormControl>
 

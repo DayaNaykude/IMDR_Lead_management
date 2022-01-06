@@ -6,7 +6,7 @@ import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
 import IconButton from "@mui/material/IconButton";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import XLSX from "xlsx";
@@ -116,6 +116,7 @@ const TrashScreen = () => {
   const { userInfo } = userLogin;
 
   const [data, setData] = useState([]);
+  const [pager, setPager] = useState({});
 
   const dispatch = useDispatch();
   const [tableLoading, setTableLoading] = useState(true);
@@ -136,18 +137,24 @@ const TrashScreen = () => {
     XLSX.writeFile(workBook, "TrashData.xlsx");
   };
 
+  let location = useLocation();
+
   //loading leads
-  const preload = () => {
-    getAllLeadsFromTrash(userInfo._id, userInfo.token)
-      .then((data) => {
-        if (data.error) {
-          console.log(data.error);
-        } else {
-          setData(data);
-          setTableLoading(false);
-        }
-      })
-      .catch((err) => console.log(err));
+  const preload = (page) => {
+    if (userInfo) {
+      if (page !== pager.currentPage)
+        getAllLeadsFromTrash(page)
+          .then((data) => {
+            if (data.error) {
+              console.log(data.error);
+            } else {
+              setData(data.leads);
+              setPager(data.pager);
+              setTableLoading(false);
+            }
+          })
+          .catch((err) => console.log(err));
+    }
   };
 
   //re-assigning
@@ -194,11 +201,13 @@ const TrashScreen = () => {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      preload();
+      const params = new URLSearchParams(location.search);
+      const page = parseInt(params.get("page")) || 1;
+      preload(page);
     } else {
       history.push("/login");
     }
-  }, [history, userInfo]);
+  }, [history, preload, userInfo]);
 
   const column = [
     { title: "Name", field: "applicantName", filtering: false },
@@ -307,7 +316,72 @@ const TrashScreen = () => {
               ),
             }}
           />
-
+          <div className="card-footer pb-0 pt-3 d-flex justify-content-center">
+            {pager.pages && pager.pages.length && (
+              <ul className="pagination">
+                <li
+                  className={`page-item first-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link to={{ search: `?page=1` }} className="page-link">
+                    First
+                  </Link>
+                </li>
+                <li
+                  className={`page-item previous-item ${
+                    pager.currentPage === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage - 1}` }}
+                    className="page-link"
+                  >
+                    Previous
+                  </Link>
+                </li>
+                {pager.pages.map((page) => (
+                  <li
+                    key={page}
+                    className={`page-item number-item ${
+                      pager.currentPage === page ? "active" : ""
+                    }`}
+                  >
+                    <Link
+                      to={{ search: `?page=${page}` }}
+                      className="page-link"
+                    >
+                      {page}
+                    </Link>
+                  </li>
+                ))}
+                <li
+                  className={`page-item next-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.currentPage + 1}` }}
+                    className="page-link"
+                  >
+                    Next
+                  </Link>
+                </li>
+                <li
+                  className={`page-item last-item ${
+                    pager.currentPage === pager.totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <Link
+                    to={{ search: `?page=${pager.totalPages}` }}
+                    className="page-link"
+                  >
+                    Last
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </div>
           <div>
             <Dialog
               open={flag}
