@@ -1,11 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
-import {
-  Grid,
-  TablePagination,
-  Typography,
-} from "@material-ui/core";
+import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import KeyboardBackspaceSharpIcon from "@mui/icons-material/KeyboardBackspaceSharp";
@@ -41,7 +37,6 @@ const boxStyle = {
   marginRight: "20px",
 };
 
-
 const btnstyle = {
   backgroundColor: "rgb(30 183 30)",
   color: "white",
@@ -53,8 +48,6 @@ const textStyle = {
   marginLeft: "42%",
   color: "red",
 };
-
-
 
 const TrashScreen = () => {
   const [open, setOpen] = useState(false);
@@ -108,7 +101,7 @@ const TrashScreen = () => {
             });
           }
         })
-        .catch(console.log("Error In Deleting Leads."));
+        .catch((err) => console.log(err));
     } else {
       setValues({
         ...values,
@@ -150,7 +143,6 @@ const TrashScreen = () => {
         if (data.error) {
           console.log(data.error);
         } else {
-          console.log(data);
           setData(data);
           setTableLoading(false);
         }
@@ -180,7 +172,7 @@ const TrashScreen = () => {
             });
           }
         })
-        .catch(console.log("Error in Re-assigning leads"));
+        .catch((err) => console.log(err));
     } else {
       setRValues({
         ...rValues,
@@ -268,7 +260,7 @@ const TrashScreen = () => {
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
-                    leads.push(element.email);
+                    leads.push(element._id);
                   });
                   setRLeads(leads);
                   handleOpen();
@@ -281,7 +273,7 @@ const TrashScreen = () => {
                 onClick: (evt, data) => {
                   const leads = [];
                   data.forEach((element) => {
-                    leads.push(element.email);
+                    leads.push(element._id);
                   });
                   setDleads(leads);
                   showDeleteWindow();

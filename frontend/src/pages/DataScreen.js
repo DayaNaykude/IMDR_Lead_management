@@ -1,11 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import Box from "@material-ui/core/Box";
-import {
-  Grid,
-  TablePagination,
-  Typography,
-} from "@material-ui/core";
+import { Grid, TablePagination, Typography } from "@material-ui/core";
 import { CsvBuilder } from "filefy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import { useHistory } from "react-router-dom";
@@ -33,7 +29,6 @@ const textStyle = {
   marginLeft: "45%",
   color: "red",
 };
-
 
 const DataScreen = () => {
   let history = useHistory();

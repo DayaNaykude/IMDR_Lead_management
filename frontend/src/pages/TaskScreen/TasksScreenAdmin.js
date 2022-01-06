@@ -88,28 +88,40 @@ const TaskScreenAdmin = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, error: "", loading: true });
-    csvImport(formData).then((data) => {
-      if (data.error) {
-        setValues({
-          ...values,
-          email: data.email,
-          error: data.error,
-          loading: false,
-          source: "",
-          entrance: "",
-        });
-      } else {
-        setValues({
-          ...values,
-          csv: "",
-          loading: false,
-          source: "",
-          entrance: "",
-          success: data.message,
-          count: data.count,
-        });
-      }
-    });
+    if (csv !== "") {
+      csvImport(formData).then((data) => {
+        if (data.error) {
+          setValues({
+            ...values,
+            email: data.email,
+            error: data.error,
+            success: false,
+            loading: false,
+            source: "",
+            entrance: "",
+          });
+        } else {
+          setValues({
+            ...values,
+            csv: "",
+            loading: false,
+            source: "",
+            entrance: "",
+            error: "",
+            success: data.message,
+            count: data.count,
+          });
+        }
+      });
+    } else {
+      setValues({
+        ...values,
+        error: "Please choose a file.",
+        loading: false,
+        success: false,
+        csv: "",
+      });
+    }
   };
 
   const loadingMessage = () => {
@@ -128,33 +140,37 @@ const TaskScreenAdmin = () => {
 
   const errorMessage = () => {
     return (
-      <div className="row">
-        <div className="col-md-6 offset-sm-3 text-left">
-          <div
-            className="alert alert-danger"
-            style={{ display: error ? "" : "none" }}
-          >
-            {email}
-            {error}
+      error && (
+        <div className="row">
+          <div className="col-md-6 offset-sm-3 text-left">
+            <div
+              className="alert alert-danger"
+              style={{ display: error ? "" : "none" }}
+            >
+              {email}
+              {error}
+            </div>
           </div>
         </div>
-      </div>
+      )
     );
   };
 
   const successMessage = () => {
     return (
-      <div className="row">
-        <div className="col-md-6 offset-sm-3 text-left">
-          <div
-            className="alert alert-success mt-4"
-            style={{ display: success ? "" : "none" }}
-          >
-            {count}
-            {success}
+      success && (
+        <div className="row">
+          <div className="col-md-6 offset-sm-3 text-left">
+            <div
+              className="alert alert-success mt-4"
+              style={{ display: success ? "" : "none" }}
+            >
+              {count}
+              {success}
+            </div>
           </div>
         </div>
-      </div>
+      )
     );
   };
   const textStyle = {

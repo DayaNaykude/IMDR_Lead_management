@@ -209,14 +209,14 @@ exports.deleteManyLeads = (req, res) => {
   var result = [];
 
   for (var i in jsonObj) result.push(jsonObj[i]);
-  result.map((email) => {
-    Lead.findOneAndRemove({ email: email }).exec((err, lead) => {
+  result.map((_id) => {
+    Lead.findOneAndRemove({ _id: _id }).exec((err, lead) => {
       if (err || !lead) {
         return res.status(400).json({
           error: "Deletion Failed.",
         });
       }
-      if (lead && lead.email === result[result.length - 1]) {
+      if (lead && lead._id == result[result.length - 1]) {
         return res.json({
           message: "Selected Leads Have Been Deleted Successfully.",
         });
@@ -287,18 +287,18 @@ exports.reAssignLeadsToSameUser = (req, res) => {
   var result = [];
 
   for (var i in jsonObj) result.push(jsonObj[i]);
-  result.map((email) => {
+  result.map((_id) => {
     Lead.findOneAndUpdate(
-      { email: email },
+      { _id: _id },
       { $set: { flag: "Active" } },
       { new: true, useFindAndModify: false },
       (err, lead) => {
-        if (err || !Lead) {
+        if (err || !lead) {
           return res.status(400).json({
             error: "Failed To Re-assign Leads.",
           });
         }
-        if (lead && lead.email === result[result.length - 1]) {
+        if (lead && lead._id == result[result.length - 1]) {
           return res.json({
             message:
               "Selected Leads Are Re-assigned To Their Respective Users Successfully.",
@@ -315,18 +315,18 @@ exports.moveLeadsIntoTrash = (req, res) => {
   var result = [];
 
   for (var i in jsonObj) result.push(jsonObj[i]);
-  result.map((email) => {
+  result.map((_id) => {
     Lead.findOneAndUpdate(
-      { email: email },
+      { _id: _id },
       { $set: { flag: "Deactive" } },
       { new: true, useFindAndModify: false },
       (err, lead) => {
-        if (err || !Lead) {
+        if (err || !lead) {
           return res.status(400).json({
             error: "Failed To Move Leads Into Trash.",
           });
         }
-        if (lead && lead.email === result[result.length - 1]) {
+        if (lead && lead._id == result[result.length - 1]) {
           return res.json({
             message: "Selected Leads Are Moved Into Trash Successfully.",
           });

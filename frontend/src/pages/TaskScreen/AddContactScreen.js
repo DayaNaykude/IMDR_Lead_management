@@ -167,7 +167,7 @@ const AddContact = () => {
           });
         }
       })
-      .catch(console.log("Error in lead creation!"));
+      .catch((err) => console.log(err));
   };
 
   const errorMessage = () => {
