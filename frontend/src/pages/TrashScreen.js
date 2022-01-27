@@ -65,9 +65,10 @@ const TrashScreen = () => {
     dError: "",
     dSuccess: false,
     dLoading: false,
+    dGetARedirect: false,
   });
 
-  const { dError, dSuccess, dLoading } = values;
+  const { dError, dSuccess, dLoading, dGetARedirect } = values;
   const { _id, token } = isAuthenticated();
 
   const [rLeads, setRLeads] = useState([]);
@@ -75,9 +76,10 @@ const TrashScreen = () => {
     rError: "",
     rSuccess: false,
     rLoading: false,
+    rGetARedirect: false,
   });
 
-  const { rError, rSuccess, rLoading } = rValues;
+  const { rError, rSuccess, rLoading, rGetARedirect } = rValues;
 
   //permanent deletion
   const deleteALlLeads = () => {
@@ -97,6 +99,7 @@ const TrashScreen = () => {
               ...values,
               dError: "",
               dSuccess: true,
+              dGetARedirect:true,
               dLoading: false,
             });
           }
@@ -175,6 +178,7 @@ const TrashScreen = () => {
               ...rValues,
               rError: "",
               rSuccess: true,
+              rGetARedirect: true,
               rLoading: false,
             });
           }
@@ -427,6 +431,10 @@ const TrashScreen = () => {
                 </Button>
               </DialogActions>
             </Dialog>
+            {dGetARedirect &&
+              setTimeout(() => {
+                history.go(0);
+              }, 1000)}
           </div>
 
           <div>
@@ -474,6 +482,10 @@ const TrashScreen = () => {
                 </Button>
               </DialogActions>
             </Dialog>
+            {rGetARedirect &&
+              setTimeout(() => {
+                history.go(0);
+              }, 1000)}
           </div>
         </Box>
       </div>

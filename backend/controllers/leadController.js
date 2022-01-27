@@ -253,7 +253,7 @@ exports.deleteManyLeads = (req, res) => {
 
 // get all trashed leads
 exports.getAllTrashedLeads = (req, res) => {
-  const resultsperPage = 10;
+  const resultsperPage = 100;
   let page = parseInt(req.query.page) >= 1 ? parseInt(req.query.page) : 1;
   page = page - 1;
   Lead.find(
@@ -282,7 +282,7 @@ exports.getAllTrashedLeads = (req, res) => {
         });
       } else {
         Lead.countDocuments({ flag: "Deactive" }, (err, count) => {
-          const pageSize = 10;
+          const pageSize = 100;
           const pager = paginate(count, page + 1, pageSize);
           return res.json({ pager, leads });
         });
@@ -295,6 +295,18 @@ exports.getAllLeadsForAdmin = (req, res) => {
   const resultsperPage = 100;
   let page = parseInt(req.query.page) >= 1 ? parseInt(req.query.page) : 1;
   page = page - 1;
+
+  // Lead.aggregate(
+  //   [{ $match: { flag: "Active" } }, { $sort: { updatedAt: -1 } }],
+  //   (err, leads) => {
+  //     if (err || !leads) {
+  //       console.log("IN ERROR AGGREGATE");
+  //       console.log(err);
+  //     } else {
+  //       console.log(leads.length);
+  //     }
+  //   }
+  // );
   Lead.find(
     { flag: "Active" },
     {
@@ -310,7 +322,7 @@ exports.getAllLeadsForAdmin = (req, res) => {
     }
   )
     .populate("user", "username")
-    
+
     .limit(resultsperPage)
     .skip(resultsperPage * page)
     .exec((err, leads) => {

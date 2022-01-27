@@ -152,9 +152,10 @@ const TasksScreenUser = () => {
     dError: "",
     dSuccess: false,
     dLoading: false,
+    getARedirect: false,
   });
 
-  const { dError, dSuccess, dLoading } = values;
+  const { dError, dSuccess, dLoading, getARedirect } = values;
   const { _id, token } = isAuthenticated();
 
   //move leads into trash
@@ -175,6 +176,7 @@ const TasksScreenUser = () => {
               ...values,
               dError: "",
               dSuccess: true,
+              getARedirect: true,
               dLoading: false,
             });
           }
@@ -693,9 +695,9 @@ const TasksScreenUser = () => {
                   <Alert severity="error">{errorLeadAddReview}</Alert>
                 )}
 
-                {statusLeadAddReview &&
+                {statusLeadAddReview && (
                   <Alert severity="error">{successLeadAddReview}</Alert>
-                  }
+                )}
 
                 <FormControl style={{ margin: "8px", width: "50%" }}>
                   <InputLabel>Select Status</InputLabel>
@@ -823,6 +825,10 @@ const TasksScreenUser = () => {
                 </Button>
               </DialogActions>
             </Dialog>
+            {getARedirect &&
+              setTimeout(() => {
+                history.go(0);
+              }, 1000)}
           </div>
         </Box>
       </div>
