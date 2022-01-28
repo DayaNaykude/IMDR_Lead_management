@@ -75,7 +75,7 @@ const smsbtnStyle = {
   color: "white",
   fontSize: "20px",
   padding: "5px 5px 5px 5px",
-  marginLeft: "60%",
+  marginLeft: "70%",
   marginTop: "10%",
   width: "15%",
 };
@@ -84,10 +84,10 @@ const editStyle = {
   backgroundColor: "#26d6ca",
   color: "white",
   fontSize: "15px",
-  padding: "5px 5px 5px 5px",
-  marginLeft: "65%",
+  padding: "6.5px 5px 5px 4px",
+  marginLeft: "70%",
   marginTop: "0%",
-  width: "12%",
+  width: "9.5%",
 };
 
 const submitStyle = {
@@ -118,10 +118,10 @@ const saveStyle = {
   color: "white",
   display: "inline-block",
   fontSize: "15px",
-  padding: "5px",
+  padding: "6px 7.5px 5px 7.5px",
   float: "right",
-  marginTop: "0%",
-  width: "fit-content",
+  marginTop: "0.25%",
+  width: "9.5%",
 };
 
 const sendStyle = {
